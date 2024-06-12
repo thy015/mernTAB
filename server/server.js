@@ -1,8 +1,10 @@
 const PORT=process.env.PORT||4000;
 const express=require('express');
+const cors=require('cors')
 const app=express();
 
-app.get('/',(req,res)=>{
+app.use(cors())
+app.get('/home',(req,res)=>{
     res.send('Hello world')
 })
 app.listen(PORT,()=>{
