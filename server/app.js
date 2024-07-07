@@ -1,17 +1,19 @@
 const express=require('express');
-const cors=require('cors')
+const cors=require('cors');
+const HomeRouter = require('./routes/home/home.route');
 const app=express();
 
+//router
+app.use('/',HomeRouter)
+
+app.use(express.static('public'))
 app.set('views','./views')
 app.set('view engine', 'pug')
-app.get('/',(req,res)=>{
-    res.render('index.pug')
+
+app.get('/product',(req,res)=>{
+    res.send('<h1>Product</h1>')
 })
 
-app.get('/',(req,res)=>{
-    res.send(
-    '<h1>Something</h1>'
-);
-})
+
 
 module.exports=app
