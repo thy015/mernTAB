@@ -1,7 +1,11 @@
 const express =require('express')
-const SignUprouter=express.Router()
+const signUpController=require('./signUp.controller')
+const signUprouter=express.Router()
 
-SignUprouter.get('/',(req,res)=>{
-    res.send('SignUp Page')
-})
-module.exports=SignUprouter
+signUprouter.get('/', (req, res) => {
+    res.send(`signUpPage`);
+  });
+
+signUprouter.post('/', signUpController.signUpOwner);
+
+module.exports=signUprouter

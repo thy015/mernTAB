@@ -1,8 +1,8 @@
 const express=require('express');
 const cors=require('cors');
 const dotenv=require('dotenv')
+const bodyParser=require('body-parser')
 dotenv.config()
-
 const HomeRouter = require('./routes/home/home.route');
 const DetailRouter = require('./routes/HotelDetail/detail.route');
 const ListRouter = require('./routes/HotelList/list.route');
@@ -10,6 +10,8 @@ const SignUprouter = require('./routes/signUp/signUp.route');
 const Bookrouter=require('./routes/BookRoom/book.route')
 const mongoose=require('mongoose')
 const app=express();
+//always put first
+app.use(bodyParser.json());
 
 //router
 app.use('/',HomeRouter)
@@ -17,7 +19,7 @@ app.use('/detail',DetailRouter)
 app.use('/list',ListRouter)
 app.use('/signUp',SignUprouter)
 app.use('/book',Bookrouter)
-
+//mongo connect
 mongoose.connect(`mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`)
 .then(()=>{
     console.log('Connect successfully')
