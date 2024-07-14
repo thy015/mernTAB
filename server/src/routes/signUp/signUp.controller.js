@@ -4,20 +4,19 @@ const signUpOwner=async(req,res)=>{
     try{
         console.log(req.body)
         const{name,passWord,email,birthDate,phoneNum}=req.body
+
         if(!name || !passWord || !email || !birthDate ||!phoneNum){
-            return res.status(200).json({
-                message:'Input is required'
-            })
+            return res.status(400).json({message:'Input is required'})
         }
-        const res= await signUpService.signUpOwner()
-        return res.status(200).json({
-            message:'Success'
-        })
+        else if(!validateEmail(email)){ 
+            //email 
+            return res.status(400).json({ message:'Invalid email'})
+        }
+        const result= await signUpService.signUpOwner(req.body)
+        return res.status(201).json(result)
         }
      catch(e){
-        return res.status(404).json({
-            message:e
-        })
+        return res.status(500).json({message:e})
     }
 
     // newAccount.save()
@@ -27,6 +26,10 @@ const signUpOwner=async(req,res)=>{
     //     res.status(400).json('Error'+e)
     // })
 }
+function validateEmail(email) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+  }
 module.exports={
     signUpOwner
 }
