@@ -118,8 +118,21 @@ function createHotel(newHotel,ownerID){
         }
     })
 }
+
+function createRoom(newRoom,hotelID){
+    return new Promise(async(resolve,rejects)=>{
+        const{numberOfBeds,typeOfRoom,money}=newRoom
+        try{
+            resolve({})
+        }catch(e){
+            rejects(e)
+        }
+    })
+}
+
 module.exports={
     signUpOwner,
     createHotel,
-    signInOwner
+    signInOwner,
+    createRoom
 }

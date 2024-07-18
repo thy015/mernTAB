@@ -18,10 +18,11 @@ const roomSchema=new mongoose.Schema({
     typeOfRoom:{type: String, required: true},
     money:{ type: Number, required: true },
     isAvailable:{type:Boolean,required:true, default:true},
-    revenue:{type:Number,required:true},
+    revenue:{type:Number,required:false,default:0},
     hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',require:true},
     customerID: { type: mongoose.Schema.ObjectId, ref: 'Customer', required: false }
 })
+
 const Hotel=mongoose.model('Hotel',hotelSchema)
 const Room=mongoose.model('Room',roomSchema)
 module.exports={
