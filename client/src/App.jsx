@@ -1,13 +1,10 @@
-
-import './App.css';
-
+import "./App.css";
+import Homepage from "./pukachu/Homepage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Something</h1>
-      </header>
+    <div>
+      <Homepage />
     </div>
   );
 }
