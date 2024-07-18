@@ -1,3 +1,4 @@
+//hotel,room
 const mongoose =require('mongoose')
 const hotelSchema =new mongoose.Schema(
     {
@@ -12,5 +13,18 @@ const hotelSchema =new mongoose.Schema(
         ownerID:{type:mongoose.Schema.ObjectId,ref:'Account',require:true}
     }
 )
+const roomSchema=new mongoose.Schema({
+    numberOfBeds:{ type: Number, required: true },
+    typeOfRoom:{type: String, required: true},
+    money:{ type: Number, required: true },
+    isAvailable:{type:Boolean,required:true, default:true},
+    revenue:{type:Number,required:true},
+    hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',require:true},
+    customerID: { type: mongoose.Schema.ObjectId, ref: 'Customer', required: false }
+})
 const Hotel=mongoose.model('Hotel',hotelSchema)
-module.exports=Hotel
+const Room=mongoose.model('Room',roomSchema)
+module.exports={
+    Hotel,
+    Room
+}

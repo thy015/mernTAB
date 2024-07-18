@@ -1,4 +1,4 @@
-
+//signUp,signIn
 const signUpService=require('../../services/services')
 const signUpOwner=async(req,res)=>{
     try{
@@ -11,6 +11,14 @@ const signUpOwner=async(req,res)=>{
         else if(!validateEmail(email)){ 
             //email 
             return res.status(400).json({ message:'Invalid email'})
+        }else{
+            const currentDate=new Date()
+            const validDueDatePCCC= currentDate.getFullYear()-new Date(dueDatePCCC).getFullYear
+            const validDueDateKD= currentDate.getFullYear()-new Date(dueDateKD).getFullYear
+
+            if(validDueDateKD<=1 || validDueDatePCCC<=1){
+                return res.status(400).json({ message:'Invalid due date'})
+            }
         }
         const result= await signUpService.signUpOwner(req.body)
         return res.status(201).json(result)

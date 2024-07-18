@@ -5,7 +5,7 @@ const bodyParser=require('body-parser')
 dotenv.config()
 const HomeRouter = require('./routes/home/home.route');
 const DetailRouter = require('./routes/HotelDetail/detail.route');
-const ListRouter = require('./routes/HotelList/hotelList.route')
+const HotelListRouter = require('./routes/HotelList/hotelList.route')
 const SignUprouter = require('./routes/signUp/signUp.route');
 const Bookrouter=require('./routes/BookRoom/book.route')
 const mongoose=require('mongoose')
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 //router
 app.use('/',HomeRouter)
 app.use('/detail',DetailRouter)
-app.use('/list',ListRouter)
+app.use('/hotelList',HotelListRouter)
 app.use('/signUp',SignUprouter)
 app.use('/book',Bookrouter)
 //mongo connect

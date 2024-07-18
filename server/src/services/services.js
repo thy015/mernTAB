@@ -3,6 +3,7 @@ const Account=require('../models/signUp.model');
 const Hotel=require('../models/hotel.model');
 const { resolve } = require('path');
 const { rejects } = require('assert');
+const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
 
 function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -39,6 +40,7 @@ function signUpOwner(newOwner){
         }
     })
 }
+
 function signInOwner(existedOwner){
     return new Promise(async(resolve,rejects)=>{
         const {email,passWord}=existedOwner
@@ -58,22 +60,58 @@ function signInOwner(existedOwner){
                     message:'Wrong password'
                 })
             }
+            const access_token=await generalAccessTokens({
+                id:foundOwner._id,
+                isUse:foundOwner.isUse
+            })
+            const refresh_token=await refreshAccessTokens({
+                id:foundOwner._id,
+                isUse:foundOwner.isUse
+            })
+
             resolve({
                 status:'OK',
                 message:'Success log in',
-                data:foundOwner
+                access_token: access_token,
+                refresh_token: refresh_token
             })
         }catch(e){
             rejects(e)
         }
     })
 }
+//phải nhập id chủ nhà
 function createHotel(newHotel){
     return new Promise(async(resolve,rejects)=>{
-        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale}=newHotel
+        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,ownerID}=newHotel
         try{
-
-            resolve({})
+            const checkExistedOwnerID=await Account.findOne({
+                _id:ownerID
+            })
+            if(checkExistedOwnerID==null || !checkExistedOwnerID){
+                rejects({
+                    status:'BAD',
+                    message:'Misspell ID or ID doesnt exist'
+                })
+            }
+            const createdHotel = await Hotel.Hotel.create({
+                address,
+                numberOfRooms,
+                taxCode,
+                companyName,
+                nation,
+                facilityName,
+                businessType,
+                scale,
+                ownerID
+            });
+            if(createdHotel){
+                resolve({
+                status: 'OK',
+                message: 'Hotel created successfully',
+                data: createdHotel
+            });
+            }
         } catch(e){
             rejects(e)
         }
