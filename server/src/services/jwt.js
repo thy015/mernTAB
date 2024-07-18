@@ -36,8 +36,9 @@ const authenToken = (req, res, next) => {
     });
 }
 
+
 module.exports={
     generalAccessTokens,
     refreshAccessTokens,
-    authenToken
+    authenToken,
 }

@@ -133,7 +133,7 @@ function signInCustomer(existedCustomer){
     })
 }
 
-//phải nhập id chủ nhà
+//Không cần nhập id chủ nhà(nhập token)
 function createHotel(newHotel,ownerID){
     return new Promise(async(resolve,rejects)=>{
         const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale}=newHotel
@@ -172,16 +172,38 @@ function createHotel(newHotel,ownerID){
     })
 }
 
-function createRoom(newRoom,hotelID){
-    return new Promise(async(resolve,rejects)=>{
-        const{numberOfBeds,typeOfRoom,money}=newRoom
-        try{
-            resolve({})
-        }catch(e){
-            rejects(e)
+const createRoom = async (newRoom, hotelID) => {
+    return new Promise(async (resolve, reject) => {
+        const { numberOfBeds, typeOfRoom, money } = newRoom;
+        try {
+            const createdRoom = await Hotel.Room.create({
+                numberOfBeds,
+                typeOfRoom,
+                money,
+                hotelID
+            });
+            if (createdRoom) {
+                resolve({
+                    status: 'OK',
+                    message: 'Room created successfully',
+                    data: createdRoom
+                });
+            }
+        } catch (e) {
+            console.error("Error in createRoom service:", e);
+            reject(e);
         }
-    })
+    });
 }
+
+const getHotelsByOwner = async (ownerID) => {
+    try {
+        return await Hotel.Hotel.find({ ownerID });
+    } catch (e) {
+        console.error("Error in getHotelsByOwner service:", e);
+        throw e;
+    }
+};
 
 module.exports={
     signUpOwner,
@@ -189,5 +211,6 @@ module.exports={
     signInOwner,
     signUpCustomer,
     signInCustomer,
-    createRoom
+    createRoom,
+    getHotelsByOwner
 }

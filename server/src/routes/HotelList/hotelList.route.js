@@ -11,6 +11,16 @@ ListRouter.get('/',async(req,res)=>{
         res.status(500).json(e)
     }
 })
-
 ListRouter.post('/',authenToken,hotelListController.createHotel)
+
+//room
+ListRouter.get('/room',async(req,res)=>{
+    try{
+        const createdRoom=await Hotel.Room.find()
+        res.status(200).json(createdRoom)
+    }catch(e){
+        res.status(500).json(e)
+    }
+})
+ListRouter.post('/room',authenToken,hotelListController.createRoom)
 module.exports=ListRouter
