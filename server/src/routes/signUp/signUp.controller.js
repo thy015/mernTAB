@@ -1,11 +1,11 @@
-const Account=require('../../models/signUp.model')
-const signUpService=require('../../services/signUp.service')
+
+const signUpService=require('../../services/services')
 const signUpOwner=async(req,res)=>{
     try{
         console.log(req.body)
-        const{name,passWord,email,birthDate,phoneNum}=req.body
+        const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=req.body
 
-        if(!name || !passWord || !email || !birthDate ||!phoneNum){
+        if(!name || !passWord || !email || !birthDate ||!phoneNum ||!address||!dueDatePCCC||!dueDateKD){
             return res.status(400).json({message:'Input is required'})
         }
         else if(!validateEmail(email)){ 
@@ -19,17 +19,26 @@ const signUpOwner=async(req,res)=>{
         return res.status(500).json({message:e})
     }
 
-    // newAccount.save()
-    // .then(m=>{
-    //     res.status(201).json('Account create'+m)
-    // }).catch((e)=>{
-    //     res.status(400).json('Error'+e)
-    // })
 }
+const signInOwner=async(req,res)=>{
+    console.log(req.body)
+    const {email, passWord}=req.body
+
+    if (!email || !passWord) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    } else if (!validateEmail(email)) {
+        return res.status(400).json({ message: 'Invalid email' });
+    }
+
+    const result = await signUpService.signInOwner(req.body);
+    return res.status(200).json(result);
+}
+
 function validateEmail(email) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   }
 module.exports={
-    signUpOwner
+    signUpOwner,
+    signInOwner
 }

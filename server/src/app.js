@@ -5,7 +5,7 @@ const bodyParser=require('body-parser')
 dotenv.config()
 const HomeRouter = require('./routes/home/home.route');
 const DetailRouter = require('./routes/HotelDetail/detail.route');
-const ListRouter = require('./routes/HotelList/list.route');
+const ListRouter = require('./routes/HotelList/hotelList.route')
 const SignUprouter = require('./routes/signUp/signUp.route');
 const Bookrouter=require('./routes/BookRoom/book.route')
 const mongoose=require('mongoose')
