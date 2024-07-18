@@ -19,7 +19,25 @@ const refreshAccessTokens=async(payload)=>{
     return refresh_token
 }
 
+const authenToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.status(401).json({ message: 'missing token' });
+
+    jwt.verify(token, process.env.ACCESS_TOKEN, (error, owner) => {
+        if (error) {
+            console.error("Token verification failed:", error);
+            return res.sendStatus(403);
+        }
+        console.log("Token owner:", owner);
+        req.ownerID = owner.payload.id; 
+        next();
+    });
+}
+
 module.exports={
     generalAccessTokens,
-    refreshAccessTokens
+    refreshAccessTokens,
+    authenToken
 }

@@ -1,8 +1,7 @@
 
 const Account=require('../models/signUp.model');
 const Hotel=require('../models/hotel.model');
-const { resolve } = require('path');
-const { rejects } = require('assert');
+
 const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
 
 function signUpOwner(newOwner){
@@ -73,7 +72,8 @@ function signInOwner(existedOwner){
                 status:'OK',
                 message:'Success log in',
                 access_token: access_token,
-                refresh_token: refresh_token
+                refresh_token: refresh_token,
+                ownerID: foundOwner._id
             })
         }catch(e){
             rejects(e)
@@ -81,17 +81,18 @@ function signInOwner(existedOwner){
     })
 }
 //phải nhập id chủ nhà
-function createHotel(newHotel){
+function createHotel(newHotel,ownerID){
     return new Promise(async(resolve,rejects)=>{
-        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,ownerID}=newHotel
+        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale}=newHotel
         try{
+            console.log(ownerID)
             const checkExistedOwnerID=await Account.findOne({
                 _id:ownerID
             })
-            if(checkExistedOwnerID==null || !checkExistedOwnerID){
-                rejects({
+            if(!checkExistedOwnerID){
+                return rejects({
                     status:'BAD',
-                    message:'Misspell ID or ID doesnt exist'
+                    message:'Owner ID does not exist'
                 })
             }
             const createdHotel = await Hotel.Hotel.create({
