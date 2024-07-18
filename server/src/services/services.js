@@ -1,5 +1,6 @@
 
 const Account=require('../models/signUp.model');
+const Customer=require('../models/customer.model');
 const Hotel=require('../models/hotel.model');
 
 const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
@@ -80,6 +81,58 @@ function signInOwner(existedOwner){
         }
     })
 }
+function signUpCustomer(newCustomer){
+    return new Promise(async(resolve,rejects)=>{
+        const{nameCus,phoneNum}=newCustomer
+        try{
+            const checkCustomerExisted=await Customer.findOne({
+                phoneNum:phoneNum
+            })
+            if(checkCustomerExisted!==null){
+                resolve({
+                    status:'BAD',
+                    message:'Đã tồn tại khách hàng'
+                })
+            }
+            const createCustomer= await Customer.create({
+                nameCus,
+                phoneNum
+            })
+            if(createCustomer){
+                resolve({
+                    status:'OK',
+                    message:'Succ',
+                    data:createdCustomer
+                })
+            }
+        }catch(e){
+            rejects(e)
+        }
+    })
+}
+function signInCustomer(existedCustomer){
+    return new Promise(async(resolve,rejects)=>{
+        const {nameCus,phoneNum}=existedCustomer
+        try{
+            const foundCustomer=await Customer.findOne({
+                phoneNum:phoneNum
+            })
+            if(foundCustomer==null){
+                resolve({
+                    status:'BAD',
+                    message: 'You havent registed'
+                })
+            }
+            resolve({
+                status:'OK',
+                message:'Success log in',
+            })
+        }catch(e){
+            rejects(e)
+        }
+    })
+}
+
 //phải nhập id chủ nhà
 function createHotel(newHotel,ownerID){
     return new Promise(async(resolve,rejects)=>{
@@ -134,5 +187,7 @@ module.exports={
     signUpOwner,
     createHotel,
     signInOwner,
+    signUpCustomer,
+    signInCustomer,
     createRoom
 }
