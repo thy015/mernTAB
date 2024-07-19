@@ -1,12 +1,12 @@
 
 import './App.css';
-
+import HotelList from './component/HotelList';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Something</h1>
+        <HotelList/>
       </header>
     </div>
   );
