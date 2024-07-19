@@ -14,6 +14,9 @@ const app=express();
 //always put first
 app.use(bodyParser.json());
 
+app.use(cors({
+    origin:'http://localhost:3000'
+}))
 //router
 app.use('/',HomeRouter)
 app.use('/detail',DetailRouter)

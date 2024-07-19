@@ -12,7 +12,7 @@ ListRouter.get('/',async(req,res)=>{
     }
 })
 ListRouter.post('/',authenToken,hotelListController.createHotel)
-
+ListRouter.get('/owner',authenToken,hotelListController.getHotelsByOwner)
 //room
 ListRouter.get('/room',async(req,res)=>{
     try{

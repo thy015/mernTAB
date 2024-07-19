@@ -3,8 +3,8 @@ const service=require('../../services/services')
 const createHotel=async(req,res)=>{
     try{
         console.log("Request ownerID in controller:", req.ownerID);
-        const {address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,ownerID}=req.body
-        if(!address || !numberOfRooms || !taxCode || !companyName ||!nation ||!facilityName||!businessType||!scale){
+        const {address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=req.body
+        if(!address || !numberOfRooms || !taxCode || !companyName ||!nation ||!facilityName||!businessType||!scale||!city){
             return res.status(400).json({message:'Input is required'})
         }
         const result =await service.createHotel(req.body,req.ownerID)
@@ -28,8 +28,8 @@ const getHotelsByOwner = async (req, res) => {
 
 const createRoom = async (req, res) => {
     try {
-        const { numberOfBeds, typeOfRoom, money, hotelID } = req.body;
-        if (!numberOfBeds || !typeOfRoom || !money || !hotelID) {
+        const { numberOfBeds, typeOfRoom, money, hotelID,capacity } = req.body;
+        if (!numberOfBeds || !typeOfRoom || !money || !hotelID||!capacity) {
             return res.status(400).json({ message: 'Input is required' });
         }
         const result = await service.createRoom(req.body, hotelID);

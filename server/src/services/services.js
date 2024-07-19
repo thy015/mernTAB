@@ -4,6 +4,7 @@ const Customer=require('../models/customer.model');
 const Hotel=require('../models/hotel.model');
 
 const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
+const { search } = require('../routes/BookRoom/book.route');
 
 function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -136,7 +137,7 @@ function signInCustomer(existedCustomer){
 //Không cần nhập id chủ nhà(nhập token)
 function createHotel(newHotel,ownerID){
     return new Promise(async(resolve,rejects)=>{
-        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale}=newHotel
+        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
         try{
             console.log(ownerID)
             const checkExistedOwnerID=await Account.findOne({
@@ -157,6 +158,7 @@ function createHotel(newHotel,ownerID){
                 facilityName,
                 businessType,
                 scale,
+                city,
                 ownerID
             });
             if(createdHotel){
@@ -174,12 +176,13 @@ function createHotel(newHotel,ownerID){
 
 const createRoom = async (newRoom, hotelID) => {
     return new Promise(async (resolve, reject) => {
-        const { numberOfBeds, typeOfRoom, money } = newRoom;
+        const { numberOfBeds, typeOfRoom, money,capacity } = newRoom;
         try {
             const createdRoom = await Hotel.Room.create({
                 numberOfBeds,
                 typeOfRoom,
                 money,
+                capacity,
                 hotelID
             });
             if (createdRoom) {
@@ -205,6 +208,14 @@ const getHotelsByOwner = async (ownerID) => {
     }
 };
 
+const searchHotel=async(searchCriteria)=>{
+    const {city, checkInDate, checkOutDate, numberOfPeople}=searchCriteria
+    try{
+        
+    }catch(e){
+
+    }
+}
 module.exports={
     signUpOwner,
     createHotel,
