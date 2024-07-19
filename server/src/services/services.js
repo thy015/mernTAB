@@ -2,6 +2,9 @@
 const Account=require('../models/signUp.model');
 const Customer=require('../models/customer.model');
 const Hotel=require('../models/hotel.model');
+const Room = require('../models/hotel.model').Room;
+const Receipt = require('../models/receipt.model');
+const RoomT = require('../models/roomTest.model');
 const { resolve } = require('path');
 const { rejects } = require('assert');
 const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
@@ -133,6 +136,56 @@ function signInCustomer(existedCustomer){
     })
 }
 
+function bookRoom(newReceipt, cusID, roomTID) {
+    return new Promise(async (resolve, reject) => {
+        const { total, paymentMethod } = newReceipt;
+        try {
+            const customer = await Customer.findById(cusID);
+            if (!customer) {
+                return reject({
+                    status: 'BAD',
+                    message: 'Customer not found'
+                });
+            }
+
+            const room = await RoomT.findById(roomTID);
+            if (!room) {
+                return reject({
+                    status: 'BAD',
+                    message: 'Room not found'
+                });
+            }
+
+            if (!room.isAvailable) {
+                return reject({
+                    status: 'BAD',
+                    message: 'Room is not available'
+                });
+            }
+
+            const receipt = await Receipt.create({
+                cusID,
+                roomID: roomTID,
+                total,
+                //ko truyền status
+                paymentMethod,
+                createDate: new Date()
+            });
+
+            room.isAvailable = false;
+            await room.save();
+
+            resolve({
+                status: 'OK',
+                message: 'Room booked successfully',
+                data: receipt
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
 //phải nhập id chủ nhà
 function createHotel(newHotel){
     return new Promise(async(resolve,rejects)=>{
@@ -170,10 +223,33 @@ function createHotel(newHotel){
         }
     })
 }
+///Phòng giả
+function createRoomT(newRoomT){
+    return new Promise(async(resolve,rejects)=>{
+        const{numberOfBeds,typeOfRoom,money,revenue}=newRoomT
+        try{
+            
+            const createdRoomT = await RoomT.create({
+                numberOfBeds,typeOfRoom,money,revenue
+            });
+            if(createdHotel){
+                resolve({
+                status: 'OK',
+                message: 'Room created successfully',
+                data: createdRoomT
+            });
+            }
+        } catch(e){
+            rejects(e)
+        }
+    })
+}
 module.exports={
     signUpOwner,
     createHotel,
     signInOwner,
     signUpCustomer,
-    signInCustomer
+    signInCustomer,
+    bookRoom,
+    createRoomT
 }
