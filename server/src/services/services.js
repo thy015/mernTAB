@@ -2,12 +2,15 @@
 const Account=require('../models/signUp.model');
 const Customer=require('../models/customer.model');
 const Hotel=require('../models/hotel.model');
+
 const Room = require('../models/hotel.model').Room;
 const Receipt = require('../models/receipt.model');
 const RoomT = require('../models/roomTest.model');
 const { resolve } = require('path');
 const { rejects } = require('assert');
+
 const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
+const { search } = require('../routes/BookRoom/book.route');
 
 function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -77,7 +80,8 @@ function signInOwner(existedOwner){
                 status:'OK',
                 message:'Success log in',
                 access_token: access_token,
-                refresh_token: refresh_token
+                refresh_token: refresh_token,
+                ownerID: foundOwner._id
             })
         }catch(e){
             rejects(e)
@@ -136,6 +140,7 @@ function signInCustomer(existedCustomer){
     })
 }
 
+
 function bookRoom(newReceipt, cusID, roomTID) {
     return new Promise(async (resolve, reject) => {
         const { total, paymentMethod } = newReceipt;
@@ -187,17 +192,18 @@ function bookRoom(newReceipt, cusID, roomTID) {
 }
 
 //phải nhập id chủ nhà
-function createHotel(newHotel){
+function createHotel(newHotel,ownerID){
     return new Promise(async(resolve,rejects)=>{
-        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,ownerID}=newHotel
+        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
         try{
+            console.log(ownerID)
             const checkExistedOwnerID=await Account.findOne({
                 _id:ownerID
             })
-            if(checkExistedOwnerID==null || !checkExistedOwnerID){
-                rejects({
+            if(!checkExistedOwnerID){
+                return rejects({
                     status:'BAD',
-                    message:'Misspell ID or ID doesnt exist'
+                    message:'Owner ID does not exist'
                 })
             }
             const createdHotel = await Hotel.Hotel.create({
@@ -209,6 +215,7 @@ function createHotel(newHotel){
                 facilityName,
                 businessType,
                 scale,
+                city,
                 ownerID
             });
             if(createdHotel){
@@ -223,6 +230,49 @@ function createHotel(newHotel){
         }
     })
 }
+
+const createRoom = async (newRoom, hotelID) => {
+    return new Promise(async (resolve, reject) => {
+        const { numberOfBeds, typeOfRoom, money,capacity } = newRoom;
+        try {
+            const createdRoom = await Hotel.Room.create({
+                numberOfBeds,
+                typeOfRoom,
+                money,
+                capacity,
+                hotelID
+            });
+            if (createdRoom) {
+                resolve({
+                    status: 'OK',
+                    message: 'Room created successfully',
+                    data: createdRoom
+                });
+            }
+        } catch (e) {
+            console.error("Error in createRoom service:", e);
+            reject(e);
+        }
+    });
+}
+
+const getHotelsByOwner = async (ownerID) => {
+    try {
+        return await Hotel.Hotel.find({ ownerID });
+    } catch (e) {
+        console.error("Error in getHotelsByOwner service:", e);
+        throw e;
+    }
+};
+
+const searchHotel=async(searchCriteria)=>{
+    const {city, checkInDate, checkOutDate, numberOfPeople}=searchCriteria
+    try{
+        
+    }catch(e){
+
+    }
+
 ///Phòng giả
 function createRoomT(newRoomT){
     return new Promise(async(resolve,rejects)=>{
@@ -243,6 +293,7 @@ function createRoomT(newRoomT){
             rejects(e)
         }
     })
+
 }
 module.exports={
     signUpOwner,
@@ -250,6 +301,8 @@ module.exports={
     signInOwner,
     signUpCustomer,
     signInCustomer,
+    createRoom,
+    getHotelsByOwner
     bookRoom,
     createRoomT
 }
