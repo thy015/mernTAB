@@ -1,10 +1,13 @@
-import "./App.css";
 
+import './App.css';
+import HotelList from './component/HotelList';
 
 function App() {
   return (
-    <div>
-      <h1>Something</h1>
+    <div className="App">
+      <header className="App-header">
+        <HotelList/>
+      </header>
     </div>
   );
 }
