@@ -140,8 +140,8 @@ function signInCustomer(existedCustomer){
     })
 }
 
-
-function bookRoom(newReceipt, cusID, roomTID) {
+//chưa xử lý, room ảo
+function bookRoomT(newReceipt, cusID, roomTID) {
     return new Promise(async (resolve, reject) => {
         const { total, paymentMethod } = newReceipt;
         try {
@@ -190,7 +190,15 @@ function bookRoom(newReceipt, cusID, roomTID) {
         }
     });
 }
-
+function bookRoom(){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            resolve({})
+        }catch(e){
+            reject(e)
+        }
+    })
+}
 //phải nhập id chủ nhà
 function createHotel(newHotel,ownerID){
     return new Promise(async(resolve,rejects)=>{
@@ -230,7 +238,7 @@ function createHotel(newHotel,ownerID){
         }
     })
 }
-
+//truyền HotelID và token chủ nhà
 const createRoom = async (newRoom, hotelID) => {
     return new Promise(async (resolve, reject) => {
         const { numberOfBeds, typeOfRoom, money,capacity } = newRoom;
@@ -255,7 +263,7 @@ const createRoom = async (newRoom, hotelID) => {
         }
     });
 }
-
+//chỉ cần truyền token
 const getHotelsByOwner = async (ownerID) => {
     try {
         return await Hotel.Hotel.find({ ownerID });
@@ -268,11 +276,36 @@ const getHotelsByOwner = async (ownerID) => {
 const searchHotel=async(searchCriteria)=>{
     const {city, checkInDate, checkOutDate, numberOfPeople}=searchCriteria
     try{
-        
-    }catch(e){
+        const hotelCity=await Hotel.Hotel.find({city})
 
+        const availableHotels= await Promise.all(
+            hotelCity.map(async(h)=>{
+                const hotelRooms = await Hotel.Room.find({
+                    hotelID:h._id,
+                    capacity:{ $gte: numberOfPeople } //>= số ng dc nhập
+                })
+                if (hotelRooms.length > 0) {
+                    return {
+                        ...h._doc,
+                        rooms: hotelRooms
+                    };
+                } else return null;
+            }))
+        const filteredHotels=availableHotels.filter(hotel=>hotel!==null)
+
+        return {
+            status: 'OK',
+            message: 'Find Hotel successfully',
+            data: filteredHotels
+        };
+    }
+    catch(e){
+        console.error("There's no Hotel in your search place:", e);
     }
 }
+
+
+
 ///Phòng giả
 function createRoomT(newRoomT){
     return new Promise(async(resolve,rejects)=>{
@@ -303,6 +336,8 @@ module.exports={
     signInCustomer,
     createRoom,
     getHotelsByOwner,
+    bookRoomT,
+    createRoomT,
     bookRoom,
-    createRoomT
+    searchHotel
 }
