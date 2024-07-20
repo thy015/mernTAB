@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../src/Component 33.png";
+import logo from "../component/logo.png";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
