@@ -1,6 +1,6 @@
 const BookRoomService = require('../../services/services');
 
-const bookRoom = async (req, res) => {
+const bookRoomT = async (req, res) => {
     try {
         const { cusID, roomID, total, paymentMethod } = req.body;
 
@@ -8,7 +8,7 @@ const bookRoom = async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        const result = await BookRoomService.bookRoom(req.body, cusID, roomID);
+        const result = await BookRoomService.bookRoomT(req.body, cusID, roomID);
         return res.status(201).json(result);
     } catch (e) {
         return res.status(500).json({ message: e.message });
@@ -29,4 +29,12 @@ const createRoomT = async (req, res) => {
     }
 };
 
-module.exports = { bookRoom, createRoomT };
+
+const bookRoom=async(req,res)=>{
+    try{
+        const { cusID, roomID, total, paymentMethod } = req.body
+    }catch(e){
+
+    }
+}
+module.exports = { bookRoomT, createRoomT };

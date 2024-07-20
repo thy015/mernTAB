@@ -1,5 +1,5 @@
 const express = require('express');
-const bookController = require('./bookRoom.controller');
+const bookController=require('./bookRoom.controller')
 const bookRouter = express.Router();
 
 bookRouter.get('/', async (req, res) => {
@@ -10,6 +10,6 @@ bookRouter.get('/', async (req, res) => {
         res.status(500).json(e);
     }
 });
-bookRouter.post('/', bookController.bookRoom);
+bookRouter.post('/', bookController.bookRoomT);
 
 module.exports = bookRouter;
