@@ -1,22 +1,20 @@
 
 const Account=require('../models/signUp.model');
-const Customer=require('../models/customer.model');
 const Hotel=require('../models/hotel.model');
 
-const Room = require('../models/hotel.model').Room;
-const Receipt = require('../models/receipt.model');
 const RoomT = require('../models/roomTest.model');
 const { resolve } = require('path');
 const { rejects } = require('assert');
-
-const { generalAccessTokens, refreshAccessTokens } = require('./jwt');
+const axios =require('axios')
+const { generalAccessTokens, refreshAccessTokens, paymentToken } = require('./jwt');
 const { search } = require('../routes/BookRoom/book.route');
+const { Invoice } = require('../models/invoice.model');
 
 function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
         const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=newOwner
         try{
-            const checkAccountExisted=await Account.findOne({
+            const checkAccountExisted=await Account.Account.findOne({
                 email:email
             })
             if(checkAccountExisted!==null){
@@ -25,7 +23,7 @@ function signUpOwner(newOwner){
                     message:'Đã tồn tại email'
                 })
             }
-            const createdOwner=await Account.create({
+            const createdOwner=await Account.Account.create({
                 name,
                 passWord,
                 email,
@@ -52,7 +50,7 @@ function signInOwner(existedOwner){
     return new Promise(async(resolve,rejects)=>{
         const {email,passWord}=existedOwner
         try{
-            const foundOwner= await Account.findOne({
+            const foundOwner= await Account.Account.findOne({
                 email:email
             })
             if(foundOwner==null){
@@ -90,26 +88,29 @@ function signInOwner(existedOwner){
 }
 function signUpCustomer(newCustomer){
     return new Promise(async(resolve,rejects)=>{
-        const{nameCus,phoneNum}=newCustomer
+        const{name,passWord,email,birthDate,phoneNum}=newCustomer
         try{
-            const checkCustomerExisted=await Customer.findOne({
-                phoneNum:phoneNum
+            const checkCustomerExisted=await Account.Customer.findOne({
+                email:email
             })
             if(checkCustomerExisted!==null){
-                resolve({
+                return rejects({
                     status:'BAD',
-                    message:'Đã tồn tại khách hàng'
+                    message:'Existed cus'
                 })
             }
-            const createCustomer= await Customer.create({
-                nameCus,
+            const createCustomer= await Account.Customer.create({
+                name,
+                passWord,
+                email,
+                birthDate,
                 phoneNum
             })
             if(createCustomer){
                 resolve({
                     status:'OK',
-                    message:'Succ',
-                    data:createdCustomer
+                    message:'Succesfully created customer',
+                    data:createCustomer
                 })
             }
         }catch(e){
@@ -117,84 +118,101 @@ function signUpCustomer(newCustomer){
         }
     })
 }
+//đẩy qua bên khác
 function signInCustomer(existedCustomer){
-    return new Promise(async(resolve,rejects)=>{
-        const {nameCus,phoneNum}=existedCustomer
+    return new Promise(async(resolve,rejects)=>{    
+        const {email,passWord}=existedCustomer 
         try{
-            const foundCustomer=await Customer.findOne({
-                phoneNum:phoneNum
+            const response=await axios.post('/appdangnhap',{
+                email:email,
+                password:passWord
             })
-            if(foundCustomer==null){
+            if(response.status===200){
+                const access_token=await generalAccessTokens({
+                    id:response.data.id
+                })
+                resolve({
+                    status:'OK',
+                    message:'Successfully signed in as cus',
+                    access_token:access_token
+                })
+            }else{
                 resolve({
                     status:'BAD',
-                    message: 'You havent registed'
+                    message:'Third-party service auth failed'
                 })
             }
-            resolve({
-                status:'OK',
-                message:'Success log in',
-            })
         }catch(e){
+            console.log(e)
             rejects(e)
         }
     })
 }
 
-//chưa xử lý, room ảo
-function bookRoomT(newReceipt, cusID, roomTID) {
-    return new Promise(async (resolve, reject) => {
-        const { total, paymentMethod } = newReceipt;
-        try {
-            const customer = await Customer.findById(cusID);
-            if (!customer) {
-                return reject({
-                    status: 'BAD',
-                    message: 'Customer not found'
-                });
-            }
-
-            const room = await RoomT.findById(roomTID);
-            if (!room) {
+//truyền qua token của cus tạo từ signInCus, roomID nhập tay
+//chưa đủ các điều kiện, chưa có controller+route
+async function bookRoom(newInvoice, cusID,roomID){
+    return new Promise(async(resolve,reject)=>{
+        const {paymentMethod}=newInvoice
+        try{
+            //ko có phòng, đă dc book
+            const foundRoom=await Hotel.Room.findById(roomID)
+            if (!foundRoom) {
                 return reject({
                     status: 'BAD',
                     message: 'Room not found'
                 });
             }
 
-            if (!room.isAvailable) {
+            if (!foundRoom.isAvailable) {
                 return reject({
                     status: 'BAD',
-                    message: 'Room is not available'
+                    message: 'Room is booked'
                 });
             }
-
-            const receipt = await Receipt.create({
+            const roomPrice =foundRoom.money
+            const total =roomPrice +(roomPrice*0.08) //vat
+            //tạo biên lai
+            const invoice = await Invoice.create({
                 cusID,
-                roomID: roomTID,
+                roomID,
                 total,
-                //ko truyền status
-                paymentMethod,
-                createDate: new Date()
+                paymentMethod
             });
 
-            room.isAvailable = false;
-            await room.save();
+            const payment_token=await paymentToken({
+                invoiceID:invoice._id,
+                cusID,
+                total
+            })
 
-            resolve({
-                status: 'OK',
-                message: 'Room booked successfully',
-                data: receipt
-            });
-        } catch (e) {
-            reject(e);
-        }
-    });
-}
-function bookRoom(){
-    return new Promise(async(resolve,reject)=>{
-        try{
-            resolve({})
+            //đẩy thanh toán qua bên t3
+            const paymentResponse=await axios.post('/appthanhtoan',{
+                token:payment_token,
+                total,
+                cusID
+            })
+            if(paymentResponse.status===200){
+                invoice.isPaid=true
+                await invoice.save()
+            //đổi trạng thái phòng thủ công(chưa theo ngày)
+                foundRoom.isAvailable=false
+                await foundRoom.save()
+                resolve({
+                    status: 'OK',
+                    message: 'Room booked successfully',
+                    data: invoice
+                });
+            }
+            else {
+                reject({
+                    status: 'BAD',
+                    message: 'Payment failed',
+                })
+            }
+            
         }catch(e){
+            console.log('e in promise'+e)
             reject(e)
         }
     })
@@ -205,7 +223,7 @@ function createHotel(newHotel,ownerID){
         const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
         try{
             console.log(ownerID)
-            const checkExistedOwnerID=await Account.findOne({
+            const checkExistedOwnerID=await Account.Account.findOne({
                 _id:ownerID
             })
             if(!checkExistedOwnerID){
@@ -305,29 +323,6 @@ const searchHotel=async(searchCriteria)=>{
 }
 
 
-
-///Phòng giả
-function createRoomT(newRoomT){
-    return new Promise(async(resolve,rejects)=>{
-        const{numberOfBeds,typeOfRoom,money,revenue}=newRoomT
-        try{
-            
-            const createdRoomT = await RoomT.create({
-                numberOfBeds,typeOfRoom,money,revenue
-            });
-            if(createdHotel){
-                resolve({
-                status: 'OK',
-                message: 'Room created successfully',
-                data: createdRoomT
-            });
-            }
-        } catch(e){
-            rejects(e)
-        }
-    })
-
-}
 module.exports={
     signUpOwner,
     createHotel,
@@ -336,8 +331,6 @@ module.exports={
     signInCustomer,
     createRoom,
     getHotelsByOwner,
-    bookRoomT,
-    createRoomT,
     bookRoom,
     searchHotel
 }
