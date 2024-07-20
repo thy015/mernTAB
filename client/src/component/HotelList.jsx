@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../src/Component 33.png";
+import logo from "../image/Component 33.png";
 
 export default function HotelList() {
   const [value, setValue] = useState(1750000);
@@ -38,10 +38,10 @@ export default function HotelList() {
         </div>
       </nav>
 
-      <body class="bg-blue-100	mx-auto">
+      <body class="bg-blue-100	">
         {/* Search bar */}
         <div class="bg-sky-700 p-4 shadow-md">
-          <div class="container mx-auto flex justify-between items-center">
+          <div class="container mx-auto flex  justify-between items-center">
             <label class="relative block w-1/5">
               <span class="sr-only">Search</span>
               <span class="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -78,9 +78,10 @@ export default function HotelList() {
             </button>
           </div>
         </div>
-        {/* Budget*/}
-        <div class="container mx-auto mt-4 flex">
-          <div class="w-1/4 p-4 h-1/2 bg-white shadow-md rounded-md">
+
+        <div class="container mx-auto mt-4 flex  justify-between items-center">
+          {/* Budget*/}
+          <div class="w-1/5 p-4 h-1/2 bg-white shadow-md rounded-md mr-4">
             <div className="mb-4">
               <h2 className="text-lg font-semibold">Your budget</h2>
               <input
@@ -207,13 +208,13 @@ export default function HotelList() {
                   </p>
                   <p className="mt-2">This property offers:</p>
                   <ul className="justify-between inline-block">
-                    <li className="inline-block rounded border border-sky-100 bg-sky-50 px-2 py-0.5 my-2">
+                    <li className="inline-block rounded-md border-sky-300 border	 bg-teal-100 text-sky-500 px-2 py-0.5 my-2">
                       Sales
                     </li>
-                    <li className="inline-block mx-1 rounded border border-sky-100 bg-sky-50 px-2 py-0.5 my-2">
+                    <li className="inline-block rounded-md border-sky-300 border	 bg-teal-100 text-sky-500 px-2 py-0.5 my-2 mx-1">
                       Marketing
                     </li>
-                    <li className="inline-block rounded border border-sky-100 bg-sky-50 px-2 py-0.5 my-2">
+                    <li className="inline-block rounded-md border-sky-300 border	 bg-teal-100 text-sky-500 px-2 py-0.5 my-2">
                       SEO
                     </li>
                   </ul>
@@ -242,38 +243,6 @@ export default function HotelList() {
                 </div>
               </div>
             </div>
-            <div class="mb-4 flex h-60 bg-white rounded shadow-md overflow-hidden">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1720706435477-bb1d79c2224c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"
-                alt="Hotel 1"
-                class="w-80 object-cover"
-              />
-              <div class="w-2/3 p-4 flex flex-col justify-between">
-                <div>
-                  <h2 class="text-xl font-semibold">iBis Saigon Airport</h2>
-                  <p class="text-sm text-gray-500">
-                    Tân Bình, Ho Chi Minh City
-                  </p>
-                  <p class="mt-2">This property offers:</p>
-                  <ul class="  *:rounded *:border *:border-sky-100 *:bg-sky-50 *:px-2 *:py-0.5 *:my-2 dark:text-slate-500 dark:*:border-sky-500/15 dark:*:bg-sky-500/10  inline-block justify-between">
-                    <li className="inline-block">Sales</li>
-                    <li className="inline-block mx-1">Marketing</li>
-                    <li className="inline-block ">SEO</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="w-1 h-56 my-2 bg-slate-300"></div>
-
-              <div class="flex justify-between items-center m-4 ">
-                <div>
-                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded">
-                    Excellent
-                  </span>
-                  <p class="text-sm text-gray-500 line-through">₫1,750,000</p>
-                  <p class="text-lg font-semibold text-red-500">₫1,500,000</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </body>
@@ -288,7 +257,7 @@ export default function HotelList() {
               <br /> and a positive.
             </p>
           </div>
-          <div class="flex flex-wrap w-full md:w-4/6">
+          <div class="flex flex-wrap w-4/6 md:w-4/6 justify-between">
             <div class="w-full md:w-1/6 mb-4 md:mb-0">
               <h5 class="text-xl font-semibold mb-2">About us</h5>
               <ul class="list-none">
@@ -363,8 +332,12 @@ export default function HotelList() {
               <h5 class="text-xl font-semibold mb-2">Get in touch</h5>
               <form>
                 <label class="block">
-                  <input type="email" class="peer " placeholder="Enter your " />
-                  <p class="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+                  <input
+                    type="email"
+                    class="peer border-solid border-teal-400	"
+                    placeholder="Enter your email"
+                  />
+                  <p class="mt-2 invisible peer-invalid:visible text-red-600 text-sm">
                     Please provide a valid email address.
                   </p>
                 </label>

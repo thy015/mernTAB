@@ -1,11 +1,13 @@
 import "./App.css";
-import HotelList from "./HotelList";
-import Detail from "./Detail";
+import HotelList from "./component/HotelList";
+import Detail from "./component/Detail";
+import HomePage from "./component/HomePage";
+import FAQ from "./component/FAQ";
 
 function App() {
   return (
     <div>
-      <HotelList />
+      <FAQ />
     </div>
   );
 }
