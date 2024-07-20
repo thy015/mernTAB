@@ -272,7 +272,7 @@ const searchHotel=async(searchCriteria)=>{
     }catch(e){
 
     }
-
+}
 ///Phòng giả
 function createRoomT(newRoomT){
     return new Promise(async(resolve,rejects)=>{
@@ -302,7 +302,7 @@ module.exports={
     signUpCustomer,
     signInCustomer,
     createRoom,
-    getHotelsByOwner
+    getHotelsByOwner,
     bookRoom,
     createRoomT
 }
