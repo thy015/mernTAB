@@ -305,6 +305,7 @@ const searchHotel=async(searchCriteria)=>{
 }
 
 
+
 ///Phòng giả
 function createRoomT(newRoomT){
     return new Promise(async(resolve,rejects)=>{
