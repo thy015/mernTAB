@@ -1,4 +1,3 @@
-
 import './App.css';
 import HotelList from './component/HotelList';
 
