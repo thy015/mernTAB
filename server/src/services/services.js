@@ -301,9 +301,9 @@ const searchHotel=async(searchCriteria)=>{
     }
     catch(e){
         console.error("There's no Hotel in your search place:", e);
-        reject(e);
     }
 }
+
 
 
 ///Phòng giả

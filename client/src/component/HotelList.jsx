@@ -2,12 +2,12 @@ import React,{useState,useEffect} from 'react';
 import axios from 'axios'
 
 const HotelList = () => {
-
+    //const [hotelListState, setHotel]
     useEffect(()=>{
         const getHotelList = async () =>{
             try{
                 const res =await axios.get(
-                    "http://localhost:4000/hotelList/"
+                    "http:/localhost/:4000/hotelList/"
                 )
                 console.log(res.data)  
             }catch(error){
@@ -16,6 +16,7 @@ const HotelList = () => {
         }   
         getHotelList()
     })
+    
 }
 
 export default HotelList;
