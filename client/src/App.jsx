@@ -1,13 +1,12 @@
 
 import './App.css';
-import HotelList from './component/HotelList';
+import { Payment } from './Pages/Payment';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <HotelList/>
-      </header>
+     <Payment></Payment>
     </div>
   );
 }
