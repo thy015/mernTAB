@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../pukachu/Component 33.png";
+import logo from "../src/Component 33.png";
 
 export default function HotelList() {
   const [value, setValue] = useState(1750000);
@@ -13,7 +13,7 @@ export default function HotelList() {
     setMax(e.target.value);
   };
   return (
-    <div className="">
+    <div className="mx-auto ">
       {/* Navigation */}
       <nav className="sticky top-0 z-10 flex items-center justify-between w-full h-24 px-5 bg-white shadow-md">
         <div className="flex items-center space-x-5">
@@ -37,8 +37,8 @@ export default function HotelList() {
           </h2>
         </div>
       </nav>
-      {/* Option */}
-      <body class="bg-blue-100	">
+
+      <body class="bg-blue-100	mx-auto">
         {/* Search bar */}
         <div class="bg-sky-700 p-4 shadow-md">
           <div class="container mx-auto flex justify-between items-center">
@@ -61,23 +61,15 @@ export default function HotelList() {
               />
             </label>
             <div class="flex items-center space-x-2 w-1/5">
-              <input
-                type="date"
-                value="2024-08-02"
-                class="border p-2 rounded"
-              />
-              <input
-                type="date"
-                value="2024-08-05"
-                class="border p-2 rounded"
-              />
+              <input type="date" class="border p-2 rounded" />
+              <input type="date" class="border p-2 rounded" />
             </div>
             <div class="flex items-center space-x-2 placeholder:text-slate-400 ">
               <input
                 type="number"
                 min="1"
                 max="10"
-                class="border p-2 rounded mx-2 w-20 text-center"
+                class="border p-2 rounded mx-2 w-40 text-center"
                 placeholder="2"
               />
             </div>
@@ -88,7 +80,7 @@ export default function HotelList() {
         </div>
         {/* Budget*/}
         <div class="container mx-auto mt-4 flex">
-          <div class="w-1/4 p-4 h-1/2 bg-white shadow-md">
+          <div class="w-1/4 p-4 h-1/2 bg-white shadow-md rounded-md">
             <div className="mb-4">
               <h2 className="text-lg font-semibold">Your budget</h2>
               <input
@@ -172,11 +164,89 @@ export default function HotelList() {
               </button>
             </div>
             {/*hotel*/}
+            <div className="flex mb-4 overflow-hidden bg-white rounded shadow-md h-60">
+              <div className="flex w-[370px]">
+                <img
+                  src="https://plus.unsplash.com/premium_photo-1720706435477-bb1d79c2224c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"
+                  alt="Hotel 1"
+                  className="object-cover w-full"
+                />
+                <div className="flex flex-col justify-between w-1/4 ml-2 space-y-1">
+                  <img
+                    src="https://images.unsplash.com/photo-1721404832661-658016cde3d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8"
+                    alt="Small 1"
+                    className="object-cover h-1/5"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1721404832661-658016cde3d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8"
+                    alt="Small 2"
+                    className="object-cover h-1/5"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1721404832661-658016cde3d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8"
+                    alt="Small 3"
+                    className="object-cover h-1/5"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1721404832661-658016cde3d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8"
+                    alt="Small 4"
+                    className="object-cover h-1/5"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1721404832661-658016cde3d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8"
+                    alt="Small 5"
+                    className="object-cover h-1/5"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col justify-between w-2/4 p-4">
+                <div>
+                  <h2 className="text-xl font-semibold">iBis Saigon Airport</h2>
+                  <p className="text-sm text-gray-500">
+                    Tân Bình, Ho Chi Minh City
+                  </p>
+                  <p className="mt-2">This property offers:</p>
+                  <ul className="justify-between inline-block">
+                    <li className="inline-block rounded border border-sky-100 bg-sky-50 px-2 py-0.5 my-2">
+                      Sales
+                    </li>
+                    <li className="inline-block mx-1 rounded border border-sky-100 bg-sky-50 px-2 py-0.5 my-2">
+                      Marketing
+                    </li>
+                    <li className="inline-block rounded border border-sky-100 bg-sky-50 px-2 py-0.5 my-2">
+                      SEO
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="w-1 h-56 my-2 bg-slate-300"></div>
+              <div className="flex flex-col items-end justify-between m-2 text-right">
+                <div>
+                  <span className="block text-xs text-blue-400">
+                    20,400 reviews
+                  </span>
+                  <span className="block px-2 py-1 text-green-500 bg-green-200 rounded">
+                    Excellent
+                  </span>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">
+                    Per night after taxes and fees
+                  </p>
+                  <p className="text-sm text-gray-500 line-through">
+                    ₫1,750,000
+                  </p>
+                  <p className="text-xl font-semibold text-red-500">
+                    ₫1,500,000
+                  </p>
+                </div>
+              </div>
+            </div>
             <div class="mb-4 flex h-60 bg-white rounded shadow-md overflow-hidden">
               <img
                 src="https://plus.unsplash.com/premium_photo-1720706435477-bb1d79c2224c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"
                 alt="Hotel 1"
-                class="w-1/3 object-cover"
+                class="w-80 object-cover"
               />
               <div class="w-2/3 p-4 flex flex-col justify-between">
                 <div>
@@ -185,104 +255,16 @@ export default function HotelList() {
                     Tân Bình, Ho Chi Minh City
                   </p>
                   <p class="mt-2">This property offers:</p>
-                  <ul class="  *:rounded *:border *:border-sky-100 *:bg-sky-50 *:px-2 *:py-0.5 *:my-2 dark:text-slate-500 dark:*:border-sky-500/15 dark:*:bg-sky-500/10  inline-block">
-                    <li className="inline-block mx-1">Sales</li>
+                  <ul class="  *:rounded *:border *:border-sky-100 *:bg-sky-50 *:px-2 *:py-0.5 *:my-2 dark:text-slate-500 dark:*:border-sky-500/15 dark:*:bg-sky-500/10  inline-block justify-between">
+                    <li className="inline-block">Sales</li>
                     <li className="inline-block mx-1">Marketing</li>
-                    <li className="inline-block mx-1">SEO</li>
+                    <li className="inline-block ">SEO</li>
                   </ul>
                 </div>
               </div>
-              <div class="flex justify-between items-center mt-4 ">
-                <div>
-                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded">
-                    Excellent
-                  </span>
-                  <p class="text-sm text-gray-500 line-through">₫1,750,000</p>
-                  <p class="text-lg font-semibold text-red-500">₫1,500,000</p>
-                </div>
-              </div>
-            </div>
-            <div class="mb-4 flex h-60 bg-white rounded shadow-md overflow-hidden">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1720760946714-518ebe939591?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8"
-                alt="Hotel 1"
-                class="w-1/3 object-cover"
-              />
-              <div class="w-2/3 p-4 flex flex-col justify-between">
-                <div>
-                  <h2 class="text-xl font-semibold">iBis Saigon Airport</h2>
-                  <p class="text-sm text-gray-500">
-                    Tân Bình, Ho Chi Minh City
-                  </p>
-                  <p class="mt-2">This property offers:</p>
-                  <ul class="  *:rounded *:border *:border-sky-100 *:bg-sky-50 *:px-2 *:py-0.5 *:my-2 dark:text-slate-500 dark:*:border-sky-500/15 dark:*:bg-sky-500/10  inline-block">
-                    <li className="inline-block mx-1">Sales</li>
-                    <li className="inline-block mx-1">Marketing</li>
-                    <li className="inline-block mx-1">SEO</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="flex justify-between items-center mt-4 ">
-                <div>
-                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded">
-                    Excellent
-                  </span>
-                  <p class="text-sm text-gray-500 line-through">₫1,750,000</p>
-                  <p class="text-lg font-semibold text-red-500">₫1,500,000</p>
-                </div>
-              </div>
-            </div>
-            <div class="mb-4 flex h-60 bg-white rounded shadow-md overflow-hidden">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1720706435477-bb1d79c2224c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"
-                alt="Hotel 1"
-                class="w-1/3 object-cover"
-              />
-              <div class="w-2/3 p-4 flex flex-col justify-between">
-                <div>
-                  <h2 class="text-xl font-semibold">iBis Saigon Airport</h2>
-                  <p class="text-sm text-gray-500">
-                    Tân Bình, Ho Chi Minh City
-                  </p>
-                  <p class="mt-2">This property offers:</p>
-                  <ul class="  *:rounded *:border *:border-sky-100 *:bg-sky-50 *:px-2 *:py-0.5 *:my-2 dark:text-slate-500 dark:*:border-sky-500/15 dark:*:bg-sky-500/10  inline-block">
-                    <li className="inline-block mx-1">Sales</li>
-                    <li className="inline-block mx-1">Marketing</li>
-                    <li className="inline-block mx-1">SEO</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="flex justify-between items-center mt-4 ">
-                <div>
-                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded">
-                    Excellent
-                  </span>
-                  <p class="text-sm text-gray-500 line-through">₫1,750,000</p>
-                  <p class="text-lg font-semibold text-red-500">₫1,500,000</p>
-                </div>
-              </div>
-            </div>
-            <div class="mb-4 flex h-60 bg-white rounded shadow-md overflow-hidden">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1720760946714-518ebe939591?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8"
-                alt="Hotel 1"
-                class="w-1/3 object-cover"
-              />
-              <div class="w-2/3 p-4 flex flex-col justify-between">
-                <div>
-                  <h2 class="text-xl font-semibold">iBis Saigon Airport</h2>
-                  <p class="text-sm text-gray-500">
-                    Tân Bình, Ho Chi Minh City
-                  </p>
-                  <p class="mt-2">This property offers:</p>
-                  <ul class="  *:rounded *:border *:border-sky-100 *:bg-sky-50 *:px-2 *:py-0.5 *:my-2 dark:text-slate-500 dark:*:border-sky-500/15 dark:*:bg-sky-500/10  inline-block">
-                    <li className="inline-block mx-1">Sales</li>
-                    <li className="inline-block mx-1">Marketing</li>
-                    <li className="inline-block mx-1">SEO</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="flex justify-between items-center mt-4 ">
+              <div className="w-1 h-56 my-2 bg-slate-300"></div>
+
+              <div class="flex justify-between items-center m-4 ">
                 <div>
                   <span class="bg-green-100 text-green-800 px-2 py-1 rounded">
                     Excellent
@@ -307,7 +289,7 @@ export default function HotelList() {
             </p>
           </div>
           <div class="flex flex-wrap w-full md:w-4/6">
-            <div class="w-full md:w-2/6 mb-4 md:mb-0">
+            <div class="w-full md:w-1/6 mb-4 md:mb-0">
               <h5 class="text-xl font-semibold mb-2">About us</h5>
               <ul class="list-none">
                 <li>
@@ -377,7 +359,7 @@ export default function HotelList() {
                 </li>
               </ul>
             </div>
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
+            <div class="w-full md:w-2/6 mb-4 md:mb-0">
               <h5 class="text-xl font-semibold mb-2">Get in touch</h5>
               <form>
                 <label class="block">

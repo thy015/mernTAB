@@ -1,10 +1,11 @@
 import "./App.css";
-import Homepage from "./pukachu/Homepage";
+import HotelList from "./HotelList";
+import Detail from "./Detail";
 
 function App() {
   return (
     <div>
-      <Homepage />
+      <HotelList />
     </div>
   );
 }
