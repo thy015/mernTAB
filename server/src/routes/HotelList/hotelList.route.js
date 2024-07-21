@@ -11,7 +11,11 @@ ListRouter.get('/',async(req,res)=>{
         res.status(500).json(e)
     }
 })
+//danh sách ksan có sẵn ko cần kiếm
 ListRouter.post('/',authenToken,hotelListController.createHotel)
+//danh sách ksan phải tìm mới có
+ListRouter.get('/search', hotelListController.searchHotel)
+//danh sách khách sạn của 1 chủ nhà xác định bằng lần đăng nhập
 ListRouter.get('/owner',authenToken,hotelListController.getHotelsByOwner)
 //room
 ListRouter.get('/room',async(req,res)=>{
