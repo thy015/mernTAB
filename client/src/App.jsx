@@ -1,14 +1,17 @@
-import './App.css';
-import HotelList from './component/HotelList';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Register from "./component/Register";
+import SuccessPage from "./component/SuccessPage";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <HotelList/>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Register />} />
+          <Route path="/success" element={<SuccessPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
-
-export default App;
