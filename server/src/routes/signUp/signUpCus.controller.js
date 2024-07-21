@@ -1,34 +1,47 @@
-const signUpService=require('../../services/services')
+const services=require('../../services/services')
+const { validateEmail,validateBirthDate } = require('./signUp.controller')
 const signUpCustomer=async(req,res)=>{
     try{
         console.log(req.body)
-        const{nameCus,phoneNum}=req.body
+        const{name,passWord,email,birthDate,phoneNum}=req.body
 
-        if(!nameCus||!phoneNum){
-            return res.status(400).json({message:'Input is required'})
+        if(!name||!phoneNum|| !email || !birthDate ||!passWord){
+            return res.status(403).json({message:'Input is required'})
+        }else if(!validateEmail(email)){ 
+            return res.status(400).json({ message:'Invalid email'})
         }
-        const result= await signUpService.signUpCustomer(req.body)
+        else if(!validateBirthDate(birthDate)){
+            return res.status(400).json({message:'Not enough age'})
+        }
+        
+        const result= await services.signUpCustomer(req.body)
         return res.status(201).json(result)
+
     }
     catch(e){
         return res.status(500).json({message:e})
     }
 }
 
-//hàm đăng nhập ảo
-const signInCustomer=async(req,res)=>{
-    console.log(req.body)
-    const {nameCus}=req.body
+const signInCustomer = async (req, res) => {
+    try {
+        const { email, passWord } = req.body;
 
-    if (!nameCus) {
-        return res.status(400).json({ message: 'Name are required' });
+        if (!email || !passWord) {
+            return res.status(403).json({ message: 'Input is required' });
+        }
+        const result = await services.signInCustomer(req.body);
+        if (result.status === 'OK') {
+            return res.status(200).json(result);
+        } else {
+            return res.status(400).json(result);
+        }
+    } catch (e) {
+        return res.status(500).json({ message: e });
     }
+};
 
-    const result = await signUpService.signInCustomer(req.body);
-    return res.status(200).json(result);
-}
 module.exports={
-
     signUpCustomer,
     signInCustomer
 }
