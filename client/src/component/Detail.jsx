@@ -1,9 +1,30 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
+import { useParams } from 'react-router-dom';
 import logo from "../component/logo.png";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import axios from "axios";
 
 export default function Detail() {
+  const { _id } = useParams();
+  const [hotel, setHotel] = useState(null);
+
+  useEffect(() => {
+    const hotelData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/detail/${_id}`);
+        setHotel(res.data);
+        // console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching hotel data:', error);
+      }
+    };
+    hotelData();
+  }, [_id]);
+ 
+  if (!hotel) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       {/* Navigation */}
@@ -164,7 +185,7 @@ export default function Detail() {
                 <span className="mr-2 text-lg font-medium text-gray-400">
                   from
                 </span>
-                ₫1,500,000
+                ₫1,500,000 {/* minPrice */}
               </div>
             </div>
           </div>
@@ -172,9 +193,9 @@ export default function Detail() {
           {/*Detail */}
           <div className="flex items-center justify-between bg-white shadow-md w-max-5xl rounded-xl">
             <div className="w-3/6 p-4 mx-4 ">
-              <h1 className="text-3xl font-bold">New World Saigon Hotel</h1>
+              <h1 className="text-3xl font-bold">{hotel.companyName} - {hotel.city}</h1> {/*companyName*/}
               <p className="mt-2 text-gray-600">
-                76 Le Lai Street, District 1, Ho Chi Minh City, Vietnam, 700000
+                {hotel.address}
               </p>
               <p className="mt-4 t ext-gray-600">
                 Get your trip off to a great start with a stay at this property,
