@@ -1,3 +1,4 @@
+
 import './App.css';
 import HotelList from './component/HotelList';
 import Detail from './component/Detail';
@@ -5,8 +6,7 @@ import React from 'react';
 import { Route, Router, Routes } from 'react-router-dom'
 
 
-
-function App() {
+export default function App() {
   return (
     <div className="App">
       <Routes>
@@ -15,7 +15,4 @@ function App() {
       </Routes>
     </div>
   );  
-  
 }
-
-export default App;
