@@ -1,145 +1,32 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
+import { useParams } from 'react-router-dom';
 import logo from "../component/logo.png";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-<<<<<<< HEAD
-import Hotel from "./TabDetail";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
-export default function Detail() {
-  const tabs = [
-    {
-      type: "Premier Rooms",
-      rooms: [
-        {
-          name: "Premier Room Twin",
-          imgSrc:
-            "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-          details: {
-            images: [
-              "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-              "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-              "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            ],
-            benefits: [
-              "Giá siêu thấp!",
-              "Bãi đậu xe miễn phí, wifi, nước uống",
-              "Bữa sáng",
-            ],
-            capacity: "2 Người",
-            reviews: "20,400",
-            rating: "Excellent",
-            originalPrice: "₫4,760,000",
-            discountPrice: "₫3,230,000",
-            finalPrice: "₫1,500,000",
-          },
-        },
-        {
-          name: "Premier Room King",
-          imgSrc:
-            "https://images.unsplash.com/photo-1441260038675-7329ab4cc264?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8N3w4N3x8ZW58MHx8fHx8",
-          details: {
-            images: [
-              "https://images.unsplash.com/photo-1441260038675-7329ab4cc264?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8N3w4N3x8ZW58MHx8fHx8",
-              "https://images.unsplash.com/photo-1441260038675-7329ab4cc264?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8N3w4N3x8ZW58MHx8fHx8",
-              "https://images.unsplash.com/photo-1441260038675-7329ab4cc264?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8N3w4N3x8ZW58MHx8fHx8",
-            ],
-            benefits: [
-              "Giá ưu đãi!",
-              "Bãi đậu xe miễn phí, wifi, nước uống",
-              "Bữa sáng",
-            ],
-            capacity: "2 Người",
-            reviews: "15,200",
-            rating: "Very Good",
-            originalPrice: "₫4,500,000",
-            discountPrice: "₫3,000,000",
-            finalPrice: "₫1,200,000",
-          },
-        },
-      ],
-    },
-
-    {
-      type: "Deluxe Rooms",
-      rooms: [
-        {
-          name: "Deluxe Room Standard",
-          imgSrc:
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-          details: {
-            images: [
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            ],
-            benefits: [
-              "Giá ưu đãi!",
-              "Bãi đậu xe miễn phí, wifi, nước uống",
-              "Bữa sáng",
-            ],
-            capacity: "3 Người",
-            reviews: "15,300",
-            rating: "Great",
-            originalPrice: "₫5,200,000",
-            discountPrice: "₫4,200,000",
-            finalPrice: "₫2,000,000",
-          },
-        },
-        {
-          name: "Deluxe Room Superior",
-          imgSrc:
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-          details: {
-            images: [
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            ],
-            benefits: [
-              "Giá cao cấp!",
-              "Bãi đậu xe miễn phí, wifi, nước uống",
-              "Bữa sáng",
-            ],
-            capacity: "3 Người",
-            reviews: "12,400",
-            rating: "Very Good",
-            originalPrice: "₫6,000,000",
-            discountPrice: "₫5,000,000",
-            finalPrice: "₫2,500,000",
-          },
-        },
-        {
-          name: "Deluxe Room Premium",
-          imgSrc:
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-          details: {
-            images: [
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-              "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            ],
-            benefits: [
-              "Giá cao cấp hơn!",
-              "Bãi đậu xe miễn phí, wifi, nước uống",
-              "Bữa sáng",
-            ],
-            capacity: "4 Người",
-            reviews: "9,800",
-            rating: "Outstanding",
-            originalPrice: "₫7,000,000",
-            discountPrice: "₫6,000,000",
-            finalPrice: "₫3,000,000",
-          },
-        },
-      ],
-    },
-  ];
-
-=======
+import axios from "axios";
 
 export default function Detail() {
->>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
+  const { _id } = useParams();
+  const [hotel, setHotel] = useState(null);
+
+  useEffect(() => {
+    const hotelData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/detail/${_id}`);
+        setHotel(res.data);
+        // console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching hotel data:', error);
+      }
+    };
+    hotelData();
+  }, [_id]);
+ 
+  if (!hotel) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <Navigation />
@@ -278,7 +165,7 @@ export default function Detail() {
                 <span className="mr-2 text-lg font-medium text-gray-400">
                   from
                 </span>
-                ₫1,500,000
+                ₫1,500,000 {/* minPrice */}
               </div>
             </div>
           </div>
@@ -286,9 +173,9 @@ export default function Detail() {
           {/*Detail */}
           <div className="flex items-center justify-between bg-white shadow-md w-max-5xl rounded-xl">
             <div className="w-3/6 p-4 mx-4 ">
-              <h1 className="text-3xl font-bold">New World Saigon Hotel</h1>
+              <h1 className="text-3xl font-bold">{hotel.companyName} - {hotel.city}</h1> {/*companyName*/}
               <p className="mt-2 text-gray-600">
-                76 Le Lai Street, District 1, Ho Chi Minh City, Vietnam, 700000
+                {hotel.address}
               </p>
               <p className="mt-4 t ext-gray-600">
                 Get your trip off to a great start with a stay at this property,
@@ -312,55 +199,6 @@ export default function Detail() {
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-
-          <div className="container grid grid-flow-col grid-rows-4 gap-4 my-4">
-            {/*Hightlights*/}
-            <div className="col-span-2 row-span-2  w-[800px] h-[200px] p-4 bg-white shadow-lg  rounded-xl">
-              <h1 className="mb-4 text-3xl font-bold">Highlights</h1>
-              <div className="grid grid-cols-1 gap-8 mx-auto sm:grid-cols-2 lg:grid-cols-4">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
-                    alt="Description 1"
-                    className="object-cover w-12 h-12 mb-2 rounded-lg"
-                  />
-                  <p className="text-center">Description 1</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
-                    alt="Description 1"
-                    className="object-cover w-12 h-12 mb-2 rounded-lg"
-                  />
-                  <p className="text-center">Description 1</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
-                    alt="Description 1"
-                    className="object-cover w-12 h-12 mb-2 rounded-lg"
-                  />
-                  <p className="text-center">Description 1</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
-                    alt="Description 1"
-                    className="object-cover w-12 h-12 mb-2 rounded-lg"
-                  />
-                  <p className="text-center">Description 1</p>
-                </div>
-              </div>
-            </div>
-            {/*Facilities*/}
-            <div className="col-span-2 row-span-2  w-[800px] h-[200px] p-4 bg-white shadow-lg  rounded-xl">
-              <h1 className="mb-4 text-3xl font-bold">Facilities</h1>
-              <div className="grid grid-cols-1 gap-4 mx-auto sm:grid-cols-2 lg:grid-cols-3">
-                <div className="flex flex-col items-center">
-                  <p className="text-center">Description 1</p>
-                  <p className="text-center">Description 1</p>
-=======
           {/*Hightlights*/}
           <div className="flex flex-col w-3/5 p-4 my-4 bg-white shadow-md rounded-xl">
             <h1 className="mb-4 text-3xl font-bold">Highlights</h1>
@@ -406,15 +244,6 @@ export default function Detail() {
               <div className="flex flex-col items-center">
                 <p className="text-center">Description 1</p>
                 <p className="text-center">Description 1</p>
->>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
-
-                <p className="text-center">Description 1</p>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <p className="text-center">Description 1</p>
-                <p className="text-center">Description 1</p>
-
                 <p className="text-center">Description 1</p>
               </div>
               <div className="flex flex-col items-center">
@@ -423,12 +252,13 @@ export default function Detail() {
 
                 <p className="text-center">Description 1</p>
               </div>
-<<<<<<< HEAD
-            </div>
-            <div className="row-span-4 bg-red-400 w-[450px] items-center flex justify-center shadow-lg  rounded-xl">
-              Maps
-=======
->>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
+              <div className="flex flex-col items-center">
+                <p className="text-center">Description 1</p>
+                <p className="text-center">Description 1</p>
+
+                <p className="text-center">Description 1</p>
+              </div>
+
             </div>
           </div>
           <h2 className="text-2xl font-bold">Choose your room</h2>
@@ -450,117 +280,6 @@ export default function Detail() {
           </Tabs>
         </div>
       </body>
-
-<<<<<<< HEAD
       <Footer />
-=======
-      {/*Footer */}
-      <footer class="bg-blue-50  p-4 h-60">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mt-5">
-          <div class=" items-center  w-full md:w-auto mb-4 md:mb-0">
-            <img src={logo} alt="Logo" />
-            <p class="text-lg text-gray-500 my-5">
-              We believe brand interaction is key
-              <br /> in communication. Real innovations
-              <br /> and a positive.
-            </p>
-          </div>
-          <div class="flex flex-wrap w-full md:w-4/6">
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">About us</h5>
-              <ul class="list-none">
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    FAQ’s
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    News
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">Company </h5>
-              <ul class="list-none">
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Core values
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Partner w/ us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">Support</h5>
-              <ul class="list-none">
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Support center
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Feedback
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Accessibility
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="w-full md:w-2/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">Get in touch</h5>
-              <form>
-                <label class="block">
-                  <input
-                    type="email"
-                    class="peer "
-                    placeholder="Enter your email"
-                  />
-                  <p class="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
-                    Please provide a valid email address.
-                  </p>
-                </label>
-              </form>
-              <button class="bg-sky-300 hover:bg-sky-400 hover:text-white active:bg-sky-400 px-6 py-4">
-                Get Access
-              </button>
-            </div>
-          </div>
-        </div>
-        <p className="text-sm text-center bg-blue-50 text-slate-600">
-          &copy; 2024 Take a Breath. All rights reserved.
-        </p>
-      </footer>
->>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
-    </div>
   );
 }
