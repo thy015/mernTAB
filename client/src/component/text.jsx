@@ -203,7 +203,7 @@ const tabs = [
             />
           </div>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-1">
           <h2 className="mb-2 text-xl font-bold">Lợi ích</h2>
           <p className="mb-2">Giá của bạn bao gồm:</p>
           <ul className="mb-4 list-disc list-inside">
@@ -211,6 +211,8 @@ const tabs = [
             <li>Bãi đậu xe miễn phí, wifi, nước uống</li>
             <li>Bữa sáng</li>
           </ul>
+        </div>
+        <div className="col-span-1">
           <h2 className="mb-2 text-xl font-bold">Sức chứa</h2>
           <p className="mb-2">5 Người</p>
         </div>

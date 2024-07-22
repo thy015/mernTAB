@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Step3 = ({ onPrevious, formData, setFormData }) => {
   const [rooms, setRooms] = useState(formData.rooms || []);
-  const [errors, setErrors] = useState({}); // State for form errors
+  const [errors, setErrors] = useState({});
 
   const handleGeneralChange = (e) => {
     const { name, value } = e.target;
@@ -18,12 +18,12 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
 
       if (fileArray.length < 3) {
         alert("Bạn cần chọn ít nhất 3 ảnh.");
-        e.target.value = null; // Clear the input
+        e.target.value = null;
         return;
       }
       if (fileArray.length > 5) {
         alert("Bạn chỉ được chọn tối đa 5 ảnh.");
-        e.target.value = null; // Clear the input
+        e.target.value = null;
         return;
       }
 
@@ -118,14 +118,13 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      window.location.href = "/success"; // Redirect to the success page
+      window.location.href = "/success";
     }
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        {/* General Information Form Fields */}
         <div className="mb-4">
           <label className="block text-gray-700">Nhập tên khách sạn:</label>
           <input
