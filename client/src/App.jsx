@@ -3,7 +3,8 @@ import './App.css';
 import HotelList from './component/HotelList';
 import Detail from './component/Detail';
 import React from 'react';
-import { Route, Router, Routes } from 'react-router-dom'
+import Register from './component/Register';
+import { Route, Routes } from 'react-router-dom'
 
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
       <Routes>
         <Route path='/hotellist' element={<HotelList/>}/>
         <Route path='/detailhotel/:_id' element={<Detail/>}/>
+        <Route path='/registerOwner' element={<Register/>}/>
       </Routes>
     </div>
   );  

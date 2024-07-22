@@ -1,4 +1,3 @@
-// src/components/Step1.js
 import React from "react";
 
 const Step1 = ({ onNext, formData, setFormData }) => {
