@@ -1,7 +1,8 @@
 import React from "react";
-import logo from "../image/Component 33.png";
+import logo from "../component/logo.png";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+<<<<<<< HEAD
 import Hotel from "./TabDetail";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
@@ -135,6 +136,10 @@ export default function Detail() {
     },
   ];
 
+=======
+
+export default function Detail() {
+>>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
   return (
     <div>
       <Navigation />
@@ -307,6 +312,7 @@ export default function Detail() {
               </div>
             </div>
           </div>
+<<<<<<< HEAD
 
           <div className="container grid grid-flow-col grid-rows-4 gap-4 my-4">
             {/*Hightlights*/}
@@ -354,35 +360,207 @@ export default function Detail() {
                 <div className="flex flex-col items-center">
                   <p className="text-center">Description 1</p>
                   <p className="text-center">Description 1</p>
-
-                  <p className="text-center">Description 1</p>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <p className="text-center">Description 1</p>
-                  <p className="text-center">Description 1</p>
-
-                  <p className="text-center">Description 1</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-center">Description 1</p>
-                  <p className="text-center">Description 1</p>
-
-                  <p className="text-center">Description 1</p>
-                </div>
+=======
+          {/*Hightlights*/}
+          <div className="flex flex-col w-3/5 p-4 my-4 bg-white shadow-md rounded-xl">
+            <h1 className="mb-4 text-3xl font-bold">Highlights</h1>
+            <div className="grid grid-cols-1 gap-24 mx-auto sm:grid-cols-2 lg:grid-cols-4">
+              <div className="flex flex-col items-center">
+                <img
+                  src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
+                  alt="Description 1"
+                  className="object-cover w-12 h-12 mb-2 rounded-lg"
+                />
+                <p className="text-center">Description 1</p>
               </div>
+              <div className="flex flex-col items-center">
+                <img
+                  src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
+                  alt="Description 1"
+                  className="object-cover w-12 h-12 mb-2 rounded-lg"
+                />
+                <p className="text-center">Description 1</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <img
+                  src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
+                  alt="Description 1"
+                  className="object-cover w-12 h-12 mb-2 rounded-lg"
+                />
+                <p className="text-center">Description 1</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <img
+                  src="https://images.unsplash.com/photo-1720983415059-43ec4007cf97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzM3x8fGVufDB8fHx8fA%3D%3D"
+                  alt="Description 1"
+                  className="object-cover w-12 h-12 mb-2 rounded-lg"
+                />
+                <p className="text-center">Description 1</p>
+              </div>
+            </div>
+          </div>
+          {/*Facilities*/}
+          <div className="flex flex-col w-3/5 p-4 my-4 bg-white shadow-md rounded-xl">
+            <h1 className="mb-4 text-3xl font-bold">Highlights</h1>
+            <div className="grid grid-cols-1 gap-20 mx-auto sm:grid-cols-2 lg:grid-cols-4">
+              <div className="flex flex-col items-center">
+                <p className="text-center">Description 1</p>
+                <p className="text-center">Description 1</p>
+>>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
+
+                <p className="text-center">Description 1</p>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <p className="text-center">Description 1</p>
+                <p className="text-center">Description 1</p>
+
+                <p className="text-center">Description 1</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-center">Description 1</p>
+                <p className="text-center">Description 1</p>
+
+                <p className="text-center">Description 1</p>
+              </div>
+<<<<<<< HEAD
             </div>
             <div className="row-span-4 bg-red-400 w-[450px] items-center flex justify-center shadow-lg  rounded-xl">
               Maps
+=======
+>>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
             </div>
           </div>
           <h2 className="text-2xl font-bold">Choose your room</h2>
 
-          <Hotel tabs={tabs} />
+          <Tabs>
+            <TabList>
+              <Tab>Premier Room Twin</Tab>
+              <Tab>Deluxe Room </Tab>
+              <Tab>Deluxe Triple Room </Tab>
+              <Tab>Executive Suite </Tab>
+            </TabList>
+
+            <TabPanel>
+              <h2>Any content 1</h2>
+            </TabPanel>
+            <TabPanel>
+              <h2>Any content 2</h2>
+            </TabPanel>
+          </Tabs>
         </div>
       </body>
 
+<<<<<<< HEAD
       <Footer />
+=======
+      {/*Footer */}
+      <footer class="bg-blue-50  p-4 h-60">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mt-5">
+          <div class=" items-center  w-full md:w-auto mb-4 md:mb-0">
+            <img src={logo} alt="Logo" />
+            <p class="text-lg text-gray-500 my-5">
+              We believe brand interaction is key
+              <br /> in communication. Real innovations
+              <br /> and a positive.
+            </p>
+          </div>
+          <div class="flex flex-wrap w-full md:w-4/6">
+            <div class="w-full md:w-1/6 mb-4 md:mb-0">
+              <h5 class="text-xl font-semibold mb-2">About us</h5>
+              <ul class="list-none">
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    FAQ’s
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    News
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Pricing
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="w-full md:w-1/6 mb-4 md:mb-0">
+              <h5 class="text-xl font-semibold mb-2">Company </h5>
+              <ul class="list-none">
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Core values
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Partner w/ us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="w-full md:w-1/6 mb-4 md:mb-0">
+              <h5 class="text-xl font-semibold mb-2">Support</h5>
+              <ul class="list-none">
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Support center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Feedback
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="hover:text-sky-300 text-gray-400">
+                    Accessibility
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="w-full md:w-2/6 mb-4 md:mb-0">
+              <h5 class="text-xl font-semibold mb-2">Get in touch</h5>
+              <form>
+                <label class="block">
+                  <input
+                    type="email"
+                    class="peer "
+                    placeholder="Enter your email"
+                  />
+                  <p class="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+                    Please provide a valid email address.
+                  </p>
+                </label>
+              </form>
+              <button class="bg-sky-300 hover:bg-sky-400 hover:text-white active:bg-sky-400 px-6 py-4">
+                Get Access
+              </button>
+            </div>
+          </div>
+        </div>
+        <p className="text-sm text-center bg-blue-50 text-slate-600">
+          &copy; 2024 Take a Breath. All rights reserved.
+        </p>
+      </footer>
+>>>>>>> ddfe185255b0b59c770a570e7be1bd27161855a4
     </div>
   );
 }

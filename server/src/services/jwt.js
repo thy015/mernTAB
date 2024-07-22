@@ -36,9 +36,18 @@ const authenToken = (req, res, next) => {
     });
 }
 
+const paymentToken=async(payload)=>{
+    console.log(payload)
+    const payment_token=jwt.sign({
+        payload
+    },process.env.PAYMENT_TOKEN,{expiresIn:'20m'})
+    
+    return payment_token
+}
 
 module.exports={
     generalAccessTokens,
     refreshAccessTokens,
     authenToken,
+    paymentToken
 }
