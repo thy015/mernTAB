@@ -3,6 +3,7 @@ import React, { useState } from "react";
 const Step3 = ({ onPrevious, onSubmit, formData }) => {
   const [rooms, setRooms] = useState(formData.rooms || []);
   const [errors, setErrors] = useState({}); 
+  const [errors, setErrors] = useState({});
 
   // const handleGeneralChange = (e) => {
   //   const { name, value } = e.target;
@@ -121,9 +122,19 @@ const Step3 = ({ onPrevious, onSubmit, formData }) => {
   //     window.location.href = "/success"; 
   //   }
   // };
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      window.location.href = "/success";
+    }
+  };
 
   return (
     <div>
+      <div>
       <h2 className="text-xl font-bold mb-4">Xác nhận thông tin</h2>
       <div className="mb-4">
         <p>Email: {formData.email}</p>
@@ -137,6 +148,137 @@ const Step3 = ({ onPrevious, onSubmit, formData }) => {
       <div className="flex justify-between">
         <button onClick={onPrevious} className="px-4 py-2 bg-gray-300 rounded">
           Quay lại
+        </button>
+        <button onClick={onSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">
+          Gửi
+        </button>
+      </div>
+    </div>
+        {/*Room details*/}
+        {rooms.map((room, index) => (
+          <div key={index} className="p-4 mb-8 border rounded">
+            <h3 className="mb-4 text-lg font-semibold">
+              Thông tin phòng {index + 1}
+            </h3>
+            <div className="mb-4">
+              <label className="block text-gray-700">Chọn loại phòng:</label>
+              <input
+                type="text"
+                name="roomType"
+                value={room.roomType}
+                onChange={(e) => handleRoomChange(index, e)}
+                className="w-full px-4 py-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Loại hình chỗ nghỉ:</label>
+              <select
+                name="accommodationType"
+                value={formData.accommodationType}
+                onChange={handleGeneralChange}
+                className="w-full px-4 py-2 border rounded"
+              >
+                <option value="Đơn">Phòng đơn</option>
+                <option value="Đôi">Phòng đôi</option>
+                <option value="Deluxe">Deluxe</option>
+                <option value="Superior">Superior</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Tên phòng:</label>
+              <input
+                type="text"
+                name="roomName"
+                value={room.roomName}
+                onChange={(e) => handleRoomChange(index, e)}
+                className="w-full px-4 py-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Quốc gia cư trú:</label>
+              <input
+                type="text"
+                name="country"
+                value={room.country}
+                onChange={(e) => handleRoomChange(index, e)}
+                className="w-full px-4 py-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Tiện nghi cung cấp:</label>
+              {/* Tiện ích */}
+              <div className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  value="Khăn các loại"
+                  checked={room.amenities.includes("Khăn các loại")}
+                  onChange={(e) => handleAmenitiesChange(index, e)}
+                />
+                <span className="ml-2">Khăn các loại</span>
+              </div>
+              <div className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  value="Ban công"
+                  checked={room.amenities.includes("Ban công")}
+                  onChange={(e) => handleAmenitiesChange(index, e)}
+                />
+                <span className="ml-2">Ban công</span>
+              </div>
+              <div className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  value="Bãi xe"
+                  checked={room.amenities.includes("Bãi xe")}
+                  onChange={(e) => handleAmenitiesChange(index, e)}
+                />
+                <span className="ml-2">Bãi xe</span>
+              </div>
+              <div className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  value="Bếp"
+                  checked={room.amenities.includes("Bếp")}
+                  onChange={(e) => handleAmenitiesChange(index, e)}
+                />
+                <span className="ml-2">Bếp</span>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Giá phòng:</label>
+              <input
+                type="text"
+                name="roomPrice"
+                value={room.roomPrice}
+                onChange={(e) => handleRoomChange(index, e)}
+                className="w-full px-4 py-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Thêm ảnh phòng:</label>
+              <input
+                type="file"
+                name="hotelImages"
+                multiple
+                onChange={(e) => handleRoomChange(index, e)}
+                className="w-full px-4 py-2 border rounded"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => removeRoom(index)}
+              className="px-4 py-2 text-white bg-red-500 rounded"
+            >
+              Xóa phòng
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addRoom}
+          className="px-4 py-2 text-white bg-green-500 rounded"
+        >
+          Thêm phòng
         </button>
         <button onClick={onSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">
           Gửi

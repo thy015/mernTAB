@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import logo from "../component/logo.png";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import Navigation from "./Navigation";
+import Footer from "./Footer";
 import axios from "axios";
 
 export default function Detail() {
@@ -27,29 +29,7 @@ export default function Detail() {
   }
   return (
     <div>
-      {/* Navigation */}
-      <nav className="sticky top-0 z-10 flex items-center justify-between w-full h-24 px-5 bg-white shadow-md">
-        <div className="flex items-center space-x-5">
-          <img className="" src={logo} alt="Logo" />
-          <h2 className="text-2xl font-semibold text-sky-500">
-            <a href="https://www.example.com">Promotion</a>
-          </h2>
-          <h2 className="text-2xl font-semibold text-sky-500">
-            <a href="https://www.example.com">Hotel Collections</a>
-          </h2>
-          <h2 className="text-2xl font-semibold text-sky-500">
-            <a href="https://www.example.com">Become Our Partner</a>
-          </h2>
-        </div>
-        <div className="flex items-center space-x-5">
-          <h2 className="text-2xl font-semibold text-sky-500">
-            <a href="https://www.example.com">Register</a>
-          </h2>
-          <h2 className="text-2xl font-semibold text-sky-500">
-            <a href="https://www.example.com">Log in</a>
-          </h2>
-        </div>
-      </nav>
+      <Navigation />
       {/* Search bar */}
       <div class="bg-sky-700 p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
@@ -149,16 +129,16 @@ export default function Detail() {
           <div className="p-4 my-3 bg-white shadow-md rounded-xl">
             <div className="flex items-center justify-between mx-auto max-w-7xl">
               <nav>
-                <ul className="flex space-x-4">
+                <ul className="flex my-auto space-x-40 text-xl fontfont-medium">
                   <li>
-                    <a href="#overview" className="text-blue-500">
+                    <a href="#overview" className="text-blue-500 no-underline ">
                       Overview
                     </a>
                   </li>
                   <li>
                     <a
                       href="#location"
-                      className="text-gray-600 hover:text-blue-500"
+                      className="text-gray-600 no-underline hover:text-blue-500"
                     >
                       Location
                     </a>
@@ -166,7 +146,7 @@ export default function Detail() {
                   <li>
                     <a
                       href="#reviews"
-                      className="text-gray-600 hover:text-blue-500"
+                      className="text-gray-600 no-underline hover:text-blue-500"
                     >
                       Reviews
                     </a>
@@ -174,7 +154,7 @@ export default function Detail() {
                   <li>
                     <a
                       href="#highlights"
-                      className="text-gray-600 hover:text-blue-500"
+                      className="text-gray-600 no-underline hover:text-blue-500"
                     >
                       Highlights
                     </a>
@@ -264,14 +244,6 @@ export default function Detail() {
               <div className="flex flex-col items-center">
                 <p className="text-center">Description 1</p>
                 <p className="text-center">Description 1</p>
-
-                <p className="text-center">Description 1</p>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <p className="text-center">Description 1</p>
-                <p className="text-center">Description 1</p>
-
                 <p className="text-center">Description 1</p>
               </div>
               <div className="flex flex-col items-center">
@@ -280,6 +252,13 @@ export default function Detail() {
 
                 <p className="text-center">Description 1</p>
               </div>
+              <div className="flex flex-col items-center">
+                <p className="text-center">Description 1</p>
+                <p className="text-center">Description 1</p>
+
+                <p className="text-center">Description 1</p>
+              </div>
+
             </div>
           </div>
           <h2 className="text-2xl font-bold">Choose your room</h2>
@@ -301,113 +280,6 @@ export default function Detail() {
           </Tabs>
         </div>
       </body>
-
-      {/*Footer */}
-      <footer class="bg-blue-50  p-4 h-60">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mt-5">
-          <div class=" items-center  w-full md:w-auto mb-4 md:mb-0">
-            <img src={logo} alt="Logo" />
-            <p class="text-lg text-gray-500 my-5">
-              We believe brand interaction is key
-              <br /> in communication. Real innovations
-              <br /> and a positive.
-            </p>
-          </div>
-          <div class="flex flex-wrap w-full md:w-4/6">
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">About us</h5>
-              <ul class="list-none">
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    FAQ’s
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    News
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">Company </h5>
-              <ul class="list-none">
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Core values
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Partner w/ us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="w-full md:w-1/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">Support</h5>
-              <ul class="list-none">
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Support center
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Feedback
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="hover:text-sky-300 text-gray-400">
-                    Accessibility
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="w-full md:w-2/6 mb-4 md:mb-0">
-              <h5 class="text-xl font-semibold mb-2">Get in touch</h5>
-              <form>
-                <label class="block">
-                  <input
-                    type="email"
-                    class="peer "
-                    placeholder="Enter your email"
-                  />
-                  <p class="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
-                    Please provide a valid email address.
-                  </p>
-                </label>
-              </form>
-              <button class="bg-sky-300 hover:bg-sky-400 hover:text-white active:bg-sky-400 px-6 py-4">
-                Get Access
-              </button>
-            </div>
-          </div>
-        </div>
-        <p className="text-sm text-center bg-blue-50 text-slate-600">
-          &copy; 2024 Take a Breath. All rights reserved.
-        </p>
-      </footer>
-    </div>
+      <Footer />
   );
 }
