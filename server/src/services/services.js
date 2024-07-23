@@ -2,12 +2,8 @@
 const Account=require('../models/signUp.model');
 const Hotel=require('../models/hotel.model');
 
-const RoomT = require('../models/roomTest.model');
-const { resolve } = require('path');
-const { rejects } = require('assert');
 const axios =require('axios')
 const { generalAccessTokens, refreshAccessTokens, paymentToken } = require('./jwt');
-const { search } = require('../routes/BookRoom/book.route');
 const { Invoice } = require('../models/invoice.model');
 
 function signUpOwner(newOwner){
