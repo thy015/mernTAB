@@ -62,9 +62,17 @@ const searchHotel=async(req,res)=>{
         return res.status(500).json({ message: e });
     }
 }
+const getHotelByID=async(req,res)=>{
+    try{
+
+    }catch(e){
+        console.error("Error in getHotelByID controller:",e);
+    }
+}
 module.exports={
     createHotel,
     createRoom,
     getHotelsByOwner,
-    searchHotel
+    searchHotel,
+    getHotelByID
 }

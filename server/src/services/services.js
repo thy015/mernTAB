@@ -18,9 +18,9 @@ function signUpOwner(newOwner){
                 email:email
             })
             if(checkAccountExisted!==null){
-                resolve({
+                rejects({
                     status:'BAD',
-                    message:'Đã tồn tại email'
+                    message:'Email existed'
                 })
             }
             const createdOwner=await Account.Account.create({
@@ -173,6 +173,7 @@ async function bookRoom(newInvoice, cusID,roomID){
             const roomPrice =foundRoom.money
             const total =roomPrice +(roomPrice*0.08) //vat
             //tạo biên lai
+            //Khúc này đang truyền token, phải truyền cusID
             const invoice = await Invoice.create({
                 cusID,
                 roomID,
@@ -187,11 +188,13 @@ async function bookRoom(newInvoice, cusID,roomID){
             })
 
             //đẩy thanh toán qua bên t3
+            //Tổng tiền, id biên lai, id cus
             const paymentResponse=await axios.post('/appthanhtoan',{
                 token:payment_token,
                 total,
                 cusID
             })
+            
             if(paymentResponse.status===200){
                 invoice.isPaid=true
                 await invoice.save()
@@ -291,6 +294,13 @@ const getHotelsByOwner = async (ownerID) => {
     }
 };
 
+const getHotelByID=async()=>{
+    try{
+        
+    }catch(e){
+        
+    }
+}
 const searchHotel=async(searchCriteria)=>{
     const {city, checkInDate, checkOutDate, numberOfPeople}=searchCriteria
     try{

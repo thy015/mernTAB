@@ -17,6 +17,7 @@ ListRouter.post('/',authenToken,hotelListController.createHotel)
 ListRouter.get('/search', hotelListController.searchHotel)
 //danh sách khách sạn của 1 chủ nhà xác định bằng lần đăng nhập
 ListRouter.get('/owner',authenToken,hotelListController.getHotelsByOwner)
+// ListRouter.get('/:id',hotelListController.getHotelByID)
 //room
 ListRouter.get('/room',async(req,res)=>{
     try{
