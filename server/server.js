@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(cors({
     origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
 }))
-app.use('/',HomeRouter)
+app.use('/home',HomeRouter)
 app.use('/detail',DetailRouter)
 app.use('/hotelList',HotelListRouter)
 app.use('/signUp',signUprouter)
