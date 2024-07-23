@@ -249,69 +249,76 @@ function cancelRoom(){
 
 }
 //truyền token
-function createHotel(newHotel,ownerID){
-    return new Promise(async(resolve,rejects)=>{
-        const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
-        try{
-            console.log(ownerID)
-            const checkExistedOwnerID=await Account.Account.findOne({
-                _id:ownerID
-            })
-            if(!checkExistedOwnerID){
-                return rejects({
-                    status:'BAD',
-                    message:'Owner ID does not exist'
+    function createHotel(newHotel,ownerID){
+        return new Promise(async(resolve,rejects)=>{
+            const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
+            try{
+                console.log(ownerID)
+                const checkExistedOwnerID=await Account.Account.findOne({
+                    _id:ownerID
                 })
-            }
-            const createdHotel = await Hotel.Hotel.create({
-                address,
-                numberOfRooms,
-                taxCode,
-                companyName,
-                nation,
-                facilityName,
-                businessType,
-                scale,
-                city,
-                ownerID
-            });
-            if(createdHotel){
-                resolve({
-                status: 'OK',
-                message: 'Hotel created successfully',
-                data: createdHotel
-            });
-            }
-        } catch(e){
-            rejects(e)
-        }
-    })
-}
-//truyền HotelID và token chủ nhà
-const createRoom = async (newRoom, hotelID) => {
-    return new Promise(async (resolve, reject) => {
-        const { numberOfBeds, typeOfRoom, money,capacity } = newRoom;
-        try {
-            const createdRoom = await Hotel.Room.create({
-                numberOfBeds,
-                typeOfRoom,
-                money,
-                capacity,
-                hotelID
-            });
-            if (createdRoom) {
-                resolve({
-                    status: 'OK',
-                    message: 'Room created successfully',
-                    data: createdRoom
+                if(!checkExistedOwnerID){
+                    return rejects({
+                        status:'BAD',
+                        message:'Owner ID does not exist'
+                    })
+                }
+                const createdHotel = await Hotel.Hotel.create({
+                    address,
+                    numberOfRooms,
+                    taxCode,
+                    companyName,
+                    nation,
+                    facilityName,
+                    businessType,
+                    scale,
+                    city,
+                    ownerID
                 });
+                if(createdHotel){
+                    resolve({
+                    status: 'OK',
+                    message: 'Hotel created successfully',
+                    data: createdHotel
+                });
+                }
+            } catch(e){
+                rejects(e)
             }
-        } catch (e) {
-            console.error("Error in createRoom service:", e);
-            reject(e);
-        }
-    });
-}
+        })
+    }
+    //truyền HotelID và token chủ nhà
+    const createRoom = async (newRoom, hotelID) => {
+        return new Promise(async (resolve, reject) => {
+            const { numberOfBeds, typeOfRoom, money,capacity } = newRoom;
+            try {
+                const createdRoom = await Hotel.Room.create({
+                    numberOfBeds,
+                    typeOfRoom,
+                    money,
+                    capacity,
+                    hotelID
+                });
+                if (createdRoom) {
+                    const hotel = await Hotel.findById(hotelID);
+                    if (hotel) {
+                    if (hotel.minPrice === 0 || hotel.minPrice > money) {
+                        hotel.minPrice = money;
+                        await hotel.save();
+                    }
+                    }
+                    resolve({
+                        status: 'OK',
+                        message: 'Room created successfully',
+                        data: createdRoom
+                    });
+                }
+            } catch (e) {
+                console.error("Error in createRoom service:", e);
+                reject(e);
+            }
+        });
+    }
 //chỉ cần truyền token
 const getHotelsByOwner = async (ownerID) => {
     try {
