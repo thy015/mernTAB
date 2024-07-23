@@ -35,7 +35,10 @@ mongoose.connect(`mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhg
 
 app.use(express.static('public'))
 
-
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 const server=http.createServer(app);
 
 server.listen(PORT,()=>{
