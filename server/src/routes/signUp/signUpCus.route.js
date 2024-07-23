@@ -11,7 +11,7 @@ signUpCusRouter.get('/', async(req, res) => {
     }
   });
 
-signUpCusRouter.post('/', signUpController.signUpCustomer);
+signUpCusRouter.post('/create', signUpController.signUpCustomer);
 
 signUpCusRouter.post('/signInCus',signUpController.signInCustomer)
 module.exports = signUpCusRouter

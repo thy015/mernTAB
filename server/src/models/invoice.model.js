@@ -11,7 +11,7 @@ const InvoiceSchema=new mongoose.Schema(
 )
 const ReceiptSchema=new mongoose.Schema(
     {
-        receiptID:{type:mongoose.Schema.ObjectId,ref:'Receipt',required:true},
+        receiptID:{type:mongoose.Schema.ObjectId,ref:'Invoice',required:true},
         createDate:{type:Date,required:true}
     }
 )
