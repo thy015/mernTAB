@@ -12,6 +12,7 @@ const DetailRouter = require('./src/routes/HotelDetail/detail.route');
 const HotelListRouter=require('./src/routes/HotelList/hotelList.route');
 const signUpCusRouter = require('./src/routes/signUp/signUpCus.route');
 const signUprouter = require('./src/routes/signUp/signUp.route');
+const bookRouter = require('./src/routes/BookRoom/book.route');
 //always put first
 app.use(bodyParser.json());
 
@@ -23,6 +24,7 @@ app.use('/detail',DetailRouter)
 app.use('/hotelList',HotelListRouter)
 app.use('/signUp',signUprouter)
 app.use('/signUpCus',signUpCusRouter)
+app.use('/book',bookRouter)
 
 //mongo connect
 mongoose.connect(`mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`)

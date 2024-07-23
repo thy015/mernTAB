@@ -62,13 +62,27 @@ const searchHotel=async(req,res)=>{
         return res.status(500).json({ message: e });
     }
 }
-const getHotelByID=async(req,res)=>{
-    try{
 
-    }catch(e){
-        console.error("Error in getHotelByID controller:",e);
+const getHotelByID = async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(404).json({ status: 'BAD', message: 'Missing hotel ID' });
     }
-}
+
+    try {
+        const result = await service.getHotelByID(id);
+
+        if (result.status === 'OK') {
+            res.status(200).json(result.data);
+        } else {
+            res.status(404).json(result);
+        }
+    } catch (e) {
+        console.error('Error in getHotel controller:', e);
+        res.status(500).json({ status: 'BAD', message: 'Internal server error' });
+    }
+};
 module.exports={
     createHotel,
     createRoom,
