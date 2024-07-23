@@ -1,14 +1,12 @@
 
 const Account=require('../models/signUp.model');
 const Hotel=require('../models/hotel.model');
-
-const RoomT = require('../models/roomTest.model');
-const { resolve } = require('path');
-const { rejects } = require('assert');
+const jwt=require('jsonwebtoken')
+const dotenv=require('dotenv')
+dotenv.config()
 const axios =require('axios')
 const { generalAccessTokens, refreshAccessTokens, paymentToken } = require('./jwt');
-const { search } = require('../routes/BookRoom/book.route');
-const { Invoice } = require('../models/invoice.model');
+const { Invoice,Receipt } = require('../models/invoice.model');
 
 function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -18,9 +16,9 @@ function signUpOwner(newOwner){
                 email:email
             })
             if(checkAccountExisted!==null){
-                resolve({
+                rejects({
                     status:'BAD',
-                    message:'Đã tồn tại email'
+                    message:'Email existed'
                 })
             }
             const createdOwner=await Account.Account.create({
@@ -123,6 +121,7 @@ function signInCustomer(existedCustomer){
     return new Promise(async(resolve,rejects)=>{    
         const {email,passWord}=existedCustomer 
         try{
+            //bên fe post thẳng vào luồng này của be
             const response=await axios.post('/appdangnhap',{
                 email:email,
                 password:passWord
@@ -150,11 +149,13 @@ function signInCustomer(existedCustomer){
 }
 
 //truyền qua token của cus tạo từ signInCus, roomID nhập tay
-//chưa đủ các điều kiện, chưa có controller+route
-async function bookRoom(newInvoice, cusID,roomID){
+async function bookRoom(newInvoice, cusToken,roomID){
     return new Promise(async(resolve,reject)=>{
         const {paymentMethod}=newInvoice
         try{
+            //decode vì truyền vào token
+            const decodedID= jwt.verify(cusToken,process.env.ACCESS_TOKEN)
+            const cusID=decodedID.payload.id
             //ko có phòng, đă dc book
             const foundRoom=await Hotel.Room.findById(roomID)
             if (!foundRoom) {
@@ -172,7 +173,7 @@ async function bookRoom(newInvoice, cusID,roomID){
             }
             const roomPrice =foundRoom.money
             const total =roomPrice +(roomPrice*0.08) //vat
-            //tạo biên lai
+           //tạo biên lai
             const invoice = await Invoice.create({
                 cusID,
                 roomID,
@@ -186,25 +187,33 @@ async function bookRoom(newInvoice, cusID,roomID){
                 total
             })
 
-            //đẩy thanh toán qua bên t3
+            //đẩy thanh toán qua bên t3,bên fe post thẳng vào luồng này của be
+            //Tổng tiền, id biên lai, id cus, token tồn tại trong 20m
             const paymentResponse=await axios.post('/appthanhtoan',{
                 token:payment_token,
+                invoiceID: invoice._id,
                 total,
                 cusID
             })
+            
             if(paymentResponse.status===200){
+
                 invoice.isPaid=true
                 await invoice.save()
-            //đổi trạng thái phòng thủ công(chưa theo ngày)
-                foundRoom.isAvailable=false
+
+                foundRoom.isAvailable=false //đổi trạng thái phòng thủ công(chưa theo ngày)
                 await foundRoom.save()
+                
+                const receipt = await createReceipt(invoice._id)
+
                 resolve({
                     status: 'OK',
                     message: 'Room booked successfully',
-                    data: invoice
+                    data: {invoice,receipt}
                 });
             }
             else {
+                await Invoice.findByIdAndDelete(invoice._id)
                 reject({
                     status: 'BAD',
                     message: 'Payment failed',
@@ -212,12 +221,34 @@ async function bookRoom(newInvoice, cusID,roomID){
             }
             
         }catch(e){
-            console.log('e in promise'+e)
-            reject(e)
+            console.error('Error in bookRoom:', e);
+
+            if (e.status !== 'BAD' && e.status !== 400) {
+                await Invoice.findOneAndDelete(newInvoice);
+            }
+            reject({
+                status: 'BAD',
+                message: 'Internal server error',
+            });
         }
     })
 }
-//phải nhập id chủ nhà
+async function createReceipt(invoiceID) {
+    try {
+        const receipt = await Receipt.create({
+            invoiceID,
+            createDate: new Date()
+        });
+        return receipt;
+    } catch (e) {
+        console.error('Error in createReceipt:', e);
+    }
+}
+//hủy phòng
+function cancelRoom(){
+    
+}
+//truyền token
     function createHotel(newHotel,ownerID){
         return new Promise(async(resolve,rejects)=>{
             const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
@@ -298,6 +329,7 @@ const getHotelsByOwner = async (ownerID) => {
     }
 };
 
+
 const searchHotel=async(searchCriteria)=>{
     const {city, checkInDate, checkOutDate, numberOfPeople}=searchCriteria
     try{
@@ -339,5 +371,6 @@ module.exports={
     createRoom,
     getHotelsByOwner,
     bookRoom,
-    searchHotel
+    searchHotel,
+   
 }

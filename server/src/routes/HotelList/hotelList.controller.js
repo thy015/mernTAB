@@ -62,9 +62,12 @@ const searchHotel=async(req,res)=>{
         return res.status(500).json({ message: e });
     }
 }
+
+
 module.exports={
     createHotel,
     createRoom,
     getHotelsByOwner,
-    searchHotel
+    searchHotel,
+    
 }
