@@ -1,14 +1,20 @@
+
 import './App.css';
 import HotelList from './component/HotelList';
+import Detail from './component/Detail';
+import React from 'react';
+import Register from './component/Register';
+import { Route, Routes } from 'react-router-dom'
 
-function App() {
+
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <HotelList/>
-      </header>
+      <Routes>
+        <Route path='/hotellist' element={<HotelList/>}/>
+        <Route path='/detailhotel/:_id' element={<Detail/>}/>
+        <Route path='/registerOwner' element={<Register/>}/>
+      </Routes>
     </div>
-  );
+  );  
 }
-
-export default App;
