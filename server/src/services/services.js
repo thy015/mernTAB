@@ -246,7 +246,7 @@ async function createReceipt(invoiceID) {
 }
 //hủy phòng
 function cancelRoom(){
-
+    
 }
 //truyền token
 function createHotel(newHotel,ownerID){
