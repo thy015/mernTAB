@@ -6,7 +6,7 @@ const dotenv=require('dotenv')
 dotenv.config()
 const axios =require('axios')
 const { generalAccessTokens, refreshAccessTokens, paymentToken } = require('./jwt');
-const { Invoice } = require('../models/invoice.model');
+const { Invoice,Receipt } = require('../models/invoice.model');
 
 function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -200,13 +200,16 @@ async function bookRoom(newInvoice, cusToken,roomID){
 
                 invoice.isPaid=true
                 await invoice.save()
+
                 foundRoom.isAvailable=false //đổi trạng thái phòng thủ công(chưa theo ngày)
                 await foundRoom.save()
+                
+                const receipt = await createReceipt(invoice._id)
 
                 resolve({
                     status: 'OK',
                     message: 'Room booked successfully',
-                    data: invoice
+                    data: {invoice,receipt}
                 });
             }
             else {
@@ -229,6 +232,21 @@ async function bookRoom(newInvoice, cusToken,roomID){
             });
         }
     })
+}
+async function createReceipt(invoiceID) {
+    try {
+        const receipt = await Receipt.create({
+            invoiceID,
+            createDate: new Date()
+        });
+        return receipt;
+    } catch (e) {
+        console.error('Error in createReceipt:', e);
+    }
+}
+//hủy phòng
+function cancelRoom(){
+    
 }
 //truyền token
 function createHotel(newHotel,ownerID){
@@ -304,20 +322,7 @@ const getHotelsByOwner = async (ownerID) => {
     }
 };
 
-const getHotelByID = async (id) => {
-    try {
-        const hotel = await Hotel.Hotel.findById(id);
 
-        if (!hotel) {
-            return { status: 'BAD', message: 'Hotel not found' };
-        }
-
-        return { status: 'OK', data: hotel };
-    } catch (e) {
-        console.error('Error fetching hotel by ID:', e);
-        return { status: 'BAD', message: 'Internal server error' };
-    }
-};
 const searchHotel=async(searchCriteria)=>{
     const {city, checkInDate, checkOutDate, numberOfPeople}=searchCriteria
     try{
@@ -360,5 +365,5 @@ module.exports={
     getHotelsByOwner,
     bookRoom,
     searchHotel,
-    getHotelByID
+   
 }
