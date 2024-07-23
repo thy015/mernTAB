@@ -7,7 +7,7 @@ dotenv.config()
 const app=express();
 const mongoose=require('mongoose')
 const http=require('http');
-const HomeRouter = require('./src/routes/home/home.route');
+const HomeRouter = require('./src/routes/Home/home.route');
 const DetailRouter = require('./src/routes/HotelDetail/detail.route');
 const HotelListRouter=require('./src/routes/HotelList/hotelList.route');
 const signUpCusRouter = require('./src/routes/signUp/signUpCus.route');
