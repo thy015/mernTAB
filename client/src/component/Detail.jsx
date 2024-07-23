@@ -1,9 +1,8 @@
 import React, {useState,useEffect} from "react";
 import { useParams } from 'react-router-dom';
-import logo from "../component/logo.png";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import Navigation from "./Navigation";
+import Navigation from "./Navigation"
 import Footer from "./Footer";
 import axios from "axios";
 
@@ -16,7 +15,7 @@ export default function Detail() {
       try {
         const res = await axios.get(`http://localhost:4000/detail/${_id}`);
         setHotel(res.data);
-        // console.log(response.data)
+        //console.log(response.data)
       } catch (error) {
         console.error('Error fetching hotel data:', error);
       }
@@ -281,5 +280,6 @@ export default function Detail() {
         </div>
       </body>
       <Footer />
+      </div>
   );
 }
