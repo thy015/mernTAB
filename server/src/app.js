@@ -19,7 +19,7 @@ app.use(cors({
     origin:'http://localhost:3000'
 }))
 //router
-app.use('/home',HomeRouter)
+app.use('/',HomeRouter)
 app.use('/detail',DetailRouter)
 app.use('/hotelList',HotelListRouter)
 app.use('/signUp',SignUprouter)
