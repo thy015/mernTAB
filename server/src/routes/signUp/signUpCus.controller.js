@@ -25,9 +25,9 @@ const signUpCustomer=async(req,res)=>{
 
 const signInCustomer = async (req, res) => {
     try {
-        const { email, passWord } = req.body;
+        const { username, password } = req.body;
 
-        if (!email || !passWord) {
+        if (!username || !password) {
             return res.status(403).json({ message: 'Input is required' });
         }
         const result = await services.signInCustomer(req.body);

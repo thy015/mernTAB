@@ -119,12 +119,12 @@ function signUpCustomer(newCustomer){
 //đẩy qua bên khác
 function signInCustomer(existedCustomer){
     return new Promise(async(resolve,rejects)=>{    
-        const {email,passWord}=existedCustomer 
+        const {username,password}=existedCustomer 
         try{
             //bên fe post thẳng vào luồng này của be
-            const response=await axios.post('/appdangnhap',{
-                email:email,
-                password:passWord
+            const response=await axios.post('/https://api.htilssu.com/api/v1/auth/login',{
+                email:username,
+                password:password
             })
             if(response.status===200){
                 const access_token=await generalAccessTokens({
@@ -246,7 +246,7 @@ async function createReceipt(invoiceID) {
 }
 //hủy phòng
 function cancelRoom(){
-    
+
 }
 //truyền token
 function createHotel(newHotel,ownerID){
