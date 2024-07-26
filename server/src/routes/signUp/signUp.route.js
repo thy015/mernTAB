@@ -12,7 +12,7 @@ signUprouter.get('/', async(req, res) => {
     }
   });
 
-signUprouter.post('/', signUpController.signUpOwner);
+signUprouter.post('/create', signUpController.signUpOwner);
 signUprouter.post('/signIn', signUpController.signInOwner);
 
 module.exports=signUprouter

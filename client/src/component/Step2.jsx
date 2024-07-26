@@ -1,5 +1,7 @@
+
 // src/components/Step2.js
 import React, { useState } from "react";
+
 
 const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
   const handleChange = (e) => {

@@ -28,6 +28,7 @@ const signUpOwner=async(req,res)=>{
         return res.status(201).json(result)
         }
      catch(e){
+        console.log(e)
         return res.status(500).json({message:e})
     }
 
