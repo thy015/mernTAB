@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
-import Step3 from "./Step3";
 
 export default function Register() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -22,17 +21,6 @@ export default function Register() {
       fireSafetyLicenseExpiry: "",
       businessCertificate: "",
     },
-    step3: {
-      hotelName: "",
-      hotelPhone: "",
-      accommodationType: "Căn hộ",
-      area: "",
-      capacity: "",
-      numberOfBathrooms: "",
-      numberOfBedrooms: "",
-      hotelAddress: "",
-      rooms: [], // Ensure this matches the initial state in Step3
-    },
   });
 
   const handleFormDataChange = (step, data) => {
@@ -43,6 +31,10 @@ export default function Register() {
         ...data,
       },
     }));
+  };
+
+  const handleComplete = () => {
+    window.location.href = "/success";
   };
 
   const renderStep = () => {
@@ -58,18 +50,10 @@ export default function Register() {
       case 2:
         return (
           <Step2
-            onNext={() => setCurrentStep(3)}
             onPrevious={() => setCurrentStep(1)}
             formData={formData.step2}
             setFormData={(data) => handleFormDataChange("step2", data)}
-          />
-        );
-      case 3:
-        return (
-          <Step3
-            onPrevious={() => setCurrentStep(2)}
-            formData={formData.step3}
-            setFormData={(data) => handleFormDataChange("step3", data)}
+            onComplete={handleComplete}
           />
         );
       default:
@@ -101,14 +85,6 @@ export default function Register() {
           onClick={() => setCurrentStep(2)}
         >
           Bước 2: Đăng ký thông tin doanh nghiệp
-        </button>
-        <button
-          className={`block w-full text-left px-4 py-2 mb-2 ${
-            currentStep === 3 ? "bg-gray-300" : "bg-gray-100"
-          }`}
-          onClick={() => setCurrentStep(3)}
-        >
-          Bước 3: Nhập thông tin phòng cho thuê
         </button>
       </div>
       <div className="w-2/3 p-4 bg-white">{renderStep()}</div>

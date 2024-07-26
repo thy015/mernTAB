@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
-const Step3 = ({ onPrevious, formData, setFormData }) => {
+const CreateRoom = ({ formData = {}, setFormData }) => {
   const [rooms, setRooms] = useState(formData.rooms || []);
   const [errors, setErrors] = useState({});
 
   const handleGeneralChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleRoomChange = (index, e) => {
@@ -68,7 +71,6 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
       {
         roomType: "",
         roomName: "",
-        country: "",
         amenities: [],
         roomPrice: "",
         roomImages: [],
@@ -84,19 +86,17 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
       rooms: newRooms,
     }));
   };
+
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.hotelName) newErrors.hotelName = "Tên khách sạn là bắt buộc";
+    if (!formData.hotelName)
+      newErrors.hotelName = "Tên nơi cho thuê là bắt buộc";
     if (!formData.hotelPhone)
       newErrors.hotelPhone = "Số điện thoại là bắt buộc";
     if (!formData.area) newErrors.area = "Quy mô chỗ nghỉ là bắt buộc";
-    if (!formData.capacity) newErrors.capacity = "Sức chứa tối đa là bắt buộc";
-    if (!formData.numberOfBathrooms)
-      newErrors.numberOfBathrooms = "Số phòng tắm là bắt buộc";
-    if (!formData.numberOfBedrooms)
-      newErrors.numberOfBedrooms = "Số phòng ngủ là bắt buộc";
     if (!formData.hotelAddress)
       newErrors.hotelAddress = "Địa chỉ khách sạn là bắt buộc";
+    if (!formData.country) newErrors.country = "Quốc gia cư trú là bắt buộc";
 
     // Validate rooms
     rooms.forEach((room, index) => {
@@ -104,8 +104,6 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
         newErrors[`roomType_${index}`] = "Loại phòng là bắt buộc";
       if (!room.roomName)
         newErrors[`roomName_${index}`] = "Tên phòng là bắt buộc";
-      if (!room.country)
-        newErrors[`country_${index}`] = "Quốc gia cư trú là bắt buộc";
       if (!room.roomPrice)
         newErrors[`roomPrice_${index}`] = "Giá phòng là bắt buộc";
       if (room.roomImages.length === 0)
@@ -115,6 +113,7 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -123,17 +122,21 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
   };
 
   return (
-    <div>
+    <div className="md:w-[1600px] mx-auto bg-white p-4 shadow-md rounded-lg">
+      <h1 className="text-center text-blue-500">Accommodation Infomation</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700">Nhập tên khách sạn:</label>
           <input
             type="text"
             name="hotelName"
-            value={formData.hotelName}
+            value={formData.hotelName || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
+          {errors.hotelName && (
+            <p className="text-red-500">{errors.hotelName}</p>
+          )}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Nhập SDT khách sạn:</label>
@@ -141,18 +144,32 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
             type="tel"
             id="phone"
             name="hotelPhone"
-            value={formData.hotelPhone}
+            value={formData.hotelPhone || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
             placeholder="123-45-678"
             required
           />
+          {errors.hotelPhone && (
+            <p className="text-red-500">{errors.hotelPhone}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Quốc gia cư trú:</label>
+          <input
+            type="text"
+            name="country"
+            value={formData.country || ""}
+            onChange={handleGeneralChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+          {errors.country && <p className="text-red-500">{errors.country}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Loại hình chỗ nghỉ:</label>
           <select
             name="accommodationType"
-            value={formData.accommodationType}
+            value={formData.accommodationType || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           >
@@ -164,194 +181,147 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
         <div className="mb-4">
           <label className="block text-gray-700">Quy mô chỗ nghỉ (m2):</label>
           <input
-            type="text"
+            type="number"
             name="area"
-            value={formData.area}
+            value={formData.area || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">
-            Sức chứa tối đa (người):
-          </label>
-          <input
-            type="text"
-            name="capacity"
-            value={formData.capacity}
-            onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Số phòng tắm:</label>
-          <input
-            type="text"
-            name="numberOfBathrooms"
-            value={formData.numberOfBathrooms}
-            onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Số phòng ngủ:</label>
-          <input
-            type="text"
-            name="numberOfBedrooms"
-            value={formData.numberOfBedrooms}
-            onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
-          />
+          {errors.area && <p className="text-red-500">{errors.area}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Nhập địa chỉ khách sạn:</label>
           <input
             type="text"
             name="hotelAddress"
-            value={formData.hotelAddress}
+            value={formData.hotelAddress || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
+          {errors.hotelAddress && (
+            <p className="text-red-500">{errors.hotelAddress}</p>
+          )}
         </div>
-        {/*Room details*/}
+
         {rooms.map((room, index) => (
-          <div key={index} className="p-4 mb-8 border rounded">
-            <h3 className="mb-4 text-lg font-semibold">
-              Thông tin phòng {index + 1}
-            </h3>
-            <div className="mb-4">
-              <label className="block text-gray-700">Chọn loại phòng:</label>
-              <input
-                type="text"
+          <div key={index} className="mb-4">
+            <h3 className="mb-2 text-lg font-semibold">Phòng {index + 1}</h3>
+            <div className="mb-2">
+              <label className="block text-gray-700">Loại phòng:</label>
+              <select
                 name="roomType"
-                value={room.roomType}
+                value={room.roomType || ""}
                 onChange={(e) => handleRoomChange(index, e)}
                 className="w-full px-4 py-2 border rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Loại hình chỗ nghỉ:</label>
-              <select
-                name="accommodationType"
-                value={formData.accommodationType}
-                onChange={handleGeneralChange}
-                className="w-full px-4 py-2 border rounded"
               >
-                <option value="Đơn">Phòng đơn</option>
-                <option value="Đôi">Phòng đôi</option>
-                <option value="Deluxe">Deluxe</option>
-                <option value="Superior">Superior</option>
+                <option value="">Select a room type</option>
+                <option value="Single">Single Room</option>
+                <option value="Double">Double Room</option>
+                <option value="Deluxe">Deluxe Room</option>
+                <option value="Superior">Superior Room</option>
               </select>
+              {errors[`roomType_${index}`] && (
+                <p className="text-red-500">{errors[`roomType_${index}`]}</p>
+              )}
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label className="block text-gray-700">Tên phòng:</label>
               <input
                 type="text"
                 name="roomName"
-                value={room.roomName}
+                value={room.roomName || ""}
                 onChange={(e) => handleRoomChange(index, e)}
                 className="w-full px-4 py-2 border rounded"
               />
+              {errors[`roomName_${index}`] && (
+                <p className="text-red-500">{errors[`roomName_${index}`]}</p>
+              )}
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Quốc gia cư trú:</label>
-              <input
-                type="text"
-                name="country"
-                value={room.country}
-                onChange={(e) => handleRoomChange(index, e)}
-                className="w-full px-4 py-2 border rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Tiện nghi cung cấp:</label>
-              {/* Tiện ích */}
-              <div className="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  value="Khăn các loại"
-                  checked={room.amenities.includes("Khăn các loại")}
-                  onChange={(e) => handleAmenitiesChange(index, e)}
-                />
-                <span className="ml-2">Khăn các loại</span>
-              </div>
-              <div className="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  value="Ban công"
-                  checked={room.amenities.includes("Ban công")}
-                  onChange={(e) => handleAmenitiesChange(index, e)}
-                />
-                <span className="ml-2">Ban công</span>
-              </div>
-              <div className="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  value="Bãi xe"
-                  checked={room.amenities.includes("Bãi xe")}
-                  onChange={(e) => handleAmenitiesChange(index, e)}
-                />
-                <span className="ml-2">Bãi xe</span>
-              </div>
-              <div className="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  value="Bếp"
-                  checked={room.amenities.includes("Bếp")}
-                  onChange={(e) => handleAmenitiesChange(index, e)}
-                />
-                <span className="ml-2">Bếp</span>
+            <div className="mb-2">
+              <label className="block text-gray-700">Tiện nghi:</label>
+              <div>
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    value="Wi-Fi miễn phí"
+                    checked={room.amenities.includes("Wi-Fi miễn phí")}
+                    onChange={(e) => handleAmenitiesChange(index, e)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">Wi-Fi miễn phí</span>
+                </label>
+                <label className="inline-flex items-center ml-4">
+                  <input
+                    type="checkbox"
+                    value="Điều hòa nhiệt độ"
+                    checked={room.amenities.includes("Điều hòa nhiệt độ")}
+                    onChange={(e) => handleAmenitiesChange(index, e)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">Điều hòa nhiệt độ</span>
+                </label>
+                <label className="inline-flex items-center ml-4">
+                  <input
+                    type="checkbox"
+                    value="Bữa sáng miễn phí"
+                    checked={room.amenities.includes("Bữa sáng miễn phí")}
+                    onChange={(e) => handleAmenitiesChange(index, e)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">Bữa sáng miễn phí</span>
+                </label>
               </div>
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label className="block text-gray-700">Giá phòng:</label>
               <input
                 type="text"
                 name="roomPrice"
-                value={room.roomPrice}
+                value={room.roomPrice || ""}
                 onChange={(e) => handleRoomChange(index, e)}
                 className="w-full px-4 py-2 border rounded"
               />
+              {errors[`roomPrice_${index}`] && (
+                <p className="text-red-500">{errors[`roomPrice_${index}`]}</p>
+              )}
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Thêm ảnh phòng:</label>
+            <div className="mb-2">
+              <label className="block text-gray-700">Hình ảnh:</label>
               <input
                 type="file"
                 name="roomImages"
                 multiple
+                accept="image/*"
                 onChange={(e) => handleRoomChange(index, e)}
-                className="w-full px-4 py-2 border rounded"
+                className="w-full"
               />
+              {errors[`roomImages_${index}`] && (
+                <p className="text-red-500">{errors[`roomImages_${index}`]}</p>
+              )}
             </div>
+
             <button
-              type="button"
               onClick={() => removeRoom(index)}
-              className="px-4 py-2 text-white bg-red-500 rounded"
+              className="px-2 py-2 mt-4 ml-auto text-white bg-red-500 rounded"
             >
-              Xóa phòng
+              Delete Room
             </button>
           </div>
         ))}
+
         <button
-          type="button"
           onClick={addRoom}
-          className="px-4 py-2 text-white bg-green-500 rounded"
+          className="px-4 py-2 my-4 text-white bg-green-500 rounded"
         >
-          Thêm phòng
+          Add Room
         </button>
-        <div className="flex justify-between mt-4">
-          <button
-            type="button"
-            onClick={onPrevious}
-            className="px-4 py-2 text-black bg-gray-300 rounded"
-          >
-            Quay lại
-          </button>
+
+        <div className="flex justify-between">
           <button
             type="submit"
-            className="px-4 py-2 text-white bg-blue-500 rounded"
+            className="px-4 py-2 ml-auto text-white bg-blue-500 rounded"
           >
-            Hoàn tất
+            Send
           </button>
         </div>
       </form>
@@ -359,4 +329,4 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
   );
 };
 
-export default Step3;
+export default CreateRoom;
