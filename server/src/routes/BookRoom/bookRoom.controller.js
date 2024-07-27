@@ -6,7 +6,7 @@ const bookRoom= async (req, res) => {
     const cusID = req.ownerID; //middleware, but this is cusID
 
     if (!roomID || !paymentMethod ||!cusID) {
-        return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+        return res.status(403).json({message: 'Missing required fields' });
     }
 
     try {
@@ -15,11 +15,11 @@ const bookRoom= async (req, res) => {
         if (result.status==='OK'){
             return res.status(200).json(result);
         }else {
-            return res.status(result.status === 'BAD' ? 400 : 500).json(result);
+            return res.status(500).json(result);
         }
     } catch (e) {
         console.error('Error booking room in controller:', e);
-        res.status(e.status || 500).json(e);
+        res.status(500).json(e);
     }
 };
 

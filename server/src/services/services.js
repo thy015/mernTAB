@@ -111,32 +111,24 @@ async function signInOwner(existedOwner) {
         }
     });
 }
-
+// đăng ký luôn bên app t3
 async function signUpCustomer(newCustomer){
     return new Promise(async(resolve,rejects)=>{
-        const{name,passWord,email,birthDate,phoneNum}=newCustomer
+        const{name,password,email,birthDate,phoneNum,username}=newCustomer
         try{
-            const checkCustomerExisted=await Account.Customer.findOne({
-                email:email
+            const response= await axios.post(`https://api.htilssu.com/api/v1/auth/register`,{
+                username:username,
+                firstName:name,
+                password:password,
+                email:email,
+                dob:birthDate,
+                phoneNumber:phoneNum
             })
-            if(checkCustomerExisted!==null){
-                return rejects({
-                    status:'BAD',
-                    message:'Existed cus'
-                })
-            }
-            const createCustomer= await Account.Customer.create({
-                name,
-                passWord,
-                email,
-                birthDate,
-                phoneNum
-            })
-            if(createCustomer){
+            if(response.status===200){
                 resolve({
                     status:'OK',
                     message:'Succesfully created customer',
-                    data:createCustomer
+                    data:response
                 })
             }
         }catch(e){
@@ -151,12 +143,13 @@ async function signInCustomer(existedCustomer){
         try{
             //bên fe post thẳng vào luồng này của be
             const response=await axios.post('https://api.htilssu.com/api/v1/auth/login',{
-                email:username,
+                username:username,
                 password:password
             })
             if(response.status===200){
                 const access_token=await generalAccessTokens({
-                    id:response.data.id
+                    id:response.data.id,
+                    isUse:'cus'
                 })
                 resolve({
                     status:'OK',
@@ -217,15 +210,15 @@ async function bookRoom(newInvoice, cusToken,roomID){
             const nameOfService=`Đặt phòng`
             //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
             //Tổng tiền, id biên lai, id cus, token tồn tại trong 20m
-            const voucherResponse=await axios.post('/appvoucher',{
-                token:payment_token,
-                invoiceID: invoice._id,
-                total,
-                cusID,
-                nameOfService
-            })
+            // const voucherResponse=await axios.post('/appvoucher',{
+            //     token:payment_token,
+            //     invoiceID: invoice._id,
+            //     total,
+            //     cusID,
+            //     nameOfService
+            // })
             
-            if(voucherResponse.status===200){
+            // if(voucherResponse.status===200){
 
                 invoice.isPaid=true
                 await invoice.save()
@@ -240,20 +233,20 @@ async function bookRoom(newInvoice, cusToken,roomID){
                     message: 'Room booked successfully',
                     data: {invoice,receipt}
                 });
-            }
-            else {
-                await Invoice.findByIdAndDelete(invoice._id)
-                reject({
-                    status: 'BAD',
-                    message: 'Payment failed, please try again',
-                })
-            }
+            // }
+            // else {
+            //     await Invoice.findByIdAndDelete(invoice._id)
+            //     reject({
+            //         status: 'BAD',
+            //         message: 'Payment failed, please try again',
+            //     })
+            // }
             
         }catch(e){
             console.error('Error in bookRoom:', e);
 
-            if (e.status !== 'BAD' && e.status !== 400) {
-                await Invoice.findOneAndDelete(newInvoice);
+            if (e.status == 'BAD' || e.status == 400) {
+                await Invoice.findOneAndDelete(newInvoice._id);
             }
             reject({
                 status: 'BAD',
@@ -307,9 +300,16 @@ async function reqCancelRoom(cusToken,receiptID){
         }
     })
 }
-//hủy phòng
-function cancelRoom(){
-    
+//admin handle hủy phòng. ok => đổi trạng thái req, post qua app khác để hoàn tiền 
+//*chưa có test 24h. ko accept => đổi trạng thái req, trả về cho user
+async function handleCancelRoom(){
+    return new Promise(async(resolve,reject)=>{
+        try{
+
+        }catch(e){
+            console.error('Error in handleCancelRoom - promise:', e);
+        }
+    })
 }
 //truyền token
     function createHotel(newHotel,ownerID){
