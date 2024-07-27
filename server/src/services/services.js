@@ -15,7 +15,10 @@ function signUpOwner(newOwner){
             const checkAccountExisted=await Account.Account.findOne({
                 email:email
             })
-            if(checkAccountExisted!==null){
+            const isAdmin=await Account.Admin.findOne({
+                email:email
+            })
+            if(checkAccountExisted!==null || isAdmin!=null){
                 rejects({
                     status:'BAD',
                     message:'Email existed'
@@ -43,47 +46,71 @@ function signUpOwner(newOwner){
         }
     })
 }
+//chung của owner và admin
+async function signInOwner(existedOwner) {
+    return new Promise(async (resolve, reject) => {
+        const { email, passWord } = existedOwner;
+        try {
+            const foundOwner = await Account.Account.findOne({ email: email });
 
-function signInOwner(existedOwner){
-    return new Promise(async(resolve,rejects)=>{
-        const {email,passWord}=existedOwner
-        try{
-            const foundOwner= await Account.Account.findOne({
-                email:email
-            })
-            if(foundOwner==null){
-                resolve({
-                    status:'BAD',
-                    message: 'You havent registed'
-                })
-            }
-            if(foundOwner.passWord!=passWord){
-                resolve({
-                    status:'BAD',
-                    message:'Wrong password'
-                })
-            }
-            const access_token=await generalAccessTokens({
-                id:foundOwner._id,
-                isUse:foundOwner.isUse
-            })
-            const refresh_token=await refreshAccessTokens({
-                id:foundOwner._id,
-                isUse:foundOwner.isUse
-            })
+            if (foundOwner) {
+                if (foundOwner.passWord !== passWord) {
+                    return resolve({
+                        status: 'BAD',
+                        message: 'Wrong password'
+                    });
+                }
+                const access_token = await generalAccessTokens({
+                    id: foundOwner._id,
+                    isUse: foundOwner.isUse
+                });
+                const refresh_token = await refreshAccessTokens({
+                    id: foundOwner._id,
+                    isUse: foundOwner.isUse
+                });
 
-            resolve({
-                status:'OK',
-                message:'Success log in',
-                access_token: access_token,
-                refresh_token: refresh_token,
-                ownerID: foundOwner._id
-            })
-        }catch(e){
-            rejects(e)
+                return resolve({
+                    status: 'OK',
+                    message: 'Success log in',
+                    access_token: access_token,
+                    refresh_token: refresh_token,
+                    ownerID: foundOwner._id,
+                    //owner đi vào trang chủ
+                    redirect: '/'
+                });
+            } else {
+                const foundAdmin = await Account.Admin.findOne({
+                    email: email,
+                    passWord: passWord
+                });
+
+                if (foundAdmin) {
+                    const access_token = await generalAccessTokens({
+                        id: foundAdmin._id,
+                        isUse: foundAdmin.isUse
+                    });
+
+                    return resolve({
+                        status: 'OK',
+                        message: 'Admin logged in',
+                        access_token,
+                        //admin đi vào dashboard admin
+                        redirect: '/Admin'
+                    });
+                    //ko tìm thấy admin
+                } else {
+                    return reject({
+                        status: 'BAD',
+                        message: 'You haven’t registered yet'
+                    });
+                }
+            }
+        } catch (e) {
+            reject(e);
         }
-    })
+    });
 }
+
 function signUpCustomer(newCustomer){
     return new Promise(async(resolve,rejects)=>{
         const{name,passWord,email,birthDate,phoneNum}=newCustomer
@@ -186,17 +213,18 @@ async function bookRoom(newInvoice, cusToken,roomID){
                 cusID,
                 total
             })
-
-            //đẩy thanh toán qua bên t3,bên fe post thẳng vào luồng này của be
+            const nameOfService=`Đặt phòng`
+            //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
             //Tổng tiền, id biên lai, id cus, token tồn tại trong 20m
-            const paymentResponse=await axios.post('/appthanhtoan',{
+            const voucherResponse=await axios.post('/appvoucher',{
                 token:payment_token,
                 invoiceID: invoice._id,
                 total,
-                cusID
+                cusID,
+                nameOfService
             })
             
-            if(paymentResponse.status===200){
+            if(voucherResponse.status===200 && invoiceID===invoice._id){
 
                 invoice.isPaid=true
                 await invoice.save()
@@ -216,7 +244,7 @@ async function bookRoom(newInvoice, cusToken,roomID){
                 await Invoice.findByIdAndDelete(invoice._id)
                 reject({
                     status: 'BAD',
-                    message: 'Payment failed',
+                    message: 'Payment failed, please try again',
                 })
             }
             
@@ -233,6 +261,7 @@ async function bookRoom(newInvoice, cusToken,roomID){
         }
     })
 }
+//xuất biên lai đi kèm với hàm trên
 async function createReceipt(invoiceID) {
     try {
         const receipt = await Receipt.create({
@@ -243,6 +272,29 @@ async function createReceipt(invoiceID) {
     } catch (e) {
         console.error('Error in createReceipt:', e);
     }
+}
+//cus yêu cầu được hủy phòng, gửi đến admin. Dùng token cus, id hóa đơn 
+function reqCancelRoom(cusToken,newReqCancelRoom,receiptID){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            const decodedID=jwt.verify(cusToken,process.env.ACCESS_TOKEN)
+            const cusID=decodedID.payload.id
+
+            const foundInvoice=await Invoice.Receipt.findOne({
+                _id:receiptID
+            })
+            if(foundInvoice){
+
+            }else{
+                reject({
+                    status:'BAD',
+                    message:'Cant find receipt - promise'
+                })
+            }
+        }catch(e){
+            console.error('Error in reqCancelRoom - promise:', e);
+        }
+    })
 }
 //hủy phòng
 function cancelRoom(){

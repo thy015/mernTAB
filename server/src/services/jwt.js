@@ -28,7 +28,7 @@ const authenToken = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN, (error, owner) => {
         if (error) {
             console.error("Token verification failed:", error);
-            return res.sendStatus(403);
+            return res.status(403).json({ message: 'Invalid token' });
         }
         console.log("Token owner:", owner);
         req.ownerID = owner.payload.id; 

@@ -25,7 +25,10 @@ const cusSchema=new mongoose.Schema(
 
 const Account=mongoose.model('Account',ownerSchema)
 const Customer=mongoose.model('Customer',cusSchema)
+//kết nối với db có sẵn chứ ko cho tạo
+const Admin=mongoose.connection.collection('Admin')
 module.exports={
     Account,
-    Customer
+    Customer,
+    Admin
 }
