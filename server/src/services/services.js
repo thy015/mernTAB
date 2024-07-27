@@ -114,11 +114,12 @@ async function signInOwner(existedOwner) {
 // đăng ký luôn bên app t3
 async function signUpCustomer(newCustomer){
     return new Promise(async(resolve,reject)=>{
-        const{firstName,password,email,dob,phoneNumber,username}=newCustomer
+        const{firstName,password,email,dob,phoneNumber,username,lastName}=newCustomer
         try{
             const response= await axios.post(`https://api.htilssu.com/api/v1/auth/register`,{
                 username:username,
                 firstName:firstName,
+                lastName:lastName,
                 password:password,
                 email:email,
                 dob:dob,
