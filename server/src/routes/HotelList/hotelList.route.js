@@ -12,11 +12,13 @@ ListRouter.get('/',async(req,res)=>{
     }
 })
 //danh sách ksan có sẵn ko cần kiếm
-ListRouter.post('/',authenToken,hotelListController.createHotel)
+ListRouter.post('/create',authenToken,hotelListController.createHotel)
+
 //danh sách ksan phải tìm mới có
 ListRouter.get('/search', hotelListController.searchHotel)
 //danh sách khách sạn của 1 chủ nhà xác định bằng lần đăng nhập
 ListRouter.get('/owner',authenToken,hotelListController.getHotelsByOwner)
+
 //room
 ListRouter.get('/room',async(req,res)=>{
     try{
@@ -26,5 +28,5 @@ ListRouter.get('/room',async(req,res)=>{
         res.status(500).json(e)
     }
 })
-ListRouter.post('/room',authenToken,hotelListController.createRoom)
+ListRouter.post('/createRoom',authenToken,hotelListController.createRoom)
 module.exports=ListRouter

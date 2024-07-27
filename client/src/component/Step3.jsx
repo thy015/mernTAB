@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 
-const Step3 = ({ onPrevious, formData, setFormData }) => {
+const Step3 = ({ onPrevious, onSubmit, formData, setFormData }) => {
   const [rooms, setRooms] = useState(formData.rooms || []);
   const [errors, setErrors] = useState({});
 
   const handleGeneralChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ [name]: value });
+    setFormData({
+      [name]: value,
+    });
   };
 
   const handleRoomChange = (index, e) => {
@@ -84,21 +86,17 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
       rooms: newRooms,
     }));
   };
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.hotelName) newErrors.hotelName = "Tên khách sạn là bắt buộc";
-    if (!formData.hotelPhone)
-      newErrors.hotelPhone = "Số điện thoại là bắt buộc";
+    if (!formData.hotelPhone) newErrors.hotelPhone = "Số điện thoại là bắt buộc";
     if (!formData.area) newErrors.area = "Quy mô chỗ nghỉ là bắt buộc";
     if (!formData.capacity) newErrors.capacity = "Sức chứa tối đa là bắt buộc";
-    if (!formData.numberOfBathrooms)
-      newErrors.numberOfBathrooms = "Số phòng tắm là bắt buộc";
-    if (!formData.numberOfBedrooms)
-      newErrors.numberOfBedrooms = "Số phòng ngủ là bắt buộc";
-    if (!formData.hotelAddress)
-      newErrors.hotelAddress = "Địa chỉ khách sạn là bắt buộc";
+    if (!formData.numberOfBathrooms) newErrors.numberOfBathrooms = "Số phòng tắm là bắt buộc";
+    if (!formData.numberOfBedrooms) newErrors.numberOfBedrooms = "Số phòng ngủ là bắt buộc";
+    if (!formData.hotelAddress) newErrors.hotelAddress = "Địa chỉ khách sạn là bắt buộc";
 
-    // Validate rooms
     rooms.forEach((room, index) => {
       if (!room.roomType)
         newErrors[`roomType_${index}`] = "Loại phòng là bắt buộc";
@@ -110,23 +108,35 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
         newErrors[`roomPrice_${index}`] = "Giá phòng là bắt buộc";
       if (room.roomImages.length === 0)
         newErrors[`roomImages_${index}`] = "Hình ảnh là bắt buộc";
+
     });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      window.location.href = "/success";
+      onSubmit();
     }
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700">Nhập tên khách sạn:</label>
+      <h2 className="text-xl font-bold mb-4">Xác nhận thông tin</h2>
+      <div className="mb-4">
+        <p>Email: {formData.email}</p>
+        <p>Số điện thoại: {formData.phone}</p>
+        <p>Họ và tên: {formData.fullName}</p>
+        <p>Địa chỉ: {formData.address}</p>
+        <p>Ngày sinh: {formData.dob}</p>
+        <p>Tên doanh nghiệp: {formData.businessName}</p>
+        <p>MST Doanh nghiệp: {formData.taxId}</p>
+      </div>
+      <div className="mb-4">
+        <label>
+          Tên khách sạn:</label>
           <input
             type="text"
             name="hotelName"
@@ -134,84 +144,157 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Nhập SDT khách sạn:</label>
+          {errors.hotelName && <p>{errors.hotelName}</p>}
+        
+      </div>
+      <div className="mb-4">
+        <label>
+          Số điện thoại khách sạn:
           <input
-            type="tel"
-            id="phone"
+            type="text"
             name="hotelPhone"
             value={formData.hotelPhone}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
             placeholder="123-45-678"
             required
+
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Loại hình chỗ nghỉ:</label>
-          <select
-            name="accommodationType"
-            value={formData.accommodationType}
-            onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
-          >
-            <option value="Căn hộ">Căn hộ</option>
-            <option value="Biệt thự">Biệt thự</option>
-            <option value="Toàn bộ nhà riêng">Toàn bộ nhà riêng</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Quy mô chỗ nghỉ (m2):</label>
+          {errors.hotelPhone && <p>{errors.hotelPhone}</p>}
+        </label>
+      </div>
+      <div className="mb-4">
+        <label>
+          Quy mô chỗ nghỉ:
           <input
             type="text"
             name="area"
             value={formData.area}
             onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">
-            Sức chứa tối đa (người):
-          </label>
+          {errors.area && <p>{errors.area}</p>}
+        </label>
+      </div>
+      <div className="mb-4">
+        <label>
+          Sức chứa tối đa:
           <input
             type="text"
             name="capacity"
             value={formData.capacity}
             onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Số phòng tắm:</label>
+          {errors.capacity && <p>{errors.capacity}</p>}
+        </label>
+      </div>
+      <div className="mb-4">
+        <label>
+          Số phòng tắm:
           <input
             type="text"
             name="numberOfBathrooms"
             value={formData.numberOfBathrooms}
             onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Số phòng ngủ:</label>
+          {errors.numberOfBathrooms && <p>{errors.numberOfBathrooms}</p>}
+        </label>
+      </div>
+      <div className="mb-4">
+        <label>
+          Số phòng ngủ:
           <input
             type="text"
             name="numberOfBedrooms"
             value={formData.numberOfBedrooms}
             onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Nhập địa chỉ khách sạn:</label>
+          {errors.numberOfBedrooms && <p>{errors.numberOfBedrooms}</p>}
+        </label>
+      </div>
+      <div className="mb-4">
+        <label>
+          Địa chỉ khách sạn:
           <input
             type="text"
             name="hotelAddress"
             value={formData.hotelAddress}
             onChange={handleGeneralChange}
-            className="w-full px-4 py-2 border rounded"
           />
+          {errors.hotelAddress && <p>{errors.hotelAddress}</p>}
+        </label>
+      </div>
+
+      {rooms.map((room, index) => (
+        <div key={index} className="mb-4">
+          <h3 className="font-bold">Phòng {index + 1}</h3>
+          <label>
+            Loại phòng:
+            <input
+              type="text"
+              name="roomType"
+              value={room.roomType}
+              onChange={(e) => handleRoomChange(index, e)}
+            />
+            {errors[`roomType_${index}`] && <p>{errors[`roomType_${index}`]}</p>}
+          </label>
+          <label>
+            Tên phòng:
+            <input
+              type="text"
+              name="roomName"
+              value={room.roomName}
+              onChange={(e) => handleRoomChange(index, e)}
+            />
+            {errors[`roomName_${index}`] && <p>{errors[`roomName_${index}`]}</p>}
+          </label>
+          <label>
+            Quốc gia cư trú:
+            <input
+              type="text"
+              name="country"
+              value={room.country}
+              onChange={(e) => handleRoomChange(index, e)}
+            />
+            {errors[`country_${index}`] && <p>{errors[`country_${index}`]}</p>}
+          </label>
+          <label>
+            Giá phòng:
+            <input
+              type="text"
+              name="roomPrice"
+              value={room.roomPrice}
+              onChange={(e) => handleRoomChange(index, e)}
+            />
+            {errors[`roomPrice_${index}`] && <p>{errors[`roomPrice_${index}`]}</p>}
+          </label>
+          <label>
+            Hình ảnh:
+            <input
+              type="file"
+              name="hotelImages"
+              multiple
+              onChange={(e) => handleRoomChange(index, e)}
+            />
+            {errors[`hotelImages_${index}`] && <p>{errors[`hotelImages_${index}`]}</p>}
+          </label>
+          <label>
+            Tiện nghi:
+            <input
+              type="checkbox"
+              name="amenities"
+              value="wifi"
+              checked={room.amenities.includes("wifi")}
+              onChange={(e) => handleAmenitiesChange(index, e)}
+            /> Wifi
+            <input
+              type="checkbox"
+              name="amenities"
+              value="parking"
+              checked={room.amenities.includes("parking")}
+              onChange={(e) => handleAmenitiesChange(index, e)}
+            /> Parking
+          </label>
+          <button onClick={() => removeRoom(index)}>Xóa phòng</button>
         </div>
         {/*Room details*/}
         {rooms.map((room, index) => (
@@ -338,23 +421,12 @@ const Step3 = ({ onPrevious, formData, setFormData }) => {
           className="px-4 py-2 text-white bg-green-500 rounded"
         >
           Thêm phòng
+
         </button>
-        <div className="flex justify-between mt-4">
-          <button
-            type="button"
-            onClick={onPrevious}
-            className="px-4 py-2 text-black bg-gray-300 rounded"
-          >
-            Quay lại
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 text-white bg-blue-500 rounded"
-          >
-            Hoàn tất
-          </button>
-        </div>
-      </form>
+        <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">
+          Gửi
+        </button>
+      </div>
     </div>
   );
 };
