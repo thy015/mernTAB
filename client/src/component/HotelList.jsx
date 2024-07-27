@@ -1,28 +1,29 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../component/logo.png";
 import axios from "axios";
 import HotelItem from "./HotelItem";
-const HotelList = () =>  {
+const HotelList = () => {
   const [value, setValue] = useState(1750000);
   const [max, setMax] = useState(1000000);
 
-  {/*get API */}
-  const [hotelListState, setHotelListState] = useState([])
-  useEffect(()=>{
-      const getHotelList = async () =>{
-          try{
-              const res =await axios.get(
-                  "http://localhost:4000/hotellist"
-              )
-              //console.log(res.data) 
-              setHotelListState(res.data) 
-          }catch(error){
-              console.log(error.messege)
-          }
-      }   
-      getHotelList()
-  },[])
-  
+  {
+    /*get API */
+  }
+  const [hotelListState, setHotelListState] = useState([]);
+  useEffect(() => {
+    const getHotelList = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_BASEURL}/hotellist`
+        );
+        //console.log(res.data)
+        setHotelListState(res.data);
+      } catch (error) {
+        console.log(error.messege);
+      }
+    };
+    getHotelList();
+  }, []);
 
   const handleValueChange = (e) => {
     setValue(e.target.value);
@@ -183,10 +184,9 @@ const HotelList = () =>  {
               </button>
             </div>
             {/*hotel*/}
-            {hotelListState.map( hotel =>{
-              return <HotelItem hotelProps={hotel}/>
+            {hotelListState.map((hotel) => {
+              return <HotelItem hotelProps={hotel} />;
             })}
-            
           </div>
         </div>
       </body>
@@ -294,5 +294,5 @@ const HotelList = () =>  {
       </footer>
     </div>
   );
-}
+};
 export default HotelList;
