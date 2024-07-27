@@ -1,31 +1,31 @@
 
-// src/components/Step2.js
 import React, { useState } from "react";
+import dayjs from "dayjs";
 
 
-const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
+const Step1 = ({ onNext, formData, setFormData }) => {
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ [name]: value });
   };
-  const [errors, setErrors] = useState({});
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.businessName)
-      newErrors.businessName = "Tên doanh nghiệp là bắt buộc";
-    if (!formData.taxId) newErrors.taxId = "MST Doanh nghiệp là bắt buộc";
-    if (!formData.businessAddress)
-      newErrors.businessAddress = "Địa chỉ kinh doanh là bắt buộc";
-    if (!formData.businessLicenseExpiry)
-      newErrors.businessLicenseExpiry =
-        "Ngày hết hạn của giấy phép kinh doanh là bắt buộc";
-    if (!formData.fireSafetyLicenseExpiry)
-      newErrors.fireSafetyLicenseExpiry =
-        "Ngày hết hạn của giấy phép PCCC là bắt buộc";
-    if (!formData.businessCertificate)
-      newErrors.businessCertificate =
-        "Giấy chứng nhận đăng ký doanh nghiệp là bắt buộc";
+    const today = dayjs();
+    const eighteenYearsAgo = today.subtract(18, "year");
+
+    if (!formData.email) newErrors.email = "Email là bắt buộc";
+    if (!formData.phone) newErrors.phone = "Số điện thoại là bắt buộc";
+    if (!formData.fullName) newErrors.fullName = "Họ và tên là bắt buộc";
+    if (!formData.address) newErrors.address = "Địa chỉ là bắt buộc";
+    if (!formData.password) newErrors.password = "Mật khẩu là bắt buộc";
+    if (!formData.dob) {
+      newErrors.dob = "Ngày sinh là bắt buộc";
+    } else if (dayjs(formData.dob).isAfter(eighteenYearsAgo)) {
+      newErrors.dob = "Bạn phải từ 18 tuổi trở lên";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -34,110 +34,86 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onComplete();
+      onNext();
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-4">
-        <label className="block text-gray-700">Tên doanh nghiệp</label>
+        <label className="block text-gray-700">Email</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded"
+        />
+        {errors.email && <p className="text-red-500">{errors.email}</p>}
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700">Số điện thoại</label>
         <input
           type="text"
-          name="businessName"
-          value={formData.businessName}
+          name="phone"
+          value={formData.phone}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.businessName && (
-          <p className="text-red-500">{errors.businessName}</p>
-        )}
+        {errors.phone && <p className="text-red-500">{errors.phone}</p>}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">MST Doanh nghiệp</label>
-        <input
-          type="number"
-          name="taxId"
-          value={formData.taxId}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded"
-        />
-        {errors.taxId && <p className="text-red-500">{errors.taxId}</p>}
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Địa chỉ kinh doanh</label>
+        <label className="block text-gray-700">Họ và tên</label>
         <input
           type="text"
-          name="businessAddress"
-          value={formData.businessAddress}
+          name="fullName"
+          value={formData.fullName}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.businessAddress && (
-          <p className="text-red-500">{errors.businessAddress}</p>
-        )}
+        {errors.fullName && <p className="text-red-500">{errors.fullName}</p>}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">
-          Ngày hết hạn của giấy phép kinh doanh
-        </label>
+        <label className="block text-gray-700">Địa chỉ</label>
         <input
-          type="month"
-          name="businessLicenseExpiry"
-          value={formData.businessLicenseExpiry}
+          type="text"
+          name="address"
+          value={formData.address}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.businessLicenseExpiry && (
-          <p className="text-red-500">{errors.businessLicenseExpiry}</p>
-        )}
+        {errors.address && <p className="text-red-500">{errors.address}</p>}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">
-          Ngày hết hạn của giấy phép PCCC
-        </label>
+        <label className="block text-gray-700">Mật khẩu</label>
         <input
-          type="month"
-          name="fireSafetyLicenseExpiry"
-          value={formData.fireSafetyLicenseExpiry}
+          type="password"
+          name="password"
+          value={formData.password}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.fireSafetyLicenseExpiry && (
-          <p className="text-red-500">{errors.fireSafetyLicenseExpiry}</p>
-        )}
+        {errors.password && <p className="text-red-500">{errors.password}</p>}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">
-          Giấy chứng nhận đăng ký doanh nghiệp
-        </label>
+        <label className="block text-gray-700">Ngày sinh</label>
         <input
-          type="file"
-          name="businessCertificate"
+          type="date"
+          name="dob"
+          value={formData.dob}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.businessCertificate && (
-          <p className="text-red-500">{errors.businessCertificate}</p>
-        )}
+        {errors.dob && <p className="text-red-500">{errors.dob}</p>}
       </div>
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={onPrevious}
-          className="px-4 py-2 text-black bg-gray-300 rounded"
-        >
-          Quay lại
-        </button>
-        <button
-          type="submit"
-          className="justify-end px-4 py-2 text-white bg-blue-500 rounded"
-        >
-          Hoàn tất
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="flex justify-end px-4 py-2 text-white bg-blue-500 rounded"
+      >
+        Tiếp tục
+      </button>
     </form>
   );
 };
 
-export default Step2;
+export default Step1;
