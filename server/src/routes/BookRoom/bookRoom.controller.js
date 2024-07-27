@@ -6,7 +6,7 @@ const bookRoom= async (req, res) => {
     const cusID = req.ownerID; //middleware, but this is cusID
 
     if (!roomID || !paymentMethod ||!cusID) {
-        return res.status(400).json({ status: 'BAD', message: 'Missing required fields' });
+        return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
     }
 
     try {

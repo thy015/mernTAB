@@ -40,8 +40,6 @@ const signInOwner = async (req, res) => {
 
     if (!email || !passWord) {
         return res.status(403).json({ message: 'Email and password are required' });
-    } else if (!validateEmail(email)) {
-        return res.status(400).json({ message: 'Invalid email' });
     }
     try {
         const result = await signUpService.signInOwner(req.body);

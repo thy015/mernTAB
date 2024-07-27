@@ -7,8 +7,9 @@ dotenv.config()
 const axios =require('axios')
 const { generalAccessTokens, refreshAccessTokens, paymentToken } = require('./jwt');
 const { Invoice,Receipt } = require('../models/invoice.model');
+const { reqCancel } = require('../models/reqCancel.model');
 
-function signUpOwner(newOwner){
+async function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
         const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=newOwner
         try{
@@ -73,7 +74,7 @@ async function signInOwner(existedOwner) {
                     status: 'OK',
                     message: 'Success log in',
                     access_token: access_token,
-                    refresh_token: refresh_token,
+                    // refresh_token: refresh_token,
                     ownerID: foundOwner._id,
                     //owner đi vào trang chủ
                     redirect: '/'
@@ -100,7 +101,7 @@ async function signInOwner(existedOwner) {
                     //ko tìm thấy admin
                 } else {
                     return reject({
-                        status: 'BAD',
+                        status: 404,
                         message: 'You haven’t registered yet'
                     });
                 }
@@ -111,7 +112,7 @@ async function signInOwner(existedOwner) {
     });
 }
 
-function signUpCustomer(newCustomer){
+async function signUpCustomer(newCustomer){
     return new Promise(async(resolve,rejects)=>{
         const{name,passWord,email,birthDate,phoneNum}=newCustomer
         try{
@@ -144,7 +145,7 @@ function signUpCustomer(newCustomer){
     })
 }
 //đẩy qua bên khác
-function signInCustomer(existedCustomer){
+async function signInCustomer(existedCustomer){
     return new Promise(async(resolve,rejects)=>{    
         const {username,password}=existedCustomer 
         try{
@@ -224,7 +225,7 @@ async function bookRoom(newInvoice, cusToken,roomID){
                 nameOfService
             })
             
-            if(voucherResponse.status===200 && invoiceID===invoice._id){
+            if(voucherResponse.status===200){
 
                 invoice.isPaid=true
                 await invoice.save()
@@ -274,25 +275,35 @@ async function createReceipt(invoiceID) {
     }
 }
 //cus yêu cầu được hủy phòng, gửi đến admin. Dùng token cus, id hóa đơn 
-function reqCancelRoom(cusToken,newReqCancelRoom,receiptID){
+async function reqCancelRoom(cusToken,receiptID){
     return new Promise(async(resolve,reject)=>{
         try{
             const decodedID=jwt.verify(cusToken,process.env.ACCESS_TOKEN)
             const cusID=decodedID.payload.id
 
-            const foundInvoice=await Invoice.Receipt.findOne({
+            const foundInvoice=await Receipt.findOne({
                 _id:receiptID
             })
-            if(foundInvoice){
-
-            }else{
+            if(!foundInvoice){
                 reject({
                     status:'BAD',
                     message:'Cant find receipt - promise'
                 })
             }
+               const newReqCancelRoom= await reqCancel.create({
+                    dateReq: new Date(),
+                    cusID:cusID,
+                    receiptID:receiptID
+                })
+                resolve({
+                    status: 'OK',
+                    message: 'Request cancel room sent to admin',
+                    data:newReqCancelRoom
+                })
+            
         }catch(e){
             console.error('Error in reqCancelRoom - promise:', e);
+            reject(e+`rejects in promise`)
         }
     })
 }
@@ -424,5 +435,5 @@ module.exports={
     getHotelsByOwner,
     bookRoom,
     searchHotel,
-   
+   reqCancelRoom
 }
