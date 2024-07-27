@@ -127,7 +127,7 @@ async function signUpCustomer(newCustomer){
             if(response.status===200){
                 resolve({
                     status:'OK',
-                    message:'Succesfully created customer',
+                    message:'Successfully created customer',
                     data:response
                 })
             }
