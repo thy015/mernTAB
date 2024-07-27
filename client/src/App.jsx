@@ -16,6 +16,7 @@ import CreateRoom from "./component/CreateRoom";
 import RevenueStats from "./component/RevenueStats";
 import RoomList from "./component/RoomList";
 import Manage from "./component/Manage";
+import Admin from "./component/Admin";
 
 export default function App() {
   return (
@@ -28,7 +29,7 @@ export default function App() {
     //   </div>
     // </Router>
     <div>
-      <HomePage />{" "}
+      <Admin />{" "}
     </div>
 
     // <Router>

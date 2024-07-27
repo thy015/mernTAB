@@ -10,7 +10,6 @@ import {
   faTachometerAlt,
   faPlus,
   faChartBar,
-  faUsers,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import CreateRoom from "./CreateRoom";
@@ -32,12 +31,12 @@ export default function Manage() {
     numberOfBathrooms: "",
     numberOfBedrooms: "",
     hotelAddress: "",
-    country: "", // Thêm trường quốc gia cư trú vào đây
+    country: "",
     rooms: [],
   });
 
   return (
-    <Router>
+    <>
       <div className="flex min-h-screen bg-blue-100">
         <nav className="p-4 text-blue-500 bg-slate-900 w-[400px]">
           <div className="my-6 font-bold text-center">
@@ -110,6 +109,6 @@ export default function Manage() {
         </div>
       </div>
       <Footer />
-    </Router>
+    </>
   );
 }
