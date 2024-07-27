@@ -3,14 +3,14 @@ const { validateEmail,validateBirthDate } = require('./signUp.controller')
 const signUpCustomer=async(req,res)=>{
     try{
         console.log(req.body)
-        const{name,password,email,birthDate,phoneNum}=req.body
+        const{firstName,password,email,dob,phoneNumber}=req.body
 
-        if(!name||!phoneNum|| !email || !birthDate ||!password){
+        if(!firstName||!phoneNumber|| !email || !dob ||!password){
             return res.status(403).json({message:'Input is required'})
         }else if(!validateEmail(email)){ 
             return res.status(400).json({ message:'Invalid email'})
         }
-        else if(!validateBirthDate(birthDate)){
+        else if(!validateBirthDate(dob)){
             return res.status(400).json({message:'Not enough age'})
         }
         
