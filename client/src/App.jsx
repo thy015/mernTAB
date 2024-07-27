@@ -7,8 +7,9 @@ import Register from './component/Register';
 import Upload  from './component/Upload';
 import {SecureUpload} from './component/SecureUpload'
 import { Route, Routes } from 'react-router-dom'
-
-
+import CreateRoom from './component/CreateRoom';
+import Dashboard from './component/Dashboard';
+import Manage from './component/Manage';
 export default function App() {
   return (
     <div className="App">
@@ -18,6 +19,9 @@ export default function App() {
         <Route path='/registerOwner' element={<Register/>}/>
         <Route path='/upload' element={<Upload/>}/>
         <Route path='/secure_upload' element={<SecureUpload/>}/>
+        <Route path='/createHotel' element={<CreateRoom/>}/>
+        <Route path='/dashboard' element={<Dashboard/>} />
+        <Route path='/manage' element={<Manage/>}/>
       </Routes>
     </div>
   );  
