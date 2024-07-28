@@ -5,6 +5,7 @@ import Detail from './component/Detail';
 import React from 'react';
 import Register from './component/Register';
 import { Route, Routes } from 'react-router-dom'
+import { Payment } from './Pages/Payment';
 
 
 export default function App() {
