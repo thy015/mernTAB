@@ -28,7 +28,24 @@ const getReqCancelRoomProcess=async(req,res)=>{
     }
 
 }
+
+const handleReqCancelRoom =async(req,res)=>{
+    const{reqCancelID,accept}=req.body
+    const adminID=req.adminID
+    console.log(reqCancelID,accept,adminID)
+    try{
+        if (!reqCancelID ||!accept ||!adminID) {
+            return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+        }
+       const result=await services.handleCancelRoom(reqCancelID,adminID,accept)
+       res.status(200).json(result)
+    }catch(e){
+        console.error('E in handle req controller:', e);
+        res.status(500).json({ message: 'An error occurred while fetching the cancellation requests',});
+    }
+}
 module.exports={
     reqCancelRoom,
-    getReqCancelRoomProcess
+    getReqCancelRoomProcess,
+    handleReqCancelRoom
 }
