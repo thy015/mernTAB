@@ -139,10 +139,7 @@ async function signUpCustomer(newCustomer){
             }
         }catch(e){
             console.error('Error during sign-up:', e);
-            reject({
-                status: 'ERROR',
-                message: e.response ? e.response.data : e.message
-            });
+            reject(e);
         }
     })
 }
@@ -157,14 +154,11 @@ async function signInCustomer(existedCustomer){
                 password:password
             })
             if(response.status===200){
-                const access_token=await generalAccessTokens({
-                    id:response.data.id,
-                    isUse:'cus'
-                })
                 resolve({
                     status:'OK',
                     message:'Successfully signed in as cus',
-                    access_token:access_token
+                    userID: response.data.user.id,
+                    token: response.data.token
                 })
             }else{
                 resolve({
