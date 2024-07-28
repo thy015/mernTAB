@@ -27,6 +27,8 @@ const videoRoutes = require('./src/routes/Upload/video')
 
 app.use(bodyParser.json());
 app.use(morgan("combined"))
+
+app.use("/videos", videoRoutes)
 app.use(cors({
 
     origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
@@ -34,7 +36,7 @@ app.use(cors({
 app.use('/home',HomeRouter)
 app.use('/detail',DetailRouter)
 app.use('/hotelList',HotelListRouter)
-app.use('/signUp',signUprouter)
+app.use('/signUp',signUpRouter)
 app.use('/signUpCus',signUpCusRouter)
 app.use('/book',bookRouter)
 app.use('/reqCancel',reqCancelRouter)
