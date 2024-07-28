@@ -1,10 +1,4 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  NavLink,
-} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTachometerAlt,
@@ -35,6 +29,23 @@ export default function Manage() {
     rooms: [],
   });
 
+  const [activeTab, setActiveTab] = useState("Dashboard");
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "Dashboard":
+        return <Dashboard />;
+      case "CreateRoom":
+        return <CreateRoom formData={formData} setFormData={setFormData} />;
+      case "RevenueStats":
+        return <RevenueStats />;
+      case "RoomList":
+        return <RoomList />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-screen bg-blue-100">
@@ -45,67 +56,45 @@ export default function Manage() {
               <span>Owner Dashboard</span>
             </h3>
           </div>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 ${
-                isActive ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-              }`
-            }
+          <div
+            onClick={() => setActiveTab("Dashboard")}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
+              activeTab === "Dashboard" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
+            }`}
           >
             <FontAwesomeIcon icon={faTachometerAlt} className="mr-3" />
             <h4>Dashboard</h4>
-          </NavLink>
-          <NavLink
-            to="/create-room"
-            className={({ isActive }) =>
-              `no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 text-center ${
-                isActive ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-              }`
-            }
+          </div>
+          <div
+            onClick={() => setActiveTab("CreateRoom")}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
+              activeTab === "CreateRoom" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
+            }`}
           >
             <FontAwesomeIcon icon={faPlus} className="mr-3" />
             <h4>Create Hotel</h4>
-          </NavLink>
-          <NavLink
-            to="/revenue-stats"
-            className={({ isActive }) =>
-              `no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 ${
-                isActive ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-              }`
-            }
+          </div>
+          <div
+            onClick={() => setActiveTab("RevenueStats")}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
+              activeTab === "RevenueStats" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
+            }`}
           >
             <FontAwesomeIcon icon={faChartBar} className="mr-3" />
             <h4>Revenue Stats</h4>
-          </NavLink>
-
-          <NavLink
-            to="/room-list"
-            className={({ isActive }) =>
-              `no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 ${
-                isActive ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-              }`
-            }
+          </div>
+          <div
+            onClick={() => setActiveTab("RoomList")}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
+              activeTab === "RoomList" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
+            }`}
           >
             <FontAwesomeIcon icon={faList} className="mr-3" />
             <h4>Room List</h4>
-          </NavLink>
+          </div>
         </nav>
         <div className="flex-1 p-8">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route
-              path="/create-room"
-              element={
-                <CreateRoom formData={formData} setFormData={setFormData} />
-              }
-            />
-            <Route path="/revenue-stats" element={<RevenueStats />} />
-            <Route path="/room-list" element={<RoomList />} />
-            <Route path="/profile/:id" element={<ProfileDetail />} />
-            <Route path="/success" element={<SuccessPage />} />
-          </Routes>
+          {renderContent()}
         </div>
       </div>
       <Footer />

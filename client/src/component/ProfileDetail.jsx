@@ -1,48 +1,43 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 
-// Sample data for demonstration purposes
-const initialProfileData = {
-  hotelName: "Grand Hotel",
-  rooms: [
-    {
-      roomType: "Premier Room Twin",
-      roomName: "Grand Suite",
-      country: "Vietnam",
-      amenities: ["Balcony", "Air conditioning", "Free Wi-Fi"],
-      roomPrice: "450,000 VND",
-      roomImages: [
-        "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
-        "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
-      ],
-    },
-    {
-      roomType: "Deluxe Room",
-      roomName: "Ocean View Suite",
-      country: "Vietnam",
-      amenities: ["Sea view", "Air conditioning", "Free Wi-Fi", "Mini bar"],
-      roomPrice: "550,000 VND",
-      roomImages: [
-        "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
-        "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
-      ],
-    },
-  ],
-  allAmenities: [
-    "Balcony",
-    "Air conditioning",
-    "Free Wi-Fi",
-    "Sea view",
-    "Mini bar",
-    "Breakfast",
-    "Gym",
-    "Pool",
-  ], // Add more amenities if needed
-};
-
-const ProfileDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+const ProfileDetail = ({ profile, onBack }) => {
+  const initialProfileData = {
+    hotelName: profile.hotelName,
+    rooms: [
+      {
+        roomType: "Premier Room Twin",
+        roomName: "Grand Suite",
+        country: "Vietnam",
+        amenities: ["Balcony", "Air conditioning", "Free Wi-Fi"],
+        roomPrice: "450,000 VND",
+        roomImages: [
+          "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
+        ],
+      },
+      {
+        roomType: "Deluxe Room",
+        roomName: "Ocean View Suite",
+        country: "Vietnam",
+        amenities: ["Sea view", "Air conditioning", "Free Wi-Fi", "Mini bar"],
+        roomPrice: "550,000 VND",
+        roomImages: [
+          "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?w=500&auto=format&fit=crop&q=60",
+        ],
+      },
+    ],
+    allAmenities: [
+      "Balcony",
+      "Air conditioning",
+      "Free Wi-Fi",
+      "Sea view",
+      "Mini bar",
+      "Breakfast",
+      "Gym",
+      "Pool",
+    ], // Add more amenities if needed
+  };
 
   const [hotel, setHotel] = useState(initialProfileData);
   const [newRoom, setNewRoom] = useState({
@@ -71,10 +66,6 @@ const ProfileDetail = () => {
         const updatedRooms = prevHotel.rooms.filter(
           (_, i) => i !== roomToDelete
         );
-        if (updatedRooms.length === 0) {
-          navigate("/"); // Replace with actual hotel deletion logic
-          return { ...prevHotel, rooms: updatedRooms };
-        }
         return { ...prevHotel, rooms: updatedRooms };
       });
       setRoomToDelete(null);
@@ -342,17 +333,8 @@ const ProfileDetail = () => {
         ))}
       </div>
 
-      {hotel.rooms.length === 0 && (
-        <button
-          onClick={() => navigate("/")}
-          className="px-4 py-2 mt-4 text-white bg-red-500 rounded"
-        >
-          Delete Hotel
-        </button>
-      )}
-
       <button
-        onClick={() => navigate(-1)}
+        onClick={onBack}
         className="px-4 py-2 mt-4 text-white bg-blue-500 rounded"
       >
         Back

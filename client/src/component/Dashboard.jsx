@@ -1,6 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState } from "react";
+import ProfileDetail from "./ProfileDetail";
 const Dashboard = () => {
   // Sample data for profiles
   const profiles = [
@@ -25,6 +24,8 @@ const Dashboard = () => {
     // Add more profiles as needed
   ];
 
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
   // Format creation date
   const formatDate = (dateString) => {
     const options = {
@@ -37,16 +38,25 @@ const Dashboard = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const handleBackToList = () => {
+    setSelectedProfile(null);
+  };
+
+  if (selectedProfile) {
+    return (
+      <ProfileDetail profile={selectedProfile} onBack={handleBackToList} />
+    );
+  }
+
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="mb-4 text-2xl font-semibold">Quản lý hồ sơ</h2>
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {profiles.map((profile) => (
-          <Link
+          <div
             key={profile.id}
-            to={`/profile/${profile.id}`}
-            className="block p-4 no-underline bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200"
+            onClick={() => setSelectedProfile(profile)}
+            className="block p-4 no-underline bg-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200"
           >
             <div className="mb-4">
               <img
@@ -74,7 +84,7 @@ const Dashboard = () => {
                 Trạng thái hồ sơ: {profile.status}
               </p>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

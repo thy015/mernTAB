@@ -3,6 +3,7 @@ import React, { useState } from "react";
 const CreateRoom = ({ formData = {}, setFormData }) => {
   const [rooms, setRooms] = useState(formData.rooms || []);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleGeneralChange = (e) => {
     const { name, value } = e.target;
@@ -117,13 +118,16 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      window.location.href = "/success";
+      setSuccessMessage("Tạo thành công!");
+      // Reset form if needed
+      setFormData({});
+      setRooms([]);
     }
   };
 
   return (
-    <div className="md:w-[1600px] mx-auto bg-white p-4 shadow-md rounded-lg">
-      <h1 className="text-center text-blue-500">Accommodation Infomation</h1>
+    <div className="mx-auto bg-white p-4 shadow-md rounded-lg">
+      <h1 className="text-center text-blue-500">Accommodation Information</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700">Nhập tên khách sạn:</label>
@@ -147,7 +151,7 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
             value={formData.hotelPhone || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
-            placeholder="123-45-678"
+            placeholder="0939012345"
             required
           />
           {errors.hotelPhone && (
@@ -301,6 +305,7 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
             </div>
 
             <button
+              type="button"
               onClick={() => removeRoom(index)}
               className="px-2 py-2 mt-4 ml-auto text-white bg-red-500 rounded"
             >
@@ -310,6 +315,7 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
         ))}
 
         <button
+          type="button"
           onClick={addRoom}
           className="px-4 py-2 my-4 text-white bg-green-500 rounded"
         >
@@ -325,6 +331,9 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
           </button>
         </div>
       </form>
+      {successMessage && (
+        <div className="mt-4 text-center text-green-500">{successMessage}</div>
+      )}
     </div>
   );
 };
