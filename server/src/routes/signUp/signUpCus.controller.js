@@ -3,14 +3,14 @@ const { validateEmail,validateBirthDate } = require('./signUp.controller')
 const signUpCustomer=async(req,res)=>{
     try{
         console.log(req.body)
-        const{name,passWord,email,birthDate,phoneNum}=req.body
+        const{firstName,password,email,dob,phoneNumber,lastName}=req.body
 
-        if(!name||!phoneNum|| !email || !birthDate ||!passWord){
+        if(!firstName||!phoneNumber|| !email || !dob ||!password||!lastName){
             return res.status(403).json({message:'Input is required'})
         }else if(!validateEmail(email)){ 
             return res.status(400).json({ message:'Invalid email'})
         }
-        else if(!validateBirthDate(birthDate)){
+        else if(!validateBirthDate(dob)){
             return res.status(400).json({message:'Not enough age'})
         }
         
@@ -19,15 +19,15 @@ const signUpCustomer=async(req,res)=>{
 
     }
     catch(e){
+        console.error('Error in sign-up controller:', e);
         return res.status(500).json({message:e})
     }
 }
 
 const signInCustomer = async (req, res) => {
     try {
-        const { email, passWord } = req.body;
-
-        if (!email || !passWord) {
+        const { username, password } = req.body;
+        if (!username || !password) {
             return res.status(403).json({ message: 'Input is required' });
         }
         const result = await services.signInCustomer(req.body);
@@ -39,7 +39,7 @@ const signInCustomer = async (req, res) => {
     } catch (e) {
         return res.status(500).json({ message: e });
     }
-};
+};  
 
 module.exports={
     signUpCustomer,

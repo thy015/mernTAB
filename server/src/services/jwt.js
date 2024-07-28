@@ -28,13 +28,31 @@ const authenToken = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN, (error, owner) => {
         if (error) {
             console.error("Token verification failed:", error);
-            return res.sendStatus(403);
+            return res.status(403).json({ message: 'Invalid token' });
         }
         console.log("Token owner:", owner);
         req.ownerID = owner.payload.id; 
         next();
     });
 }
+
+const authenCusToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log(token)
+    if (!token) return res.status(401).json({ message: 'missing token' });
+
+    jwt.verify(token, process.env.ACCESS_TOKEN, (error, decoded) => {
+        if (error) {
+            console.error("Token verification failed:", error);
+            return res.status(403).json({ message: 'Invalid token' });
+        }
+        console.log("Decoded token:", decoded);
+        req.cusID = decoded.payload.id;
+        next();
+    });
+};
+
 
 const paymentToken=async(payload)=>{
     console.log(payload)
@@ -49,5 +67,6 @@ module.exports={
     generalAccessTokens,
     refreshAccessTokens,
     authenToken,
+    authenCusToken,
     paymentToken
 }
