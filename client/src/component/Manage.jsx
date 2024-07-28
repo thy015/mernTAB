@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTachometerAlt,
-  faPlus,
-  faChartBar,
-  faList,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTachometerAlt, faPlus, faChartBar, faList } from "@fortawesome/free-solid-svg-icons";
 import CreateRoom from "./CreateRoom";
 import Dashboard from "./Dashboard";
 import RevenueStats from "./RevenueStats";
@@ -14,25 +9,15 @@ import logo from "../image/Component 33.png";
 import Footer from "./Footer";
 
 export default function Manage() {
-  const [formData, setFormData] = useState({
-    hotelName: "",
-    hotelPhone: "",
-    accommodationType: "Căn hộ",
-    area: "",
-    capacity: "",
-    numberOfBathrooms: "",
-    numberOfBedrooms: "",
-    hotelAddress: "",
-    country: "",
-    rooms: [],
-  });
-
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [ownerID, setOwnerID] = useState(null);
 
   useEffect(() => {
     const storedOwnerID = localStorage.getItem("ownerID");
-    if (storedOwnerID) {
+    const authToken = localStorage.getItem("authToken");
+    console.log(storedOwnerID)
+    console.log(authToken)
+    if (storedOwnerID && authToken) {
       setOwnerID(storedOwnerID);
     } else {
       window.location.href = "/login";
@@ -44,7 +29,7 @@ export default function Manage() {
       case "Dashboard":
         return <Dashboard ownerID={ownerID} />;
       case "CreateRoom":
-        return <CreateRoom formData={formData} setFormData={setFormData} />;
+        return <CreateRoom />;
       case "RevenueStats":
         return <RevenueStats />;
       case "RoomList":
@@ -66,36 +51,28 @@ export default function Manage() {
           </div>
           <div
             onClick={() => setActiveTab("Dashboard")}
-            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
-              activeTab === "Dashboard" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-            }`}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${activeTab === "Dashboard" ? "bg-gray-700 text-white" : "hover:bg-gray-700"}`}
           >
             <FontAwesomeIcon icon={faTachometerAlt} className="mr-3" />
             <h4>Dashboard</h4>
           </div>
           <div
             onClick={() => setActiveTab("CreateRoom")}
-            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
-              activeTab === "CreateRoom" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-            }`}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${activeTab === "CreateRoom" ? "bg-gray-700 text-white" : "hover:bg-gray-700"}`}
           >
             <FontAwesomeIcon icon={faPlus} className="mr-3" />
             <h4>Create Hotel</h4>
           </div>
           <div
             onClick={() => setActiveTab("RevenueStats")}
-            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
-              activeTab === "RevenueStats" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-            }`}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${activeTab === "RevenueStats" ? "bg-gray-700 text-white" : "hover:bg-gray-700"}`}
           >
             <FontAwesomeIcon icon={faChartBar} className="mr-3" />
             <h4>Revenue Stats</h4>
           </div>
           <div
             onClick={() => setActiveTab("RoomList")}
-            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${
-              activeTab === "RoomList" ? "bg-gray-700 text-white" : "hover:bg-gray-700"
-            }`}
+            className={`no-underline flex items-center py-2 px-4 rounded mt-2 text-gray-400 cursor-pointer ${activeTab === "RoomList" ? "bg-gray-700 text-white" : "hover:bg-gray-700"}`}
           >
             <FontAwesomeIcon icon={faList} className="mr-3" />
             <h4>Room List</h4>
