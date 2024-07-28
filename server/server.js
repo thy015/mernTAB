@@ -1,13 +1,14 @@
-const PORT = process.env.PORT || 4000;
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const bodyParser = require('body-parser');
-dotenv.config();
-const app = express();
-const mongoose = require('mongoose');
-const http = require('http');
 
+const PORT=process.env.PORT || 4000;
+const express=require('express');
+const cors=require('cors');
+const dotenv=require('dotenv')
+const bodyParser=require('body-parser')
+dotenv.config()
+const app=express();
+const mongoose=require('mongoose')
+const morgan=require('morgan')
+const http=require('http');
 const HomeRouter = require('./src/routes/Home/home.route');
 const DetailRouter = require('./src/routes/HotelDetail/detail.route');
 const HotelListRouter = require('./src/routes/HotelList/hotelList.route');
@@ -19,12 +20,17 @@ const reqCancelRouter=require('./src/routes/BookRoom/reqCancel.route')
 //always put first
 
 
+
 const videoRoutes = require('./src/routes/Upload/video')
 
 // Cấu hình middleware
+
 app.use(bodyParser.json());
+app.use(morgan("combined"))
+
 app.use("/videos", videoRoutes)
 app.use(cors({
+
     origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
 }))
 app.use('/home',HomeRouter)

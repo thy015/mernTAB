@@ -8,9 +8,15 @@ const reqCancelSchema=mongoose.Schema({
     adminID:{type:mongoose.Schema.ObjectId,ref:'Admin',required:false},
     receiptID:{type:mongoose.Schema.ObjectId,ref:'Receipt',required:true}
 });
+
+const refundMoneySchema =mongoose.Schema({
+    dateRefund:{type:Date,default:Date.now(),required:true},
+    amountRefund:{type:Number,default:0,required:true},
+    cusID:{type:String,required:true}
+})
 const reqCancel=mongoose.model('reqCancel',reqCancelSchema);
-
-
+const refundMoney=mongoose.model('refundMoney',refundMoneySchema)
 module.exports={
-    reqCancel
+    reqCancel,
+    refundMoney
 }

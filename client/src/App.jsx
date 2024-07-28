@@ -7,10 +7,8 @@ import Register from './component/Register';
 import Upload  from './component/Upload';
 import {SecureUpload} from './component/SecureUpload'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import CreateRoom from './component/CreateRoom';
-import Dashboard from './component/Dashboard';
 import Manage from './component/Manage';
-import ProfileDetail from './component/ProfileDetail';
+import Login from './component/Login';
 export default function App() {
   return (
     <div className="App">
@@ -22,6 +20,7 @@ export default function App() {
         <Route path='/upload' element={<Upload/>}/>
         <Route path='/secure_upload' element={<SecureUpload/>}/>
         <Route path='/manage' element={<Manage/>} />
+        <Route path='/login' element={<Login/>} />
       </Routes>
       </Router>
     </div>

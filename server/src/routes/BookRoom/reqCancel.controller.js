@@ -15,20 +15,66 @@ const reqCancelRoom=async(req,res)=>{
         res.status(500).json({message:'in controller'})
     }
 }
-const getReqCancelRoomProcess=async(req,res)=>{
+const getReqCancelRoomAccepted=async(req,res)=>{
     try {
-        const allReqCancels = await reqCancel.find({ isAccept: 'processing' });
+        const reqCancelsAccepted = await reqCancel.find({ isAccept: 'accepted' });
         res.status(200).json({
             status: 'OK',
-            data: allReqCancels
+            data: reqCancelsAccepted
         });
     } catch (e) {
-        console.error('Error in getAllReqCancel:', e);
+        console.error('Error in getReqCancelRoomAccepted:', e);
         res.status(500).json({ message: 'An error occurred while fetching the cancellation requests',});
     }
 
 }
+const getReqCancelRoomRejected=async(req,res)=>{
+    try {
+        const reqCancelsRejected= await reqCancel.find({ isAccept: 'rejected' });
+        res.status(200).json({
+            status: 'OK',
+            data: reqCancelsRejected
+        });
+    } catch (e) {
+        console.error('Error in getReqCancelRoomRejected:', e);
+        res.status(500).json({ message: 'An error occurred while fetching the cancellation requests',});
+    }
+
+}
+const getReqCancelRoomProcess=async(req,res)=>{
+    try {
+        const reqCancelsProcessing = await reqCancel.find({ isAccept: 'processing' });
+        res.status(200).json({
+            status: 'OK',
+            data: reqCancelsProcessing
+        });
+    } catch (e) {
+        console.error('Error in getReqCancelRoomProcess:', e);
+        res.status(500).json({ message: 'An error occurred while fetching the cancellation requests',});
+    }
+
+}
+
+const handleReqCancelRoom =async(req,res)=>{
+    const{reqCancelID,accept}=req.body
+    const adminID=req.adminID
+    console.log(reqCancelID,accept,adminID)
+    try{
+        if (!reqCancelID ||!accept ||!adminID) {
+            return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+        }
+       const result=await services.handleCancelRoom(reqCancelID,adminID,accept)
+       res.status(200).json(result)
+    }catch(e){
+        console.error('E in handle req controller:', e);
+        res.status(500).json({ message: 'An error occurred while fetching the cancellation requests',});
+    }
+}
 module.exports={
     reqCancelRoom,
-    getReqCancelRoomProcess
+    getReqCancelRoomProcess,
+    handleReqCancelRoom,
+    getReqCancelRoomAccepted,
+    getReqCancelRoomRejected
+
 }
