@@ -6,6 +6,7 @@ const bodyParser=require('body-parser')
 dotenv.config()
 const app=express();
 const mongoose=require('mongoose')
+const morgan=require('morgan')
 const http=require('http');
 const HomeRouter = require('./src/routes/Home/home.route');
 const DetailRouter = require('./src/routes/HotelDetail/detail.route');
@@ -16,7 +17,7 @@ const bookRouter = require('./src/routes/BookRoom/book.route');
 const reqCancelRouter=require('./src/routes/BookRoom/reqCancel.route')
 //always put first
 app.use(bodyParser.json());
-
+app.use(morgan("combined"))
 app.use(cors({
     origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
 }))
