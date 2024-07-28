@@ -138,7 +138,10 @@ async function signUpCustomer(newCustomer){
                 })
             }
         }catch(e){
-            reject(e)
+            reject({
+                status: 'ERROR',
+                message: e.response ? e.response.data : e.message
+            });
         }
     })
 }
