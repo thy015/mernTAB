@@ -19,6 +19,7 @@ const signUpCustomer=async(req,res)=>{
 
     }
     catch(e){
+        console.error('Error in sign-up controller:', e);
         return res.status(500).json({message:e})
     }
 }
