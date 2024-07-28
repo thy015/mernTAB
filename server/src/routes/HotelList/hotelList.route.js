@@ -1,7 +1,6 @@
 const express =require('express')
 const ListRouter=express.Router()
 const hotelListController=require('./hotelList.controller')
-const {createVideo} = require("./video.container")
 const Hotel = require('../../models/hotel.model')
 const { authenToken } = require('../../services/jwt')
 

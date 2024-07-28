@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProfileDetail from "./ProfileDetail";
+import axios from "axios";
+import HotelOwner from "./HotelOwner";
 const Dashboard = () => {
   // Sample data for profiles
   const profiles = [
@@ -38,6 +40,22 @@ const Dashboard = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const [hotelListState, setHotelListState] = useState([])
+
+  useEffect(()=>{
+    const getHotelList = async () =>{
+        try{
+            const res =await axios.get(
+                `${process.env.REACT_APP_BACKEND_BASEURL}/hotellist`
+            )
+            //console.log(res.data) 
+            setHotelListState(res.data) 
+        }catch(error){
+            console.log(error.messege)
+        }
+    }   
+    getHotelList()
+},[])
   const handleBackToList = () => {
     setSelectedProfile(null);
   };

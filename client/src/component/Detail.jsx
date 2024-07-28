@@ -13,7 +13,7 @@ export default function Detail() {
   useEffect(() => {
     const hotelData = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/detail/${_id}`);
+        const res = await axios.get(`https://mern-tab-be.vercel.app/detail/${_id}`);
         setHotel(res.data);
         //console.log(response.data)
       } catch (error) {

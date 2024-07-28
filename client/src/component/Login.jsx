@@ -1,5 +1,5 @@
-// src/components/Login.js
 import React, { useState } from "react";
+import axios from "axios"; // Thêm axios để gửi yêu cầu HTTP
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,7 +7,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -17,16 +17,24 @@ const Login = () => {
       return;
     }
 
-    if (email === "test@example.com" && password === "password") {
-      setSuccess("Đăng nhập thành công!");
-    } else {
-      setError("Email hoặc mật khẩu không chính xác.");
+    try {
+      const response = await axios.post("https://mern-tab-be.vercel.app/signUp/signIn", { email, password }); // Gửi yêu cầu POST đến server
+      if (response.data.status === "OK") {
+        setSuccess("Đăng nhập thành công!");
+        // Lưu trữ Owner ID và chuyển hướng đến trang Quản lý
+        localStorage.setItem("ownerID", response.data.ownerID);
+        window.location.href = "/manage";
+      } else {
+        setError("Email hoặc mật khẩu không chính xác.");
+      }
+    } catch (error) {
+      setError("Có lỗi xảy ra. Vui lòng thử lại.");
     }
   };
 
   return (
     <div
-      className="flex items-center justify-center min-h-screen bg-center bg-cover "
+      className="flex items-center justify-center min-h-screen bg-center bg-cover"
       style={{
         backgroundImage:
           "url('https://images.unsplash.com/photo-1441260038675-7329ab4cc264?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8N3w4N3x8ZW58MHx8fHx8')",
@@ -35,15 +43,11 @@ const Login = () => {
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
         <h2 className="mb-4 text-2xl font-bold text-center">Đăng Nhập</h2>
         {error && <p className="mb-4 text-center text-red-500">{error}</p>}
-        {success && (
-          <p className="mb-4 text-center text-green-500">{success}</p>
-        )}
+        {success && <p className="mb-4 text-center text-green-500">{success}</p>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block">
-              <span className=" after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                Email
-              </span>
+              <span className="after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">Email</span>
               <input
                 type="email"
                 id="email"
@@ -57,9 +61,7 @@ const Login = () => {
           </div>
           <div className="mb-4">
             <label className="block">
-              <span className="after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                Mật khẩu
-              </span>
+              <span className="after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">Mật khẩu</span>
               <input
                 type="password"
                 id="password"
@@ -71,17 +73,10 @@ const Login = () => {
               />
             </label>
           </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-          >
-            Đăng Nhập
-          </button>
+          <button type="submit" className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">Đăng Nhập</button>
           <p className="mt-4 text-sm text-center text-gray-600">
             Bạn chưa có tài khoản?
-            <a href="/signup" className="text-blue-500 hover:underline">
-              Đăng ký
-            </a>
+            <a href="/signup" className="text-blue-500 hover:underline">Đăng ký</a>
           </p>
         </form>
       </div>

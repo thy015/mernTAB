@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTachometerAlt,
@@ -30,6 +30,13 @@ export default function Manage() {
   });
 
   const [activeTab, setActiveTab] = useState("Dashboard");
+
+  useEffect(() => {
+    const ownerID = localStorage.getItem("ownerID");
+    if (!ownerID) {
+      window.location.href = "/login";
+    }
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -93,9 +100,7 @@ export default function Manage() {
             <h4>Room List</h4>
           </div>
         </nav>
-        <div className="flex-1 p-8">
-          {renderContent()}
-        </div>
+        <main className="flex-1 p-6 bg-white">{renderContent()}</main>
       </div>
       <Footer />
     </>
