@@ -3,7 +3,7 @@ const {Invoice}=require('../../models/invoice.model')
 
 const bookRoom= async (req, res) => {
     const { roomID, paymentMethod } = req.body;
-    const cusID = req.ownerID; //middleware, but this is cusID
+    const cusID = req.cusID;
 
     if (!roomID || !paymentMethod ||!cusID) {
         return res.status(403).json({message: 'Missing required fields' });

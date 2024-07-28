@@ -12,7 +12,7 @@ const InvoiceSchema=new mongoose.Schema(
 const ReceiptSchema=new mongoose.Schema(
     {
         receiptID:{type:mongoose.Schema.ObjectId,ref:'Invoice',required:true},
-        createDate:{type:Date,required:true}
+        createDate:{type:Date,required:true, default: Date.now}
     }
 )
 const Receipt=mongoose.model('Receipt',ReceiptSchema)

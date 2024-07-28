@@ -154,11 +154,15 @@ async function signInCustomer(existedCustomer){
                 password:password
             })
             if(response.status===200){
+                const access_token=await generalAccessTokens({
+                    id:response.data.user.id,
+                    isUse:'customer'
+                })
                 resolve({
                     status:'OK',
                     message:'Successfully signed in as cus',
                     userID: response.data.user.id,
-                    token: response.data.token
+                    access_token:access_token
                 })
             }else{
                 resolve({
@@ -248,7 +252,6 @@ async function bookRoom(newInvoice, cusToken,roomID){
             
         }catch(e){
             console.error('Error in bookRoom:', e);
-
             if (e.status == 'BAD' || e.status == 400) {
                 await Invoice.findOneAndDelete(newInvoice._id);
             }
