@@ -22,7 +22,8 @@ const Login = () => {
       if (response.data.status === "OK") {
         setSuccess("Đăng nhập thành công!");
         localStorage.setItem("ownerID", response.data.ownerID);
-        localStorage.setItem("authToken", response.data.token); // Lưu token vào localStorage
+        localStorage.setItem("authToken", response.data.access_token); 
+        console.log(response.data.access_token)// Lưu token vào localStorage
         window.location.href = "/manage";
       } else {
         setError("Email hoặc mật khẩu không chính xác.");
