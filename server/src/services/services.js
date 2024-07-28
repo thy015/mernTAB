@@ -1,6 +1,8 @@
 
 const Account=require('../models/signUp.model');
 const Hotel=require('../models/hotel.model');
+const Video = require('../models/Video')
+
 const jwt=require('jsonwebtoken')
 const dotenv=require('dotenv')
 dotenv.config()
@@ -318,7 +320,7 @@ async function handleCancelRoom(){
 //truyền token
     function createHotel(newHotel,ownerID){
         return new Promise(async(resolve,rejects)=>{
-            const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city}=newHotel
+            const{address,numberOfRooms,taxCode,companyName,nation,facilityName,businessType,scale,city,minPrice,imgUrl}=newHotel
             try{
                 console.log(ownerID)
                 const checkExistedOwnerID=await Account.Account.findOne({
@@ -340,6 +342,8 @@ async function handleCancelRoom(){
                     businessType,
                     scale,
                     city,
+                    minPrice,
+                    imgUrl,
                     ownerID
                 });
                 if(createdHotel){
@@ -428,7 +432,6 @@ const searchHotel=async(searchCriteria)=>{
     }
 }
 
-
 module.exports={
     signUpOwner,
     createHotel,
@@ -438,6 +441,8 @@ module.exports={
     createRoom,
     getHotelsByOwner,
     bookRoom,
+
     searchHotel,
    reqCancelRoom
+
 }

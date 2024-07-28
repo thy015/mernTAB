@@ -11,7 +11,8 @@ const hotelSchema =new mongoose.Schema(
         businessType: { type: String, required: true },
         scale: { type: String, required: true },
         city: { type: String, required: true },
-        minPrice:{type: Number,require: true, default: 0},
+        minPrice:{type: Number,required: true, default: 0},
+        imgUrl:{type:String,required:true},
         ownerID:{type:mongoose.Schema.ObjectId,ref:'Account',require:true}
     }
 )

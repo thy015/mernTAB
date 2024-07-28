@@ -133,7 +133,7 @@ export default function Footer() {
                   </p>
                 </label>
               </form>
-              <button className="p-2 bg-sky-300 hover:bg-sky-400 hover:text-white active:bg-sky-400">
+              <button className="px-4 py-2 bg-sky-300 hover:bg-sky-400 hover:text-white active:bg-sky-400">
                 Get Access
               </button>
             </div>

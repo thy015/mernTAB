@@ -12,7 +12,7 @@ const HotelList = () =>  {
       const getHotelList = async () =>{
           try{
               const res =await axios.get(
-                  "http://localhost:4000/hotellist"
+                  `${process.env.REACT_APP_BACKEND_BASEURL}/hotellist`
               )
               //console.log(res.data) 
               setHotelListState(res.data) 
