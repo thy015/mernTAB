@@ -10,9 +10,7 @@ import CreateRoom from "./CreateRoom";
 import Dashboard from "./Dashboard";
 import RevenueStats from "./RevenueStats";
 import RoomList from "./RoomList";
-import ProfileDetail from "./ProfileDetail";
 import logo from "../image/Component 33.png";
-import SuccessPage from "./SuccessPage";
 import Footer from "./Footer";
 
 export default function Manage() {
@@ -30,10 +28,13 @@ export default function Manage() {
   });
 
   const [activeTab, setActiveTab] = useState("Dashboard");
+  const [ownerID, setOwnerID] = useState(null);
 
   useEffect(() => {
-    const ownerID = localStorage.getItem("ownerID");
-    if (!ownerID) {
+    const storedOwnerID = localStorage.getItem("ownerID");
+    if (storedOwnerID) {
+      setOwnerID(storedOwnerID);
+    } else {
       window.location.href = "/login";
     }
   }, []);
@@ -41,7 +42,7 @@ export default function Manage() {
   const renderContent = () => {
     switch (activeTab) {
       case "Dashboard":
-        return <Dashboard />;
+        return <Dashboard ownerID={ownerID} />;
       case "CreateRoom":
         return <CreateRoom formData={formData} setFormData={setFormData} />;
       case "RevenueStats":
@@ -49,7 +50,7 @@ export default function Manage() {
       case "RoomList":
         return <RoomList />;
       default:
-        return <Dashboard />;
+        return <Dashboard ownerID={ownerID} />;
     }
   };
 

@@ -26,11 +26,11 @@ const videoRoutes = require('./src/routes/Upload/video')
 // Cấu hình middleware
 
 app.use(bodyParser.json());
+
 app.use(morgan("combined"))
 
 app.use("/videos", videoRoutes)
 app.use(cors({
-
     origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
 }))
 app.use('/home',HomeRouter)

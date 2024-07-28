@@ -3,7 +3,7 @@ import axios from "axios"; // Thêm axios để gửi yêu cầu HTTP
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [passWord, setpassWord] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -12,13 +12,13 @@ const Login = () => {
     setError("");
     setSuccess("");
 
-    if (!email || !password) {
+    if (!email || !passWord) {
       setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
     try {
-      const response = await axios.post("https://mern-tab-be.vercel.app/signUp/signIn", { email, password }); // Gửi yêu cầu POST đến server
+      const response = await axios.post("https://mern-tab-be.vercel.app/signUp/signIn", { email, passWord }); // Gửi yêu cầu POST đến server
       if (response.data.status === "OK") {
         setSuccess("Đăng nhập thành công!");
         // Lưu trữ Owner ID và chuyển hướng đến trang Quản lý
@@ -63,10 +63,10 @@ const Login = () => {
             <label className="block">
               <span className="after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">Mật khẩu</span>
               <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type="passWord"
+                id="passWord"
+                value={passWord}
+                onChange={(e) => setpassWord(e.target.value)}
                 className="block w-full px-3 py-2 mt-1 bg-white border rounded-md shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1"
                 placeholder="Mật khẩu của bạn"
                 required
