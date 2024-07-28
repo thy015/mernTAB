@@ -15,25 +15,30 @@ const signUpCusRouter = require('./src/routes/signUp/signUpCus.route');
 const signUpRouter = require('./src/routes/signUp/signUp.route');
 const bookRouter = require('./src/routes/BookRoom/book.route');
 
+const reqCancelRouter=require('./src/routes/BookRoom/reqCancel.route')
+//always put first
+
+
 const videoRoutes = require('./src/routes/Upload/video')
 
 // Cấu hình middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
-}));
-
-// Định nghĩa route
-app.use('/home', HomeRouter);
-app.use('/detail', DetailRouter);
-app.use('/hotelList', HotelListRouter);
-app.use('/signUp', signUpRouter);
-app.use('/signUpCus', signUpCusRouter);
-app.use('/book', bookRouter);
 
 app.use("/videos", videoRoutes)
 
-// Kết nối MongoDB
+
+    origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
+}))
+app.use('/home',HomeRouter)
+app.use('/detail',DetailRouter)
+app.use('/hotelList',HotelListRouter)
+app.use('/signUp',signUprouter)
+app.use('/signUpCus',signUpCusRouter)
+app.use('/book',bookRouter)
+app.use('/reqCancel',reqCancelRouter)
+//mongo connect
+
 mongoose.connect(`mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`)
   .then(() => {
     console.log('Connect successfully');
