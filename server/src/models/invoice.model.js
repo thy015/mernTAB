@@ -5,13 +5,13 @@ const InvoiceSchema=new mongoose.Schema(
         total:{type:Number,required:true},
         paymentMethod:{type:String,required:true},
         isPaid:{type:Boolean,required:true,default:false},
-        cusID:{type:mongoose.Schema.ObjectId,ref:'Customer',required:true},
+        cusID:{type:String,required:true},
         roomID:{type:mongoose.Schema.ObjectId,ref:'Room',required:true}
     }
 )
 const ReceiptSchema=new mongoose.Schema(
     {
-        receiptID:{type:mongoose.Schema.ObjectId,ref:'Invoice',required:true},
+        invoiceID:{type:mongoose.Schema.ObjectId,ref:'Invoice',required:true},
         createDate:{type:Date,required:true, default: Date.now}
     }
 )

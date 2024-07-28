@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
+const reqCancelRouter = express.Router();
 const reqCancelController=require('./reqCancel.controller');
-const { authenToken } = require('../../services/jwt');
+const { authenCusToken } = require('../../services/jwt');
 
-router.post('/cusSend',authenToken,reqCancelController.reqCancelRoom)
-router.get('/',reqCancelController.getReqCancelRoomProcess)
+reqCancelRouter.post('/cusSend',authenCusToken,reqCancelController.reqCancelRoom)
+reqCancelRouter.get('/',reqCancelController.getReqCancelRoomProcess)
+module.exports=reqCancelRouter

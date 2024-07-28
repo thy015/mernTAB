@@ -2,7 +2,8 @@ const services=require('../../services/services')
 const {reqCancel}=require('../../models/reqCancel.model')
 const reqCancelRoom=async(req,res)=>{
     const {receiptID}=req.body
-    const cusID=req.ownerID //middleware, but this is cusID
+    const cusID=req.cusID 
+    console.log(cusID)
     try{
         if (!receiptID ||!cusID) {
             return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });

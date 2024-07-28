@@ -48,7 +48,7 @@ const authenCusToken = (req, res, next) => {
             return res.status(403).json({ message: 'Invalid token' });
         }
         console.log("Decoded token:", decoded);
-        req.cusID = decoded.id;
+        req.cusID = decoded.payload.id;
         next();
     });
 };

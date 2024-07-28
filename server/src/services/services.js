@@ -8,6 +8,7 @@ const axios =require('axios')
 const { generalAccessTokens, refreshAccessTokens, paymentToken } = require('./jwt');
 const { Invoice,Receipt } = require('../models/invoice.model');
 const { reqCancel } = require('../models/reqCancel.model');
+const { default: mongoose } = require('mongoose');
 
 async function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -178,13 +179,12 @@ async function signInCustomer(existedCustomer){
 }
 
 //truyền qua token của cus tạo từ signInCus, roomID nhập tay
-async function bookRoom(newInvoice, cusToken,roomID){
+async function bookRoom(newInvoice, cusID,roomID){
     return new Promise(async(resolve,reject)=>{
         const {paymentMethod}=newInvoice
         try{
-            //decode vì truyền vào token
-            const decodedID= jwt.verify(cusToken,process.env.ACCESS_TOKEN)
-            const cusID=decodedID.payload.id
+            //chuyển cusID trong schema thành string
+            console.log(`Customer ID extracted from token: ${cusID}`);
             //ko có phòng, đă dc book
             const foundRoom=await Hotel.Room.findById(roomID)
             if (!foundRoom) {
@@ -275,16 +275,13 @@ async function createReceipt(invoiceID) {
     }
 }
 //cus yêu cầu được hủy phòng, gửi đến admin. Dùng token cus, id hóa đơn 
-async function reqCancelRoom(cusToken,receiptID){
+async function reqCancelRoom(receiptID,cusID){
     return new Promise(async(resolve,reject)=>{
         try{
-            const decodedID=jwt.verify(cusToken,process.env.ACCESS_TOKEN)
-            const cusID=decodedID.payload.id
-
-            const foundInvoice=await Receipt.findOne({
+            const foundReceipt=await Receipt.findOne({
                 _id:receiptID
             })
-            if(!foundInvoice){
+            if(!foundReceipt){
                 reject({
                     status:'BAD',
                     message:'Cant find receipt - promise'

@@ -1,20 +1,23 @@
 const services = require('../../services/services');
 const {Invoice}=require('../../models/invoice.model')
 
-const bookRoom= async (req, res) => {
+const bookRoom = async (req, res) => {
     const { roomID, paymentMethod } = req.body;
     const cusID = req.cusID;
 
-    if (!roomID || !paymentMethod ||!cusID) {
-        return res.status(403).json({message: 'Missing required fields' });
-    }
+    console.log("Request body:", req.body);
+    console.log("Customer ID:", cusID); 
 
+    if (!roomID || !paymentMethod || !cusID) {
+        console.error("Missing required fields:", { roomID, paymentMethod, cusID });
+        return res.status(403).json({ message: 'Missing required fields' });
+    }
     try {
         const newInvoice = { paymentMethod };
         const result = await services.bookRoom(newInvoice, cusID, roomID);
-        if (result.status==='OK'){
+        if (result.status === 'OK') {
             return res.status(200).json(result);
-        }else {
+        } else {
             return res.status(500).json(result);
         }
     } catch (e) {
