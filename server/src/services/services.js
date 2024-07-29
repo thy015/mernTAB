@@ -125,7 +125,7 @@ async function signInOwner(existedOwner) {
 // đăng ký luôn bên app t3
 async function signUpCustomer(newCustomer) {
   return new Promise(async (resolve, reject) => {
-    const { firstName, password, email, dob, phoneNumber, username, lastName } =
+    const { firstName, password, dob, phoneNumber, username, lastName } =
       newCustomer;
     try {
       const response = await axios.post(
@@ -135,7 +135,6 @@ async function signUpCustomer(newCustomer) {
           firstName: firstName,
           lastName: lastName,
           password: password,
-          email: email,
           dob: dob,
           phoneNumber: phoneNumber,
         }
