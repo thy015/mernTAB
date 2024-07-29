@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import ProfileDetail from "./ProfileDetail";
 import axios from "axios";
-import { useParams } from "react-router";
 
 const Dashboard = ({ ownerID }) => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [hotelListState, setHotelListState] = useState([]);
-  const ownerId = useParams(ownerID)
+
   useEffect(() => {
     const getHotelList = async () => {
       try {
         const token = localStorage.getItem("authToken"); // Lấy token từ localStorage
         console.log(token)
-        const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotellist/${ownerId}`, {
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/${ownerID}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Thêm token vào header
           },
