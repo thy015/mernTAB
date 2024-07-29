@@ -152,8 +152,11 @@ async function signUpCustomer(newCustomer) {
         });
       }
     } catch (e) {
-      console.error("Error during sign-up:", e);
-      reject(e);
+      console.error('Error during sign-up:', e.response ? e.response.data : e);
+      reject({
+        status: 'BAD',
+        message: e.response ? e.response.data : 'Error during sign-up',
+      });
     }
   });
 }
