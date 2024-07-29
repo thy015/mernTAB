@@ -20,7 +20,7 @@ ListRouter.get('/search', hotelListController.searchHotel)
 //danh sách khách sạn của 1 chủ nhà xác định bằng lần đăng nhập
 ListRouter.get('/:ownerID', authenToken, async (req, res) => {
     try {
-      const hotels = await Hotel.Hotel.find(req.ownerID);
+      const hotels = await Hotel.Hotel.findById(req.ownerID);
       return res.status(200).json({ status: 'OK', data: hotels });
     } catch (e) {
       console.error("Error in getHotelsByOwner controller:", e);
