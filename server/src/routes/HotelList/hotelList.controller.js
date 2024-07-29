@@ -17,7 +17,7 @@ const createHotel=async(req,res)=>{
 
 const getHotelsByOwner = async (req, res) => {
     try {
-        const ownerID = req.ownerID;
+        const ownerID = req.params.ownerId;
         const hotels = await service.getHotelsByOwner(ownerID);
         return res.status(200).json({ status: 'OK', data: hotels });
     } catch (e) {
