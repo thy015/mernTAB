@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const CreateRoom = ({ formData = {}, setFormData }) => {
+const CreateRoom = () => {
+  const [formData, setFormData] = useState({});
   const [rooms, setRooms] = useState(formData.rooms || []);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+
+  const ownerID = localStorage.getItem("ownerID");
+  const token = localStorage.getItem("authToken");
 
   const handleGeneralChange = (e) => {
     const { name, value } = e.target;
@@ -90,47 +95,94 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.hotelName)
-      newErrors.hotelName = "Tên nơi cho thuê là bắt buộc";
-    if (!formData.hotelPhone)
-      newErrors.hotelPhone = "Số điện thoại là bắt buộc";
+    if (!formData.hotelName) newErrors.hotelName = "Tên nơi cho thuê là bắt buộc";
+    if (!formData.hotelPhone) newErrors.hotelPhone = "Số điện thoại là bắt buộc";
     if (!formData.area) newErrors.area = "Quy mô chỗ nghỉ là bắt buộc";
-    if (!formData.hotelAddress)
-      newErrors.hotelAddress = "Địa chỉ khách sạn là bắt buộc";
+    if (!formData.hotelAddress) newErrors.hotelAddress = "Địa chỉ khách sạn là bắt buộc";
     if (!formData.country) newErrors.country = "Quốc gia cư trú là bắt buộc";
 
-    // Validate rooms
     rooms.forEach((room, index) => {
-      if (!room.roomType)
-        newErrors[`roomType_${index}`] = "Loại phòng là bắt buộc";
-      if (!room.roomName)
-        newErrors[`roomName_${index}`] = "Tên phòng là bắt buộc";
-      if (!room.roomPrice)
-        newErrors[`roomPrice_${index}`] = "Giá phòng là bắt buộc";
-      if (room.roomImages.length === 0)
-        newErrors[`roomImages_${index}`] = "Hình ảnh là bắt buộc";
+      if (!room.roomType) newErrors[`roomType_${index}`] = "Loại phòng là bắt buộc";
+      if (!room.roomName) newErrors[`roomName_${index}`] = "Tên phòng là bắt buộc";
+      if (!room.roomPrice) newErrors[`roomPrice_${index}`] = "Giá phòng là bắt buộc";
+      if (room.roomImages.length === 0) newErrors[`roomImages_${index}`] = "Hình ảnh là bắt buộc";
     });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const uploadFile = async (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", 'images_preset');
+
+    try {
+      const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+      const resourceType = 'image';
+      const api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+
+      const res = await axios.post(api, data);
+      const { secure_url } = res.data;
+      return secure_url;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setSuccessMessage("Tạo thành công!");
-      // Reset form if needed
-      setFormData({});
-      setRooms([]);
+      try {
+        setErrors({});
+        setSuccessMessage("");
+
+        // Upload images to Cloudinary
+        const roomsWithUploadedImages = await Promise.all(
+          rooms.map(async (room) => {
+            const uploadedImages = await Promise.all(
+              room.roomImages.map((file) => uploadFile(file))
+            );
+            return { ...room, roomImages: uploadedImages };
+          })
+        );
+
+        const formDataWithOwner = {
+          ...formData,
+          ownerID,
+          rooms: roomsWithUploadedImages,
+        };
+        console.log(formDataWithOwner)
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
+          formDataWithOwner,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.data.status === "OK") {
+          setSuccessMessage("Tạo khách sạn thành công!");
+          setFormData({});
+          setRooms([]);
+        } else {
+          setErrors({ apiError: "Có lỗi xảy ra khi tạo khách sạn. Vui lòng thử lại." });
+        }
+      } catch (error) {
+        setErrors({ apiError: "Có lỗi xảy ra khi tạo khách sạn. Vui lòng thử lại." });
+      }
     }
   };
 
   return (
     <div className="mx-auto bg-white p-4 shadow-md rounded-lg">
-      <h1 className="text-center text-blue-500">Accommodation Information</h1>
+      <h1 className="text-center text-blue-500">Thông tin chỗ nghỉ</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-gray-700">Nhập tên khách sạn:</label>
+          <label className="block text-gray-700">Tên khách sạn:</label>
           <input
             type="text"
             name="hotelName"
@@ -138,25 +190,18 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
-          {errors.hotelName && (
-            <p className="text-red-500">{errors.hotelName}</p>
-          )}
+          {errors.hotelName && <p className="text-red-500">{errors.hotelName}</p>}
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Nhập SDT khách sạn:</label>
+          <label className="block text-gray-700">Số điện thoại khách sạn:</label>
           <input
             type="tel"
-            id="phone"
             name="hotelPhone"
             value={formData.hotelPhone || ""}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
-            placeholder="0939012345"
-            required
           />
-          {errors.hotelPhone && (
-            <p className="text-red-500">{errors.hotelPhone}</p>
-          )}
+          {errors.hotelPhone && <p className="text-red-500">{errors.hotelPhone}</p>}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Quốc gia cư trú:</label>
@@ -183,7 +228,7 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
           </select>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Quy mô chỗ nghỉ (m2):</label>
+          <label className="block text-gray-700">Quy mô chỗ nghỉ (m²):</label>
           <input
             type="number"
             name="area"
@@ -194,7 +239,7 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
           {errors.area && <p className="text-red-500">{errors.area}</p>}
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Nhập địa chỉ khách sạn:</label>
+          <label className="block text-gray-700">Địa chỉ khách sạn:</label>
           <input
             type="text"
             name="hotelAddress"
@@ -202,15 +247,12 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
-          {errors.hotelAddress && (
-            <p className="text-red-500">{errors.hotelAddress}</p>
-          )}
+          {errors.hotelAddress && <p className="text-red-500">{errors.hotelAddress}</p>}
         </div>
-
+        <h2 className="text-center text-blue-500">Thông tin các loại phòng</h2>
         {rooms.map((room, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="mb-2 text-lg font-semibold">Phòng {index + 1}</h3>
-            <div className="mb-2">
+          <div key={index} className="mb-6 border p-4 rounded">
+            <div className="mb-4">
               <label className="block text-gray-700">Loại phòng:</label>
               <select
                 name="roomType"
@@ -218,17 +260,14 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
                 onChange={(e) => handleRoomChange(index, e)}
                 className="w-full px-4 py-2 border rounded"
               >
-                <option value="">Select a room type</option>
-                <option value="Single">Single Room</option>
-                <option value="Double">Double Room</option>
-                <option value="Deluxe">Deluxe Room</option>
-                <option value="Superior">Superior Room</option>
+                <option value="">Chọn loại phòng</option>
+                <option value="Phòng đơn">Phòng đơn</option>
+                <option value="Phòng đôi">Phòng đôi</option>
+                <option value="Phòng gia đình">Phòng gia đình</option>
               </select>
-              {errors[`roomType_${index}`] && (
-                <p className="text-red-500">{errors[`roomType_${index}`]}</p>
-              )}
+              {errors[`roomType_${index}`] && <p className="text-red-500">{errors[`roomType_${index}`]}</p>}
             </div>
-            <div className="mb-2">
+            <div className="mb-4">
               <label className="block text-gray-700">Tên phòng:</label>
               <input
                 type="text"
@@ -237,103 +276,70 @@ const CreateRoom = ({ formData = {}, setFormData }) => {
                 onChange={(e) => handleRoomChange(index, e)}
                 className="w-full px-4 py-2 border rounded"
               />
-              {errors[`roomName_${index}`] && (
-                <p className="text-red-500">{errors[`roomName_${index}`]}</p>
-              )}
+              {errors[`roomName_${index}`] && <p className="text-red-500">{errors[`roomName_${index}`]}</p>}
             </div>
-            <div className="mb-2">
-              <label className="block text-gray-700">Tiện nghi:</label>
-              <div>
-                <label className="inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    value="Wi-Fi miễn phí"
-                    checked={room.amenities.includes("Wi-Fi miễn phí")}
-                    onChange={(e) => handleAmenitiesChange(index, e)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">Wi-Fi miễn phí</span>
-                </label>
-                <label className="inline-flex items-center ml-4">
-                  <input
-                    type="checkbox"
-                    value="Điều hòa nhiệt độ"
-                    checked={room.amenities.includes("Điều hòa nhiệt độ")}
-                    onChange={(e) => handleAmenitiesChange(index, e)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">Điều hòa nhiệt độ</span>
-                </label>
-                <label className="inline-flex items-center ml-4">
-                  <input
-                    type="checkbox"
-                    value="Bữa sáng miễn phí"
-                    checked={room.amenities.includes("Bữa sáng miễn phí")}
-                    onChange={(e) => handleAmenitiesChange(index, e)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">Bữa sáng miễn phí</span>
-                </label>
-              </div>
-            </div>
-            <div className="mb-2">
+            <div className="mb-4">
               <label className="block text-gray-700">Giá phòng:</label>
               <input
-                type="text"
+                type="number"
                 name="roomPrice"
                 value={room.roomPrice || ""}
                 onChange={(e) => handleRoomChange(index, e)}
                 className="w-full px-4 py-2 border rounded"
               />
-              {errors[`roomPrice_${index}`] && (
-                <p className="text-red-500">{errors[`roomPrice_${index}`]}</p>
-              )}
+              {errors[`roomPrice_${index}`] && <p className="text-red-500">{errors[`roomPrice_${index}`]}</p>}
             </div>
-            <div className="mb-2">
+            <div className="mb-4">
+              <label className="block text-gray-700">Tiện nghi:</label>
+              <div className="grid grid-cols-3 gap-2">
+                {["Wifi", "Điều hòa", "TV", "Tủ lạnh", "Máy sấy tóc", "Ban công"].map((amenity) => (
+                  <label key={amenity} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="amenities"
+                      value={amenity}
+                      checked={room.amenities.includes(amenity)}
+                      onChange={(e) => handleAmenitiesChange(index, e)}
+                      className="mr-2"
+                    />
+                    {amenity}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="mb-4">
               <label className="block text-gray-700">Hình ảnh:</label>
               <input
                 type="file"
                 name="roomImages"
                 multiple
-                accept="image/*"
                 onChange={(e) => handleRoomChange(index, e)}
-                className="w-full"
+                className="w-full px-4 py-2 border rounded"
               />
-              {errors[`roomImages_${index}`] && (
-                <p className="text-red-500">{errors[`roomImages_${index}`]}</p>
-              )}
+              {errors[`roomImages_${index}`] && <p className="text-red-500">{errors[`roomImages_${index}`]}</p>}
             </div>
-
             <button
               type="button"
               onClick={() => removeRoom(index)}
-              className="px-2 py-2 mt-4 ml-auto text-white bg-red-500 rounded"
+              className="px-4 py-2 bg-red-500 text-white rounded"
             >
-              Delete Room
+              Xóa phòng
             </button>
           </div>
         ))}
-
         <button
           type="button"
           onClick={addRoom}
-          className="px-4 py-2 my-4 text-white bg-green-500 rounded"
+          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Add Room
+          Thêm phòng
         </button>
-
-        <div className="flex justify-between">
-          <button
-            type="submit"
-            className="px-4 py-2 ml-auto text-white bg-blue-500 rounded"
-          >
-            Send
-          </button>
-        </div>
+        {errors.apiError && <p className="text-red-500">{errors.apiError}</p>}
+        {successMessage && <p className="text-green-500">{successMessage}</p>}
+        <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
+          Tạo khách sạn
+        </button>
       </form>
-      {successMessage && (
-        <div className="mt-4 text-center text-green-500">{successMessage}</div>
-      )}
     </div>
   );
 };

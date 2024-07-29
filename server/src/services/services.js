@@ -433,9 +433,9 @@ async function reqCancelRoom(receiptID, cusID) {
 //     }
 //   });
 // }
-//truyền token
-function createHotel(newHotel, ownerID) {
-  return new Promise(async (resolve, rejects) => {
+
+const createHotel = async (newHotel, ownerID) => {
+  return new Promise(async (resolve, reject) => {
     const {
       address,
       numberOfRooms,
@@ -447,17 +447,16 @@ function createHotel(newHotel, ownerID) {
       scale,
       city,
     } = newHotel;
+
     try {
-      console.log(ownerID);
-      const checkExistedOwnerID = await Account.Account.findOne({
-        _id: ownerID,
-      });
+      const checkExistedOwnerID = await Account.Account.findOne({ _id: ownerID });
       if (!checkExistedOwnerID) {
-        return rejects({
+        return reject({
           status: "BAD",
           message: "Owner ID does not exist",
         });
       }
+
       const createdHotel = await Hotel.Hotel.create({
         address,
         numberOfRooms,
@@ -470,6 +469,7 @@ function createHotel(newHotel, ownerID) {
         city,
         ownerID,
       });
+
       if (createdHotel) {
         resolve({
           status: "OK",
@@ -478,15 +478,14 @@ function createHotel(newHotel, ownerID) {
         });
       }
     } catch (e) {
-      rejects(e);
+      reject(e);
     }
   });
-}
+};
 
-//truyền HotelID và token chủ nhà
 const createRoom = async (newRoom, hotelID) => {
   return new Promise(async (resolve, reject) => {
-    const { numberOfBeds, typeOfRoom, money, capacity } = newRoom;
+    const { numberOfBeds, typeOfRoom, money, capacity, roomImages } = newRoom;
     try {
       const createdRoom = await Hotel.Room.create({
         numberOfBeds,
@@ -494,9 +493,11 @@ const createRoom = async (newRoom, hotelID) => {
         money,
         capacity,
         hotelID,
+        roomImages,
       });
+
       if (createdRoom) {
-        const hotel = await Hotel.findById(hotelID);
+        const hotel = await Hotel.Hotel.findById(hotelID);
         if (hotel) {
           if (hotel.minPrice === 0 || hotel.minPrice > money) {
             hotel.minPrice = money;
@@ -515,6 +516,7 @@ const createRoom = async (newRoom, hotelID) => {
     }
   });
 };
+
 //chỉ cần truyền token
 const getHotelsByOwner = async (ownerID) => {
   try {

@@ -12,7 +12,7 @@ const HotelList = () =>  {
       const getHotelList = async () =>{
           try{
               const res =await axios.get(
-                  `${process.env.REACT_APP_BACKEND_BASEURL}/hotellist`
+                  `${process.env.REACT_APP_BACKEND_BASEURL}/hotelList`
               )
               //console.log(res.data) 
               setHotelListState(res.data) 
