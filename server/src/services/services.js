@@ -226,16 +226,10 @@ async function bookRoom(newInvoice, cusID, roomID) {
         paymentMethod,
       });
 
-      const payment_token = await paymentToken({
-        invoiceID: invoice._id,
-        cusID,
-        total,
-      });
       const nameOfService = `Đặt phòng`;
       //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
-      //Tổng tiền, id biên lai, id cus, token tồn tại trong 20m
+      //Tổng tiền, id biên lai, id cus, biên lai sẽ dc xóa nếu 20m chưa thanh toán
       const voucherResponse=await axios.post('/appvoucher',{
-          token:payment_token,
           invoiceID: invoice._id,
           total,
           cusID,
@@ -243,6 +237,13 @@ async function bookRoom(newInvoice, cusID, roomID) {
       })
 
       if(voucherResponse.status===200){
+        setTimeout(async()=>{
+          const foundInvoice=await findById(invoice._id)
+          if(foundInvoice && !foundInvoice.isPaid){
+            await Invoice.findByIdAndDelete(foundInvoice._id)
+            console.log(`Delete invoice ${foundInvoice._id} due to overtime process, failed book room`)
+          }
+        },1200000) //20m
       resolve({
         status: "OK",
         message: "choose voucher succ",
@@ -284,7 +285,7 @@ async function completedTran(req, res) {
 
     res.status(200).json({
       status: "OK",
-      message: "Room booked successfully"
+      message: "Transaction completed, room booked successfully"
     });
   } catch (e) {
     console.error("Error in completedTran:", e);
@@ -294,7 +295,7 @@ async function completedTran(req, res) {
     });
   }
 }
-//xuất hóa đơn đi kèm với hàm trên
+//xuất hóa đơn khi thanh toán thành công
 async function createReceipt(invoiceID) {
   try {
     const receipt = await Receipt.create({
