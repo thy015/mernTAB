@@ -235,50 +235,68 @@ async function bookRoom(newInvoice, cusID, roomID) {
       const nameOfService = `Đặt phòng`;
       //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
       //Tổng tiền, id biên lai, id cus, token tồn tại trong 20m
-      // const voucherResponse=await axios.post('/appvoucher',{
-      //     token:payment_token,
-      //     invoiceID: invoice._id,
-      //     total,
-      //     cusID,
-      //     nameOfService
-      // })
+      const voucherResponse=await axios.post('/appvoucher',{
+          token:payment_token,
+          invoiceID: invoice._id,
+          total,
+          cusID,
+          nameOfService
+      })
 
-      // if(voucherResponse.status===200){
-
-      invoice.isPaid = true;
-      await invoice.save();
-
-      foundRoom.isAvailable = false; //đổi trạng thái phòng thủ công(chưa theo ngày)
-      await foundRoom.save();
-
-      const receipt = await createReceipt(invoice._id);
-
+      if(voucherResponse.status===200){
       resolve({
         status: "OK",
-        message: "Room booked successfully",
-        data: { invoice, receipt },
+        message: "choose voucher succ",
+        data: voucherResponse.data,
       });
-      // }
-      // else {
-      //     await Invoice.findByIdAndDelete(invoice._id)
-      //     reject({
-      //         status: 'BAD',
-      //         message: 'Payment failed, please try again',
-      //     })
-      // }
+      }
+      else {
+          reject({
+              status: 'BAD',
+              message: '3rd choose voucher failed',
+          })
+      }
     } catch (e) {
       console.error("Error in bookRoom:", e);
-      if (e.status == "BAD" || e.status == 400) {
-        await Invoice.findOneAndDelete(newInvoice._id);
-      }
-      reject({
-        status: "BAD",
-        message: "Internal server error",
-      });
     }
   });
 }
-//xuất biên lai đi kèm với hàm trên
+//k can controller
+async function completedTran(req, res) {
+  const { id } = req.params; 
+  try {
+    const invoice = await Invoice.findById(id);
+    if (!invoice) {
+      return res.status(404).json({
+        status: "BAD",
+        message: "Invoice not found",
+      });
+    }
+    //đổi tt biên lai => đổi tt phòng => tạo hóa đơn
+    invoice.isPaid = true;
+    await invoice.save();
+
+    const foundRoom = await Hotel.Room.findById(invoice.roomID);
+    if (foundRoom) {
+      foundRoom.isAvailable = false;
+      await foundRoom.save();
+    }
+    const receipt = await createReceipt(invoice._id);
+
+    res.status(200).json({
+      status: "OK",
+      message: "Room booked successfully",
+      data: { invoice, receipt },
+    });
+  } catch (e) {
+    console.error("Error in completedTran:", e);
+    res.status(500).json({
+      status: "BAD",
+      message: "Internal server error",
+    });
+  }
+}
+//xuất hóa đơn đi kèm với hàm trên
 async function createReceipt(invoiceID) {
   try {
     const receipt = await Receipt.create({
@@ -290,7 +308,8 @@ async function createReceipt(invoiceID) {
     console.error("Error in createReceipt:", e);
   }
 }
-//cus yêu cầu được hủy phòng, gửi đến admin. Dùng token cus, id hóa đơn
+
+//cus yêu cầu được hủy phòng, gửi đến admin. Dùng id cus, id hóa đơn
 async function reqCancelRoom(receiptID, cusID) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -525,4 +544,5 @@ module.exports = {
   searchHotel,
   reqCancelRoom,
   handleCancelRoom,
+  completedTran
 };
