@@ -22,8 +22,7 @@ const roomSchema=new mongoose.Schema({
     capacity:{ type: Number, required: true },
     isAvailable:{type:Boolean,required:true, default:true},
     revenue:{type:Number,required:false,default:0},
-    hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',require:true},
-    customerID: { type: mongoose.Schema.ObjectId, ref: 'Customer', required: false }
+    hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',require:true}
 })
 
 const Hotel=mongoose.model('Hotel',hotelSchema)

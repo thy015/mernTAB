@@ -3,9 +3,9 @@ const { validateEmail,validateBirthDate } = require('./signUp.controller')
 const signUpCustomer=async(req,res)=>{
     try{
         console.log(req.body)
-        const{firstName,password,dob,phoneNumber,lastName}=req.body
+        const{firstName,password,dob,phoneNumber,lastName,email}=req.body
 
-        if(!firstName||!phoneNumber || !dob ||!password||!lastName){
+        if(!firstName||!phoneNumber || !dob ||!password||!lastName||!email){
             return res.status(403).json({message:'Input is required'})
         }else if(!validateEmail(email)){ 
             return res.status(400).json({ message:'Invalid email'})
@@ -13,10 +13,8 @@ const signUpCustomer=async(req,res)=>{
         else if(!validateBirthDate(dob)){
             return res.status(400).json({message:'Not enough age'})
         }
-        
         const result= await services.signUpCustomer(req.body)
         return res.status(201).json(result)
-
     }
     catch(e){
         console.error('Error in sign-up controller:', e);
@@ -26,8 +24,8 @@ const signUpCustomer=async(req,res)=>{
 
 const signInCustomer = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(403).json({ message: 'Input is required' });
         }
         const result = await services.signInCustomer(req.body);

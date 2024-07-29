@@ -125,13 +125,13 @@ async function signInOwner(existedOwner) {
 // đăng ký luôn bên app t3
 async function signUpCustomer(newCustomer) {
   return new Promise(async (resolve, reject) => {
-    const { firstName, password, dob, phoneNumber, username, lastName } =
+    const { firstName, password, dob, phoneNumber, email, lastName } =
       newCustomer;
     try {
       const response = await axios.post(
         `https://api.htilssu.com/api/v1/auth/register`,
         {
-          username: username,
+          email: email,
           firstName: firstName,
           lastName: lastName,
           password: password,
@@ -160,13 +160,13 @@ async function signUpCustomer(newCustomer) {
 //đẩy qua bên khác
 async function signInCustomer(existedCustomer) {
   return new Promise(async (resolve, rejects) => {
-    const { username, password } = existedCustomer;
+    const { email, password } = existedCustomer;
     try {
       //bên fe post thẳng vào luồng này của be
       const response = await axios.post(
         "https://api.htilssu.com/api/v1/auth/login",
         {
-          username: username,
+          username: email,
           password: password,
         }
       );
