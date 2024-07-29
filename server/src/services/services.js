@@ -129,7 +129,7 @@ async function signUpCustomer(newCustomer) {
       newCustomer;
     try {
       const response = await axios.post(
-        `https://api.htilssu.com/api/v1/auth/register`,
+        "https://api.htilssu.com/api/v1/auth/register",
         {
           email: email,
           firstName: firstName,
