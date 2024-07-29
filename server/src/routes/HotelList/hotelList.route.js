@@ -18,7 +18,14 @@ ListRouter.post('/create',authenToken,hotelListController.createHotel)
 //danh sách ksan phải tìm mới có
 ListRouter.get('/search', hotelListController.searchHotel)
 //danh sách khách sạn của 1 chủ nhà xác định bằng lần đăng nhập
-ListRouter.get('/:ownerID', authenToken, hotelListController.getHotelsByOwner);
+ListRouter.get('/:ownerID', authenToken, async (req, res) => {
+    try {
+      const hotels = await Hotel.Hotel.find(req.params.ownerID);
+      return res.status(200).json({ status: 'OK', data: hotels });
+    } catch (e) {
+      console.error("Error in getHotelsByOwner controller:", e);
+      return res.status(500).json({ message: e });
+    }});
 
 //room
 ListRouter.get('/room',async(req,res)=>{
