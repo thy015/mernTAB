@@ -568,6 +568,6 @@ module.exports = {
   bookRoom,
   searchHotel,
   reqCancelRoom,
-  handleCancelRoom,
+  // handleCancelRoom,
 };
 
