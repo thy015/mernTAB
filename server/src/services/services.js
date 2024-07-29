@@ -139,7 +139,7 @@ async function signUpCustomer(newCustomer) {
           phoneNumber: phoneNumber,
         }
       );
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         resolve({
           status: "OK",
           message: "Successfully created customer",
