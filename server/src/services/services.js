@@ -284,8 +284,7 @@ async function completedTran(req, res) {
 
     res.status(200).json({
       status: "OK",
-      message: "Room booked successfully",
-      data: { invoice, receipt },
+      message: "Room booked successfully"
     });
   } catch (e) {
     console.error("Error in completedTran:", e);
