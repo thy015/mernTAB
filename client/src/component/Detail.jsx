@@ -20,6 +20,7 @@ export default function Detail() {
       try {
         const res = await axios.get(`https://mern-tab-be.vercel.app/detail/${_id}`);
         setHotel(res.data);
+        console.log(res.data)
       } catch (error) {
         console.error('Error fetching hotel data:', error);
       }
