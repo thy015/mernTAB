@@ -29,6 +29,46 @@ const TabDetail = ({ hotelId, tabs }) => {
     }
   }, [hotelId]);
 
+  // const handleBookRoom = async (room) => {
+  //   try {
+  //     const roomId = room.id;  // Assuming room.id is the room's ID
+  //     const totalMoney = room.money;  // Total money
+  //     const description = `Dịch vụ đặt phòng ${room.name}`;
+
+  //     const response = await axios.post(
+  //       "https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest",
+  //       {
+  //         OrderID: roomId,
+  //         PartnerID: "60c9c5d9c5f9c40015f6f7b6",
+  //         ServiceName: "Đặt phòng khách sạn",
+  //         TotalMoney: totalMoney,
+  //         CustomerCode: "KH01",
+  //         Description: description,
+  //         LinkHome: "https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/MainHome",
+  //         LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${roomId}`,
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     const voucherData = await resVoucher.json();
+  //     console.log("Phản hồi từ server tạo yêu cầu đối tác:", voucherData);
+
+  //     if (resVoucher.ok) {
+  //       window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=${buyTicketBus._id}`;
+  //     } else {
+  //       alert(voucherData.error || "Đã xảy ra lỗi khi truyền dữ liệu");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi truyền dữ liệu:", error);
+  //     alert("Không thể truyền dữ liệu");
+  //   }
+  // };
+
+
   const activeTabData = tabs.find((tab) => tab.type === activeTab);
 
   return (

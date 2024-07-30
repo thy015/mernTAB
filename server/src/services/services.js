@@ -190,14 +190,14 @@ async function bookRoom(newInvoice, cusID, roomID) {
       const voucherResponse=await axios.post('https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest',{
           OrderID: invoice._id,
           TotalMoney:total,
-          PartnerID:"",
+          PartnerID:"1000000005",
           ServiceName:`Book room`,
           CustomerCode: "KH01",
-          LinkHome:"",
+          LinkHome:"https://mern-tab-be.vercel.app/",
           LinkReturnSuccess:`https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
       })
 
-      if(voucherResponse.status===200){
+      if(voucherResponse.status===200 || voucherResponse.status==='OK'){
         resolve({
           status: "OK",
           message: "choose voucher succ",
