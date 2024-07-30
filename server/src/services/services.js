@@ -343,75 +343,82 @@ async function reqCancelRoom(receiptID, cusID) {
 //trên fe cho click đồng ý => accept =true
 //admin handle hủy phòng. ok => đổi trạng thái req, post qua app khác để hoàn tiền
 //ko accept => đổi trạng thái req, trả về cho user
-async function handleCancelRoom(reqCancelID, adminID, accept) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const foundReqCancel = await reqCancel.findOne({
-        _id: reqCancelID,
-      });
-      if (!foundReqCancel) {
-        reject({
+const handleCancelRoom = async (req, res) => {
+  const { reqCancelID, accept } = req.body;
+  const adminID = req.adminID;
+
+  console.log(reqCancelID, accept, adminID);
+
+  if (!reqCancelID || accept === undefined || !adminID) {
+    return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+  }
+
+  try {
+    const foundReqCancel = await reqCancel.findOne({ _id: reqCancelID });
+    if (!foundReqCancel) {
+      return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
+    }
+
+    if (accept) {
+      try {
+        const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
+          orderId: foundReqCancel.receiptID,
+          transactionId: ""
+        });
+        
+        if (refundResponse.status === 200 || refundResponse.status === 201) {
+          return res.status(200).json({
+            status: "OK",
+            message: "Refund for customer and change status",
+            data: refundResponse.data,
+          });
+
+        foundReqCancel.isAccept = "accepted";
+        foundReqCancel.adminID = adminID;
+        foundReqCancel.dateAccept = new Date();
+        await foundReqCancel.save();
+
+
+        } else {
+          return res.status(500).json({
+            status: "BAD",
+            message: "Refund processing failed",
+          });
+        }
+      } catch (e) {
+        console.error("Error in processing refund:", e);
+        return res.status(500).json({
           status: "BAD",
-          message: `There's no reqCancel`,
+          message: "Error in processing refund",
         });
       }
-      const cusID=foundReqCancel.cusID
-      if (accept) {
-        try {
-            foundReqCancel.isAccept = "accepted";
-            foundReqCancel.adminID = adminID;
-            foundReqCancel.dateAccept = new Date();
-            await foundReqCancel.save();
+    } else {
+      try {
+        foundReqCancel.isAccept = "rejected";
+        foundReqCancel.adminID = adminID;
+        await foundReqCancel.save();
 
-            const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-                orderId: foundReqCancel.receiptID,
-                transactionId:""
-            });
-            if (refundResponse.status === 200 || refundResponse.status === 201) {
-                // const newRefund = await refundMoney.create({
-                // dateRefund: new Date(),
-                // amountRefund: foundReqCancel.amount,
-                // cusID: cusID,
-                // });
-
-                // await newRefund.save();
-
-                return resolve({
-                status: "OK",
-                message: "Refund for customer and change status",
-                data: refundResponse.data,
-                });
-                } else {
-                    //# 2 status trên
-                    return reject({
-                    status: "BAD",
-                    message: "Refund processing failed",
-                    });
-                }
-        } catch (e) {
-          console.error("Error in processing refund:", e);
-        }
-        if (accept==false) {
-            try{
-                foundReqCancel.isAccept = "rejected"
-                foundReqCancel.adminID = adminID;
-                await foundReqCancel.save();
-    
-                return resolve({
-                    status: "OK",
-                    message: "Not refund money to cus",
-                    data: foundReqCancel,
-                  });
-            }catch(e){
-                console.error("Error in processing refund where accept==false:", e);
-            }
-        }
+        return res.status(200).json({
+          status: "OK",
+          message: "Not refund money to cus",
+          data: foundReqCancel,
+        });
+      } catch (e) {
+        console.error("Error in processing refund where accept == false:", e);
+        return res.status(500).json({
+          status: "BAD",
+          message: "Error in rejecting refund",
+        });
       }
-    } catch (e) {
-      console.error("Error in handleCancelRoom - promise:", e);
     }
-  });
-}
+  } catch (e) {
+    console.error("Error in handleCancelRoom:", e);
+    return res.status(500).json({
+      status: "BAD",
+      message: "An error occurred while fetching the cancellation requests",
+    });
+  }
+};
 //truyền token
 function createHotel(newHotel, ownerID) {
   return new Promise(async (resolve, rejects) => {
