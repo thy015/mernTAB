@@ -312,7 +312,7 @@ const handleCancelRoom = async (req, res) => {
 
   console.log(reqCancelID, accept, adminID, orderId, transactionId);
 
-  if (!reqCancelID || accept === undefined || !adminID  || !transactionId) {
+  if (!accept === undefined || !adminID) {
     return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
   }
 
@@ -331,7 +331,7 @@ const handleCancelRoom = async (req, res) => {
         // await foundReqCancel.save();
 
         const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId: orderId,
+          orderId: foundReqCancel._id,
           transactionId: transactionId
         });
 
