@@ -24,6 +24,7 @@ const roomSchema=new mongoose.Schema({
     revenue:{type:Number,required:false,default:0},
     hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',required:true},
     roomImages:{type:[String],required:false}
+
 })
 
 const Hotel=mongoose.model('Hotel',hotelSchema)
