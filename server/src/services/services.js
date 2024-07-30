@@ -198,6 +198,11 @@ async function bookRoom(newInvoice, cusID, roomID) {
       })
 
       if(voucherResponse.status===200){
+        resolve({
+          status: "OK",
+          message: "choose voucher succ",
+          data: voucherResponse.data,
+        });
         setTimeout(async()=>{
           const foundInvoice=await findById(invoice._id)
           if(foundInvoice && !foundInvoice.isPaid){
@@ -205,11 +210,6 @@ async function bookRoom(newInvoice, cusID, roomID) {
             console.log(`Delete invoice ${foundInvoice._id} due to overtime process, failed book room`)
           }
         },1200000) //20m
-      resolve({
-        status: "OK",
-        message: "choose voucher succ",
-        data: voucherResponse.data,
-      });
       }
       else {
           reject({
