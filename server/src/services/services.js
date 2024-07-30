@@ -367,11 +367,11 @@ const handleCancelRoom = async (req, res) => {
         // await foundReqCancel.save();
 
         const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId: null,
-          transactionId: "100000000000107"
+          orderId,
+          transactionId
         });
 
-        if (refundResponse.status === 200 || refundResponse.status === 201) {
+        if (refundResponse.status === 200) {
           return res.status(200).json({
             status: "OK",
             message: "Refund for customer and change status",
