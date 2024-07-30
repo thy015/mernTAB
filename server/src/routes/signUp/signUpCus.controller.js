@@ -1,5 +1,5 @@
 const services=require('../../services/services')
-
+const axios = require("axios");
 const signUpCustomer = async (req, res) => {
     const { firstName, password, dob, phoneNumber, email, lastName } = req.body;
     try {
