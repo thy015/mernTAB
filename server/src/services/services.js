@@ -10,12 +10,7 @@ const {
 const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
 
-const Video = require('../models/Video')
 
-const jwt=require('jsonwebtoken')
-
-
-const { default: mongoose } = require('mongoose');
 
 async function signUpOwner(newOwner){
     return new Promise(async (resolve,rejects)=>{
@@ -192,11 +187,12 @@ async function bookRoom(newInvoice, cusID, roomID) {
 
       //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
       //Tổng tiền, id biên lai, id cus, biên lai sẽ dc xóa nếu 20m chưa thanh toán
-      const voucherResponse=await axios.post('/appvoucher',{
+      const voucherResponse=await axios.post('https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest',{
           OrderID: invoice._id,
           TotalMoney:total,
-          PartnerID:cusID,
+          PartnerID:"",
           ServiceName:`Book room`,
+          CustomerCode: "KH01",
           LinkHome:"",
           LinkReturnSuccess:`https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
       })

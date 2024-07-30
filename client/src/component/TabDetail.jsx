@@ -93,7 +93,7 @@ const TabDetail = ({ hotelId, tabs }) => {
                     </h2>
                     <p className="mb-2">{room.numberOfBeds}</p>
                   </div>
-                  <div className="flex flex-col items-end justify-between col-span-1">
+                  <div className="flex flex-col items-end float-right">
                     <div>
       
                       <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded float-right">
