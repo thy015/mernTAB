@@ -2,8 +2,8 @@ const service = require('../../services/services');
 
 const createHotel = async (req, res) => {
   try {
-    const { address, numberOfRooms, taxCode, companyName, nation, facilityName, businessType, scale, city,hotelImg,hotelPhone } = req.body;
-    if (!address || !taxCode || !companyName || !nation || !facilityName || !businessType || !scale || !city) {
+    const { address, taxCode, companyName, nation, facilityName, businessType, scale, city,hotelPhone } = req.body;
+    if (!address || !taxCode || !companyName || !nation || !facilityName || !businessType || !scale || !city||!hotelPhone) {
       return res.status(403).json({ message: 'Input is required' });
     }
     const result = await service.createHotel(req.body, req.ownerID);
