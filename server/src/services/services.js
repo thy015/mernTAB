@@ -400,6 +400,9 @@ function createHotel(newHotel, ownerID) {
       businessType,
       scale,
       city,
+      hotelPhone,
+      hotelImg,
+      minPrice
     } = newHotel;
 
     try {
@@ -421,6 +424,9 @@ function createHotel(newHotel, ownerID) {
         businessType,
         scale,
         city,
+        hotelPhone,
+        hotelImg,
+        minPrice,
         ownerID,
       });
 
