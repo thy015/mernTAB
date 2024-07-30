@@ -4,7 +4,7 @@ const signUpService=require('../../services/services')
 const signUpOwner = async(req,res)=>{
     try{
         const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=req.body
-
+        
         if(!name || !passWord || !email || !birthDate ||!phoneNum ||!address||!dueDatePCCC||!dueDateKD){
             return res.status(403).json({message:'Input is required'})
         }
