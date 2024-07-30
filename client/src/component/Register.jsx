@@ -1,43 +1,64 @@
 import React, { useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
+import { DatePicker, Input, Button, Form, message } from "antd";
+import "antd/dist/reset.css";
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    name: "",
-    birthDate: "",
-    phoneNum: "",
-    address: "",
-    passWord: "",
-    dueDateKD: "",
-    dueDatePCCC: "",
-  });
+  const [name, setName] = useState("");
+  const [passWord, setPassWord] = useState("");
+  const [email, setEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
+  const [address, setAddress] = useState("");
+  const [dueDatePCCC, setDueDatePCCC] = useState("");
+  const [dueDateKD, setDueDateKD] = useState("");
 
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
-        console.log(formData)
+        console.log({
+          name,
+          passWord,
+          email,
+          birthDate,
+          phoneNum,
+          address,
+          dueDatePCCC,
+          dueDateKD
+        });
         const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_BASEURL}/signUp/create`,
-          formData
+          `${process.env.REACT_APP_BACKEND_BASEURL}/signUp/create`, {
+            name,
+            passWord,
+            email,
+            birthDate,
+            phoneNum,
+            address,
+            dueDatePCCC,
+            dueDateKD
+          }
         );
         console.log(response.data);
-        // window.location.href = "/success";
+        message.success("Registration successful");
+        window.location.href = "/login";
       } catch (error) {
         console.error("There was an error!", error);
+        message.error("Registration failed");
       }
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleDateChange = (date, dateString, name) => {
+    if (name === "dueDateKD") {
+      setDueDateKD(dateString);
+    } else if (name === "dueDatePCCC") {
+      setDueDatePCCC(dateString);
+    } else {
+      setBirthDate(dateString);
+    }
   };
 
   const validateForm = () => {
@@ -45,20 +66,18 @@ const Register = () => {
     const today = dayjs();
     const eighteenYearsAgo = today.subtract(18, "year");
 
-    if (!formData.email) newErrors.email = "Email là bắt buộc";
-    if (!formData.phoneNum) newErrors.phoneNum = "Số điện thoại là bắt buộc";
-    if (!formData.name) newErrors.name = "Họ và tên là bắt buộc";
-    if (!formData.address) newErrors.address = "Địa chỉ là bắt buộc";
-    if (!formData.passWord) newErrors.passWord = "Mật khẩu là bắt buộc";
-    if (!formData.birthDate) {
+    if (!email) newErrors.email = "Email là bắt buộc";
+    if (!phoneNum) newErrors.phoneNum = "Số điện thoại là bắt buộc";
+    if (!name) newErrors.name = "Họ và tên là bắt buộc";
+    if (!address) newErrors.address = "Địa chỉ là bắt buộc";
+    if (!passWord) newErrors.passWord = "Mật khẩu là bắt buộc";
+    if (!birthDate) {
       newErrors.birthDate = "Ngày sinh là bắt buộc";
-    } else if (dayjs(formData.birthDate).isAfter(eighteenYearsAgo)) {
+    } else if (dayjs(birthDate, "DD/MM/YYYY").isAfter(eighteenYearsAgo)) {
       newErrors.birthDate = "Bạn phải từ 18 tuổi trở lên";
     }
-    if (!formData.dueDateKD)
-      newErrors.dueDateKD = "Ngày hết hạn của giấy phép kinh doanh là bắt buộc";
-    if (!formData.dueDatePCCC)
-      newErrors.dueDatePCCC = "Ngày hết hạn của giấy phép PCCC là bắt buộc";
+    if (!dueDateKD) newErrors.dueDateKD = "Ngày hết hạn của giấy phép kinh doanh là bắt buộc";
+    if (!dueDatePCCC) newErrors.dueDatePCCC = "Ngày hết hạn của giấy phép PCCC là bắt buộc";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -72,105 +91,81 @@ const Register = () => {
         </button>
       </div>
       <div className="w-2/3 p-4 bg-white">
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Số điện thoại</label>
-          <input
-            type="text"
-            name="phoneNum"
-            value={formData.phoneNum}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.phoneNum && <p className="text-red-500">{errors.phoneNum}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Họ và tên</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.name && <p className="text-red-500">{errors.name}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Địa chỉ</label>
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.address && <p className="text-red-500">{errors.address}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Mật khẩu</label>
-          <input
-            type="password"
-            name="passWord"
-            value={formData.passWord}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.passWord && <p className="text-red-500">{errors.passWord}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Ngày sinh</label>
-          <input
-            type="date"
-            name="birthDate"
-            value={formData.birthDate}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.birthDate && <p className="text-red-500">{errors.birthDate}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Ngày hết hạn của giấy phép kinh doanh</label>
-          <input
-            type="date"
-            name="dueDateKD"
-            value={formData.dueDateKD}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.dueDateKD && (
-            <p className="text-red-500">{errors.dueDateKD}</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Ngày hết hạn của giấy phép PCCC</label>
-          <input
-            type="date"
-            name="dueDatePCCC"
-            value={formData.dueDatePCCC}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.dueDatePCCC && (
-            <p className="text-red-500">{errors.dueDatePCCC}</p>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="flex justify-end px-4 py-2 text-white bg-blue-500 rounded"
-        >
-          Hoàn thành
-        </button>
+        <Form layout="vertical">
+          <Form.Item label="Email" validateStatus={errors.email ? "error" : ""} help={errors.email}>
+            <Input
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Số điện thoại" validateStatus={errors.phoneNum ? "error" : ""} help={errors.phoneNum}>
+            <Input
+              name="phoneNum"
+              value={phoneNum}
+              onChange={(e) => setPhoneNum(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Họ và tên" validateStatus={errors.name ? "error" : ""} help={errors.name}>
+            <Input
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Địa chỉ" validateStatus={errors.address ? "error" : ""} help={errors.address}>
+            <Input
+              name="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Mật khẩu" validateStatus={errors.passWord ? "error" : ""} help={errors.passWord}>
+            <Input.Password
+              name="passWord"
+              value={passWord}
+              onChange={(e) => setPassWord(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Ngày sinh"
+            validateStatus={errors.birthDate ? "error" : ""}
+            help={errors.birthDate}
+          >
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => handleDateChange(date, dateString, "birthDate")}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Ngày hết hạn của giấy phép kinh doanh"
+            validateStatus={errors.dueDateKD ? "error" : ""}
+            help={errors.dueDateKD}
+          >
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => handleDateChange(date, dateString, "dueDateKD")}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Ngày hết hạn của giấy phép PCCC"
+            validateStatus={errors.dueDatePCCC ? "error" : ""}
+            help={errors.dueDatePCCC}
+          >
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => handleDateChange(date, dateString, "dueDatePCCC")}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+            >
+              Hoàn thành
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );
