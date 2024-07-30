@@ -1,7 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const Hotel = ({ tabs }) => {
-  const [activeTab, setActiveTab] = useState(tabs[0].type);
+const TabDetail = ({ hotelId, tabs }) => {
+  const [activeTab, setActiveTab] = useState(tabs[0]?.type);
+  const [roomsData, setRoomsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRoomsData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotellist/rooms`, {
+          params: {
+            hotelID: hotelId,
+          },
+        });
+        setRoomsData(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    if (hotelId) {
+      fetchRoomsData();
+    }
+  }, [hotelId]);
 
   const activeTabData = tabs.find((tab) => tab.type === activeTab);
 
@@ -12,7 +38,7 @@ const Hotel = ({ tabs }) => {
           <button
             key={tab.type}
             onClick={() => setActiveTab(tab.type)}
-            className={`px-4 py-2 font-semibold text-gray-800 focus:outline-none transition-opacity	 duration-300 ${
+            className={`px-4 py-2 font-semibold text-gray-800 focus:outline-none transition-opacity duration-300 ${
               activeTab === tab.type ? "border-b-2 border-blue-500" : ""
             }`}
           >
@@ -21,16 +47,17 @@ const Hotel = ({ tabs }) => {
         ))}
       </div>
       <div className="mt-4">
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
         {activeTabData && (
           <div className="p-4 bg-blue-100 rounded">
-            {activeTabData.rooms.map((room) => (
+            {roomsData.map((room) => (
               <div key={room.name} className="mb-6">
                 <div className="grid grid-cols-5 gap-4 p-4 bg-white shadow-md rounded-xl">
                   <div className="col-span-2">
                     <h2 className="text-2xl font-bold text-blue-500 ">
                       {room.name}
                     </h2>
-
                     <img
                       src={room.imgSrc}
                       className="object-cover w-full h-32 mb-4 rounded"
@@ -50,14 +77,12 @@ const Hotel = ({ tabs }) => {
                     <h2 className="my-2 text-lg font-bold text-gray-600">
                       Lợi ích
                     </h2>
-
-                    <ul className="mb-4 list-none l ">
+                    <ul className="mb-4 list-none">
                       {room.details.benefits.map((benefit, index) => (
                         <li key={index}>&#10003; {benefit}</li>
                       ))}
                     </ul>
                   </div>
-
                   <div className="col-span-1">
                     <h2 className="my-2 text-lg font-bold text-gray-600">
                       Sức chứa
@@ -98,4 +123,4 @@ const Hotel = ({ tabs }) => {
   );
 };
 
-export default Hotel;
+export default TabDetail;

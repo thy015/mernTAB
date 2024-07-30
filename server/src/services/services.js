@@ -10,52 +10,51 @@ const {
 const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
 
-async function signUpOwner(newOwner) {
-  return new Promise(async (resolve, rejects) => {
-    const {
-      name,
-      passWord,
-      email,
-      birthDate,
-      phoneNum,
-      address,
-      dueDatePCCC,
-      dueDateKD,
-    } = newOwner;
-    try {
-      const checkAccountExisted = await Account.Account.findOne({
-        email: email,
-      });
-      const isAdmin = await Account.Admin.findOne({
-        email: email,
-      });
-      if (checkAccountExisted !== null || isAdmin != null) {
-        rejects({
-          status: "BAD",
-          message: "Email existed",
-        });
-      }
-      const createdOwner = await Account.Account.create({
-        name,
-        passWord,
-        email,
-        birthDate,
-        phoneNum,
-        address,
-        dueDatePCCC,
-        dueDateKD,
-      });
-      if (createdOwner) {
-        resolve({
-          status: "OK",
-          message: "Succ",
-          data: createdOwner,
-        });
-      }
-    } catch (e) {
-      rejects(e);
-    }
-  });
+const Video = require('../models/Video')
+
+const jwt=require('jsonwebtoken')
+
+
+const { default: mongoose } = require('mongoose');
+
+async function signUpOwner(newOwner){
+    return new Promise(async (resolve,rejects)=>{
+        const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=newOwner
+        try{
+            const checkAccountExisted=await Account.Account.findOne({
+                email:email
+            })
+            const isAdmin=await Account.Admin.findOne({
+                email:email
+            })
+            if(checkAccountExisted!==null || isAdmin!=null){
+                rejects({
+                    status:'BAD',
+                    message:'Email existed'
+                })
+            }
+            const createdOwner=await Account.Account.create({
+                name,
+                passWord,
+                email,
+                birthDate,
+                phoneNum,
+                address,
+                dueDatePCCC,
+                dueDateKD
+            })
+            if(createdOwner){
+                resolve({
+                    status:'OK',
+                    message:'Succ',
+                    data:createdOwner
+                })
+            }
+        } catch(e){
+            rejects(e)
+        }
+    })
+
 }
 //chung của owner và admin
 async function signInOwner(existedOwner) {
@@ -306,6 +305,7 @@ async function reqCancelRoom(receiptID, cusID) {
 //trên fe cho click đồng ý => accept =true
 //admin handle hủy phòng. ok => đổi trạng thái req, post qua app khác để hoàn tiền
 //ko accept => đổi trạng thái req, trả về cho user
+
 const handleCancelRoom = async (req, res) => {
   const { reqCancelID, accept, orderId, transactionId } = req.body;
   const adminID = req.adminID;
@@ -395,17 +395,16 @@ function createHotel(newHotel, ownerID) {
       scale,
       city,
     } = newHotel;
+
     try {
-      console.log(ownerID);
-      const checkExistedOwnerID = await Account.Account.findOne({
-        _id: ownerID,
-      });
+      const checkExistedOwnerID = await Account.Account.findOne({ _id: ownerID });
       if (!checkExistedOwnerID) {
-        return rejects({
+        return reject({
           status: "BAD",
           message: "Owner ID does not exist",
         });
       }
+
       const createdHotel = await Hotel.Hotel.create({
         address,
         numberOfRooms,
@@ -418,6 +417,7 @@ function createHotel(newHotel, ownerID) {
         city,
         ownerID,
       });
+
       if (createdHotel) {
         resolve({
           status: "OK",
@@ -426,15 +426,14 @@ function createHotel(newHotel, ownerID) {
         });
       }
     } catch (e) {
-      rejects(e);
+      reject(e);
     }
   });
-}
+};
 
-//truyền HotelID và token chủ nhà
 const createRoom = async (newRoom, hotelID) => {
   return new Promise(async (resolve, reject) => {
-    const { numberOfBeds, typeOfRoom, money, capacity } = newRoom;
+    const { numberOfBeds, typeOfRoom, money, capacity, roomImages } = newRoom;
     try {
       const createdRoom = await Hotel.Room.create({
         numberOfBeds,
@@ -442,9 +441,11 @@ const createRoom = async (newRoom, hotelID) => {
         money,
         capacity,
         hotelID,
+        roomImages,
       });
+
       if (createdRoom) {
-        const hotel = await Hotel.findById(hotelID);
+        const hotel = await Hotel.Hotel.findById(hotelID);
         if (hotel) {
           if (hotel.minPrice === 0 || hotel.minPrice > money) {
             hotel.minPrice = money;
@@ -463,6 +464,7 @@ const createRoom = async (newRoom, hotelID) => {
     }
   });
 };
+
 //chỉ cần truyền token
 const getHotelsByOwner = async (ownerID) => {
   try {
@@ -473,34 +475,42 @@ const getHotelsByOwner = async (ownerID) => {
   }
 };
 
-const searchHotel = async (searchCriteria) => {
-  const { city, checkInDate, checkOutDate, numberOfPeople } = searchCriteria;
+const searchHotel = async (req, res) => {
+  const { city, checkInDate, checkOutDate, numberOfPeople  } = req.query;
   try {
-    const hotelCity = await Hotel.Hotel.find({ city });
+    const hotelsInCity = await Hotel.Hotel.find({ city });
 
     const availableHotels = await Promise.all(
-      hotelCity.map(async (h) => {
-        const hotelRooms = await Hotel.Room.find({
-          hotelID: h._id,
-          capacity: { $gte: numberOfPeople }, //>= số ng dc nhập
+      hotelsInCity.map(async (hotel) => {
+        const availableRooms = await Room.find({
+          hotel: hotel._id,
+          capacity: { $gte: numberOfPeople },
         });
-        if (hotelRooms.length > 0) {
+        if (availableRooms.length > 0) {
           return {
-            ...h._doc,
-            rooms: hotelRooms,
+            ...hotel._doc,
+            rooms: availableRooms,
           };
-        } else return null;
+        } else {
+          return null;
+        }
       })
     );
+
     const filteredHotels = availableHotels.filter((hotel) => hotel !== null);
 
-    return {
+    return res.status(200).json({
       status: "OK",
       message: "Find Hotel successfully",
       data: filteredHotels,
-    };
+    });
   } catch (e) {
-    console.error("There's no Hotel in your search place:", e);
+    console.error("Error searching for hotels:", e);
+    return res.status(500).json({
+      status: "Error",
+      message: "There was an error searching for hotels.",
+      error: e.message,
+    });
   }
 };
 
@@ -515,5 +525,7 @@ module.exports = {
   searchHotel,
   reqCancelRoom,
   handleCancelRoom,
-  completedTran
+  completedTran,
+  handleCancelRoom
 };
+

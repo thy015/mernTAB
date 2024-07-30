@@ -11,7 +11,7 @@ const hotelSchema =new mongoose.Schema(
         businessType: { type: String, required: true },
         scale: { type: String, required: true },
         city: { type: String, required: true },
-        minPrice:{type: Number,require: true, default: 0},
+        minPrice:{type: Number,required: true, default: 0},
         ownerID:{type:mongoose.Schema.ObjectId,ref:'Account',require:true}
     }
 )
@@ -22,7 +22,9 @@ const roomSchema=new mongoose.Schema({
     capacity:{ type: Number, required: true },
     isAvailable:{type:Boolean,required:true, default:true},
     revenue:{type:Number,required:false,default:0},
-    hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',require:true}
+    hotelID:{type:mongoose.Schema.ObjectId,ref:'Hotel',required:true},
+    roomImages:{type:[String],required:false}
+
 })
 
 const Hotel=mongoose.model('Hotel',hotelSchema)

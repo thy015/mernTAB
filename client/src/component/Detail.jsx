@@ -1,26 +1,31 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import Navigation from "./Navigation"
-import Footer from "./Footer";
 import axios from "axios";
+import Navigation from "./Navigation";
+import Footer from "./Footer";
+import TabDetail from "./TabDetail";
 
 export default function Detail() {
   const { _id } = useParams();
   const [hotel, setHotel] = useState(null);
-
+  const tabs = [
+    { type: "Description" },
+    { type: "Rooms" },
+    { type: "Reviews" }
+  ];
   useEffect(() => {
-    const hotelData = async () => {
+    const fetchHotelData = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/detail/${_id}`);
+        const res = await axios.get(`https://mern-tab-be.vercel.app/detail/${_id}`);
         setHotel(res.data);
-        //console.log(response.data)
+        console.log(res.data)
       } catch (error) {
         console.error('Error fetching hotel data:', error);
       }
     };
-    hotelData();
+    fetchHotelData();
   }, [_id]);
  
   if (!hotel) {
@@ -260,23 +265,9 @@ export default function Detail() {
 
             </div>
           </div>
+          {/* Render TabDetail component */}
           <h2 className="text-2xl font-bold">Choose your room</h2>
-
-          <Tabs>
-            <TabList>
-              <Tab>Premier Room Twin</Tab>
-              <Tab>Deluxe Room </Tab>
-              <Tab>Deluxe Triple Room </Tab>
-              <Tab>Executive Suite </Tab>
-            </TabList>
-
-            <TabPanel>
-              <h2>Any content 1</h2>
-            </TabPanel>
-            <TabPanel>
-              <h2>Any content 2</h2>
-            </TabPanel>
-          </Tabs>
+          <TabDetail hotelId={hotel._id} tabs={tabs} />
         </div>
       </body>
       <Footer />
