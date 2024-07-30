@@ -87,6 +87,12 @@ const TabDetail = ({ hotelId, tabs }) => {
                     </h2>
                     <p className="mb-2">{room.capacity}</p>
                   </div>
+                  <div className="col-span-1">
+                    <h2 className="my-2 text-lg font-bold text-gray-600">
+                      Số giường
+                    </h2>
+                    <p className="mb-2">{room.numberOfBeds}</p>
+                  </div>
                   <div className="flex flex-col items-end justify-between col-span-1">
                     <div>
       
@@ -95,9 +101,6 @@ const TabDetail = ({ hotelId, tabs }) => {
                       </span>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 line-through">
-                        Số giường: {room.numberOfBeds}
-                      </p>
                       <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded">
                         Đặt phòng
                       </button>
