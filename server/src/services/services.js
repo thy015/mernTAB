@@ -344,12 +344,12 @@ async function reqCancelRoom(receiptID, cusID) {
 //admin handle hủy phòng. ok => đổi trạng thái req, post qua app khác để hoàn tiền
 //ko accept => đổi trạng thái req, trả về cho user
 const handleCancelRoom = async (req, res) => {
-  const { reqCancelID, accept } = req.body;
+  const { reqCancelID, accept, orderId, transactionId } = req.body;
   const adminID = req.adminID;
 
-  console.log(reqCancelID, accept, adminID);
+  console.log(reqCancelID, accept, adminID, orderId, transactionId);
 
-  if (!reqCancelID || accept === undefined || !adminID) {
+  if (!reqCancelID || accept === undefined || !adminID|| !orderId || !transactionId) {
     return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
   }
 
@@ -367,11 +367,11 @@ const handleCancelRoom = async (req, res) => {
         // await foundReqCancel.save();
 
         const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId,
-          transactionId
+          orderId: orderId,
+          transactionId: transactionId
         });
 
-        if (refundResponse.status === 200) {
+        if (refundResponse.status === 200 || refundResponse.status === 201) {
           return res.status(200).json({
             status: "OK",
             message: "Refund for customer and change status",
