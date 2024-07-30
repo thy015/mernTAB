@@ -47,8 +47,7 @@ const HomePage = () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/search`, {
         params: {
-          city,
-          numberOfPeople,
+          city
         },
       });
       setHotels(response.data.data);

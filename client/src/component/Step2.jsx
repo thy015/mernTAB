@@ -1,14 +1,13 @@
-
-// src/components/Step2.js
 import React, { useState } from "react";
 
-
 const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ [name]: value });
   };
-  const [errors, setErrors] = useState({});
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -17,15 +16,10 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
     if (!formData.taxId) newErrors.taxId = "MST Doanh nghiệp là bắt buộc";
     if (!formData.businessAddress)
       newErrors.businessAddress = "Địa chỉ kinh doanh là bắt buộc";
-    if (!formData.businessLicenseExpiry)
-      newErrors.businessLicenseExpiry =
-        "Ngày hết hạn của giấy phép kinh doanh là bắt buộc";
-    if (!formData.fireSafetyLicenseExpiry)
-      newErrors.fireSafetyLicenseExpiry =
-        "Ngày hết hạn của giấy phép PCCC là bắt buộc";
-    if (!formData.businessCertificate)
-      newErrors.businessCertificate =
-        "Giấy chứng nhận đăng ký doanh nghiệp là bắt buộc";
+    if (!formData.dueDateKD)
+      newErrors.dueDateKD = "Ngày hết hạn của giấy phép kinh doanh là bắt buộc";
+    if (!formData.dueDatePCCC)
+      newErrors.dueDatePCCC = "Ngày hết hạn của giấy phép PCCC là bắt buộc";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -83,13 +77,13 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
         </label>
         <input
           type="month"
-          name="businessLicenseExpiry"
-          value={formData.businessLicenseExpiry}
+          name="dueDateKD"
+          value={formData.dueDateKD}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.businessLicenseExpiry && (
-          <p className="text-red-500">{errors.businessLicenseExpiry}</p>
+        {errors.dueDateKD && (
+          <p className="text-red-500">{errors.dueDateKD}</p>
         )}
       </div>
       <div className="mb-4">
@@ -98,29 +92,16 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
         </label>
         <input
           type="month"
-          name="fireSafetyLicenseExpiry"
-          value={formData.fireSafetyLicenseExpiry}
+          name="dueDatePCCC"
+          value={formData.dueDatePCCC}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.fireSafetyLicenseExpiry && (
-          <p className="text-red-500">{errors.fireSafetyLicenseExpiry}</p>
+        {errors.dueDatePCCC && (
+          <p className="text-red-500">{errors.dueDatePCCC}</p>
         )}
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">
-          Giấy chứng nhận đăng ký doanh nghiệp
-        </label>
-        <input
-          type="file"
-          name="businessCertificate"
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded"
-        />
-        {errors.businessCertificate && (
-          <p className="text-red-500">{errors.businessCertificate}</p>
-        )}
-      </div>
+
       <div className="flex justify-between">
         <button
           type="button"

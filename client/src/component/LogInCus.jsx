@@ -19,19 +19,20 @@ const LoginCus = () => {
 
     try {
         const username = email
-      const response = await axios.post(`https://api.htilssu.com/api/v1/auth/login`, { username, password });
-      if (response.data.message === "Đăng nhập thành công") {
+      const response = await axios.post(`https://mern-tab-be.vercel.app/signUpCus/signInCus`, { username, password });
+      if (response.status === "OK"  || response.status === 200) {
         setSuccess("Đăng nhập thành công!");
-        localStorage.setItem("id", response.data.id);
-        localStorage.setItem("authToken", response.data.token); 
+        localStorage.setItem("id", response.data.userID);
+        localStorage.setItem("authToken", response.data.access_token); 
 
+        console.log(response.data.userID)
         console.log(response.data.access_token)
-        console.log(response.data.access_token)
-        // window.location.href = "/manage";
+        window.location.href = "/homepage";
       } else {
         setError("Email hoặc mật khẩu không chính xác.");
       }
     } catch (error) {
+        console.log(error)
       setError("Có lỗi xảy ra. Vui lòng thử lại.");
     }
   };
