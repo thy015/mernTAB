@@ -3,24 +3,23 @@ import axios from "axios";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 
-export default function Register() {
+const Register = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     step1: {
       email: "",
-      phone: "",
-      fullName: "",
+      phoneNum: "",
+      name: "",
       address: "",
-      password: "",
-      dob: "",
+      passWord: "",
+      birthDate: "",
     },
     step2: {
       businessName: "",
       taxId: "",
       businessAddress: "",
-      businessLicenseExpiry: "",
-      fireSafetyLicenseExpiry: "",
-      businessCertificate: "",
+      dueDateKD: "",
+      dueDatePCCC: "",
     },
   });
 
@@ -34,9 +33,17 @@ export default function Register() {
 
   const handleSubmit = async () => {
     try {
+      const formDataToSend = new FormData();
+      Object.keys(formData.step1).forEach((key) => {
+        formDataToSend.append(key, formData.step1[key]);
+      });
+      Object.keys(formData.step2).forEach((key) => {
+        formDataToSend.append(key, formData.step2[key]);
+      });
+
       const response = await axios.post(
-        "http://localhost:4000/signUp/",
-        formData
+        `${process.env.REACT_APP_BACKEND_BASEURL}/signUp/`,
+        formDataToSend
       );
       console.log(response.data);
     } catch (error) {
@@ -47,11 +54,15 @@ export default function Register() {
   const handleFormDataChange = (step, data) => {
     setFormData((prevData) => ({
       ...prevData,
-      ...data,
+      [step]: {
+        ...prevData[step],
+        ...data,
+      },
     }));
   };
 
   const handleComplete = () => {
+    handleSubmit();
     window.location.href = "/success";
   };
 
@@ -61,7 +72,7 @@ export default function Register() {
         return (
           <Step1
             onNext={handleNext}
-            formData={formData}
+            formData={formData.step1}
             setFormData={(data) => handleFormDataChange("step1", data)}
           />
         );
@@ -78,7 +89,7 @@ export default function Register() {
         return (
           <Step1
             onNext={handleNext}
-            formData={formData}
+            formData={formData.step1}
             setFormData={(data) => handleFormDataChange("step1", data)}
           />
         );
@@ -108,4 +119,6 @@ export default function Register() {
       <div className="w-2/3 p-4 bg-white">{renderStep()}</div>
     </div>
   );
-}
+};
+
+export default Register;

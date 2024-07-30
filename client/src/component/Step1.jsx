@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
 import dayjs from "dayjs";
-
 
 const Step1 = ({ onNext, formData, setFormData }) => {
   const [errors, setErrors] = useState({});
@@ -17,14 +15,14 @@ const Step1 = ({ onNext, formData, setFormData }) => {
     const eighteenYearsAgo = today.subtract(18, "year");
 
     if (!formData.email) newErrors.email = "Email là bắt buộc";
-    if (!formData.phone) newErrors.phone = "Số điện thoại là bắt buộc";
-    if (!formData.fullName) newErrors.fullName = "Họ và tên là bắt buộc";
+    if (!formData.phoneNum) newErrors.phoneNum = "Số điện thoại là bắt buộc";
+    if (!formData.name) newErrors.name = "Họ và tên là bắt buộc";
     if (!formData.address) newErrors.address = "Địa chỉ là bắt buộc";
-    if (!formData.password) newErrors.password = "Mật khẩu là bắt buộc";
-    if (!formData.dob) {
-      newErrors.dob = "Ngày sinh là bắt buộc";
-    } else if (dayjs(formData.dob).isAfter(eighteenYearsAgo)) {
-      newErrors.dob = "Bạn phải từ 18 tuổi trở lên";
+    if (!formData.passWord) newErrors.passWord = "Mật khẩu là bắt buộc";
+    if (!formData.birthDate) {
+      newErrors.birthDate = "Ngày sinh là bắt buộc";
+    } else if (dayjs(formData.birthDate).isAfter(eighteenYearsAgo)) {
+      newErrors.birthDate = "Bạn phải từ 18 tuổi trở lên";
     }
 
     setErrors(newErrors);
@@ -55,23 +53,23 @@ const Step1 = ({ onNext, formData, setFormData }) => {
         <label className="block text-gray-700">Số điện thoại</label>
         <input
           type="text"
-          name="phone"
-          value={formData.phone}
+          name="phoneNum"
+          value={formData.phoneNum}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.phone && <p className="text-red-500">{errors.phone}</p>}
+        {errors.phoneNum && <p className="text-red-500">{errors.phoneNum}</p>}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700">Họ và tên</label>
         <input
           type="text"
-          name="fullName"
-          value={formData.fullName}
+          name="name"
+          value={formData.name}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.fullName && <p className="text-red-500">{errors.fullName}</p>}
+        {errors.name && <p className="text-red-500">{errors.name}</p>}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700">Địa chỉ</label>
@@ -88,23 +86,23 @@ const Step1 = ({ onNext, formData, setFormData }) => {
         <label className="block text-gray-700">Mật khẩu</label>
         <input
           type="password"
-          name="password"
-          value={formData.password}
+          name="passWord"
+          value={formData.passWord}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.password && <p className="text-red-500">{errors.password}</p>}
+        {errors.passWord && <p className="text-red-500">{errors.passWord}</p>}
       </div>
       <div className="mb-4">
         <label className="block text-gray-700">Ngày sinh</label>
         <input
           type="date"
-          name="dob"
-          value={formData.dob}
+          name="birthDate"
+          value={formData.birthDate}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded"
         />
-        {errors.dob && <p className="text-red-500">{errors.dob}</p>}
+        {errors.birthDate && <p className="text-red-500">{errors.birthDate}</p>}
       </div>
       <button
         type="submit"

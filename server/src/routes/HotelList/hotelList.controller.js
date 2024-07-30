@@ -39,17 +39,11 @@ const createRoom = async (req, res) => {
 
 const searchHotel = async (req, res) => {
   try {
-    const { city, checkInDate, checkOutDate, numberOfPeople } = req.body;
-    if (!city || !checkInDate || !checkOutDate || !numberOfPeople) {
+    const { city } = req.body;
+    if (!city) {
       return res.status(403).json({ message: 'Input is required' });
     }
-    const searchCriteria = {
-      city,
-      checkInDate,
-      checkOutDate,
-      numberOfPeople: parseInt(numberOfPeople),
-    };
-    const result = await service.searchHotel(searchCriteria);
+    const result = await service.searchHotel(city);
     return res.status(200).json({ status: 'OK', data: result });
   } catch (e) {
     console.error("Error in searchHotels controller:", e);

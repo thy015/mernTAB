@@ -10,12 +10,14 @@ import Login from './component/Login';
 import HomePage from './component/HomePage'
 import Confirmation from './component/Confirmation';
 import Booking from './component/Booking';
+import LoginCus from './component/LogInCus';
+import SignUp from './component/SignUp';
 export default function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path='/' element={<HomePage/>} />
+          <Route path='/homepage' element={<HomePage/>} />
           <Route path='/hotellist' element={<HotelList/>}/>
           <Route path='/detailhotel/:_id' element={<Detail/>}/>
           <Route path='/registerOwner' element={<Register/>}/>
@@ -23,6 +25,8 @@ export default function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/booking' element={<Booking/>} />
           <Route path='/confirmation' element={<Confirmation/>} />
+          <Route path='/login_cus' element={<LoginCus/>}/>
+          <Route path='/signUpCus' element={<SignUp/>}/>
         </Routes>
       </Router>
     </div>

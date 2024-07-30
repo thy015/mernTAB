@@ -482,15 +482,14 @@ const getHotelsByOwner = async (ownerID) => {
 };
 
 const searchHotel = async (req, res) => {
-  const { city, checkInDate, checkOutDate, numberOfPeople  } = req.query;
+  const { city } = req.query;
   try {
     const hotelsInCity = await Hotel.Hotel.find({ city });
 
     const availableHotels = await Promise.all(
       hotelsInCity.map(async (hotel) => {
-        const availableRooms = await Room.find({
+        const availableRooms = await Hotel.Room.find({
           hotel: hotel._id,
-          capacity: { $gte: numberOfPeople },
         });
         if (availableRooms.length > 0) {
           return {
