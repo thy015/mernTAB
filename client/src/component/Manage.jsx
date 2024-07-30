@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTachometerAlt, faPlus, faChartBar, faList } from "@fortawesome/free-solid-svg-icons";
-import CreateRoom from "./CreateRoom";
+import CreateHotel from "./CreateHotel";
 import Dashboard from "./Dashboard";
 import RevenueStats from "./RevenueStats";
 import RoomList from "./RoomList";
@@ -29,7 +29,7 @@ export default function Manage() {
       case "Dashboard":
         return <Dashboard ownerID={ownerID} />;
       case "CreateRoom":
-        return <CreateRoom />;
+        return <CreateHotel />;
       case "RevenueStats":
         return <RevenueStats />;
       case "RoomList":
