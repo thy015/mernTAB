@@ -306,13 +306,13 @@ async function reqCancelRoom(receiptID, cusID) {
 //admin handle hủy phòng. ok => đổi trạng thái req, post qua app khác để hoàn tiền
 //ko accept => đổi trạng thái req, trả về cho user
 
-const handleCancelRoom = async (req, res) => {
-  const { reqCancelID, accept, orderId, transactionId } = req.body;
+const handleCancelRoomAccept = async (req, res) => {
+  const { reqCancelID, orderId, transactionId } = req.body;
   const adminID = req.adminID;
 
-  console.log(reqCancelID, accept, adminID, orderId, transactionId);
+  console.log(reqCancelID, adminID, orderId, transactionId);
 
-  if (accept === undefined || !adminID) {
+  if (!adminID) {
     return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
   }
 
@@ -322,61 +322,83 @@ const handleCancelRoom = async (req, res) => {
       return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
     }
 
-    if (accept) {
-      try {
-        // Cập nhật trạng thái yêu cầu hủy phòng
-        // foundReqCancel.isAccept = "accepted";
-        // foundReqCancel.adminID = adminID;
-        // foundReqCancel.dateAccept = new Date();
-        // await foundReqCancel.save();
+    try {
+      // Cập nhật trạng thái yêu cầu hủy phòng
+      // foundReqCancel.isAccept = "accepted";
+      // foundReqCancel.adminID = adminID;
+      // foundReqCancel.dateAccept = new Date();
+      // await foundReqCancel.save();
 
-        const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId: foundReqCancel._id,
-          transactionId: transactionId
-        });
+      const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
+        orderId: foundReqCancel._id,
+        transactionId: transactionId
+      });
 
-        console.log("Refund response:", refundResponse.data);
+      console.log("Refund response:", refundResponse.data);
 
-        if (refundResponse.status === 200 || refundResponse.status === 201) {
-          return res.status(200).json({
-            status: "OK",
-            message: "Refund for customer and change status",
-            data: refundResponse.data,
-          });
-        } else {
-          return res.status(500).json({
-            status: "BAD",
-            message: "Refund processing failed",
-            data: refundResponse.data,
-          });
-        }
-      } catch (e) {
-        console.error("Error in processing refund:", e.response ? e.response.data : e.message);
-        return res.status(500).json({
-          status: "BAD",
-          message: "Error in processing refund",
-          error: e.response ? e.response.data : e.message,
-        });
-      }
-    } else {
-      try {
-        foundReqCancel.isAccept = "rejected";
-        foundReqCancel.adminID = adminID;
-        await foundReqCancel.save();
-
+      if (refundResponse.status === 200 || refundResponse.status === 201) {
         return res.status(200).json({
           status: "OK",
-          message: "Not refund money to customer",
-          data: foundReqCancel,
+          message: "Refund for customer and change status",
+          data: refundResponse.data,
         });
-      } catch (e) {
-        console.error("Error in processing refund where accept == false:", e);
+      } else {
         return res.status(500).json({
           status: "BAD",
-          message: "Error in rejecting refund",
-          error: e.message,
+          message: "Refund processing failed",
+          data: refundResponse.data,
         });
       }
+    } catch (e) {
+      console.error("Error in processing refund:", e.response ? e.response.data : e.message);
+      return res.status(500).json({
+        status: "BAD",
+        message: "Error in processing refund",
+        error: e.response ? e.response.data : e.message,
+      });
+    }
+  } catch (e) {
+    console.error("Error in handleCancelRoom:", e);
+    return res.status(500).json({
+      status: "BAD",
+      message: "An error occurred while fetching the cancellation requests",
+      error: e.message,
+    });
+  }
+};
+const handleCancelRoomReject = async (req, res) => {
+  const { reqCancelID, orderId } = req.body;
+  const adminID = req.adminID;
+
+  console.log(reqCancelID, adminID, orderId);
+
+  if (!adminID) {
+    return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+  }
+
+  try {
+    const foundReqCancel = await reqCancel.findById(reqCancelID);
+    if (!foundReqCancel) {
+      return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
+    }
+
+    try {
+      foundReqCancel.isAccept = "rejected";
+      foundReqCancel.adminID = adminID;
+      await foundReqCancel.save();
+
+      return res.status(200).json({
+        status: "OK",
+        message: "Not refund money to customer",
+        data: foundReqCancel,
+      });
+    } catch (e) {
+      console.error("Error in processing refund where accept == false:", e);
+      return res.status(500).json({
+        status: "BAD",
+        message: "Error in rejecting refund",
+        error: e.message,
+      });
     }
   } catch (e) {
     console.error("Error in handleCancelRoom:", e);
@@ -531,8 +553,8 @@ module.exports = {
   bookRoom,
   searchHotel,
   reqCancelRoom,
-  handleCancelRoom,
+  handleCancelRoomAccept,
   completedTran,
-  handleCancelRoom
+  handleCancelRoomReject
 };
 
