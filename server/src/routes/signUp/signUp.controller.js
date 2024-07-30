@@ -17,8 +17,8 @@ const signUpOwner=async(req,res)=>{
         }
         else{
             const currentDate=new Date()
-            const validDueDatePCCC= currentDate.getFullYear()-new Date(dueDatePCCC).getFullYear
-            const validDueDateKD= currentDate.getFullYear()-new Date(dueDateKD).getFullYear
+            const validDueDatePCCC= new Date(dueDatePCCC).getFullYear-currentDate.getFullYear()
+            const validDueDateKD= new Date(dueDateKD).getFullYear-currentDate.getFullYear()
 
             if(validDueDateKD<=1 || validDueDatePCCC<=1){
                 return res.status(400).json({ message:'Invalid due date'})

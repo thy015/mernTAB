@@ -96,12 +96,12 @@ const TabDetail = ({ hotelId, tabs }) => {
                   <div className="flex flex-col items-end justify-between col-span-1">
                     <div>
       
-                      <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded">
+                      <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded float-right">
                         Tổng tiền: {room.money}
                       </span>
                     </div>
                     <div>
-                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded">
+                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right">
                         Đặt phòng
                       </button>
                     </div>
