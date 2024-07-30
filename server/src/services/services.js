@@ -156,70 +156,74 @@ async function signInCustomer(existedCustomer) {
 //truyền qua token của cus tạo từ signInCus, roomID nhập tay
 async function bookRoom(newInvoice, cusID, roomID) {
   return new Promise(async (resolve, reject) => {
-    const { paymentMethod } = newInvoice;
-    try {
-      //chuyển cusID trong schema thành string
-      console.log(`Customer ID extracted from token: ${cusID}`);
-      //ko có phòng, đă dc book
-      const foundRoom = await Hotel.Room.findById(roomID);
-      if (!foundRoom) {
-        return reject({
-          status: "BAD",
-          message: "Room not found",
-        });
-      }
+      const { paymentMethod } = newInvoice;
+      try {
+          console.log(`Customer ID extracted from token: ${cusID}`);
 
-      if (!foundRoom.isAvailable) {
-        return reject({
-          status: "BAD",
-          message: "Room is booked",
-        });
-      }
-      const roomPrice = foundRoom.money;
-      const total = roomPrice + roomPrice * 0.08; //vat
-      //tạo biên lai
-      const invoice = await Invoice.create({
-        cusID,
-        roomID,
-        total,
-        paymentMethod,
-      });
-
-      //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
-      //Tổng tiền, id biên lai, id cus, biên lai sẽ dc xóa nếu 20m chưa thanh toán
-      const voucherResponse=await axios.post('https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest',{
-          OrderID: invoice._id,
-          TotalMoney:total,
-          PartnerID:"1000000005",
-          ServiceName:`Book room`,
-          CustomerCode: "KH01",
-          LinkHome:"https://mern-tab-be.vercel.app/",
-          LinkReturnSuccess:`https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
-      })
-
-      if(voucherResponse.status===200 || voucherResponse.status==='OK'){
-        resolve({
-          status: "OK",
-          message: "choose voucher succ",
-          data: voucherResponse.data,
-        });
-        setTimeout(async()=>{
-          const foundInvoice=await findById(invoice._id)
-          if(foundInvoice && !foundInvoice.isPaid){
-            await Invoice.findByIdAndDelete(foundInvoice._id)
-            console.log(`Delete invoice ${foundInvoice._id} due to overtime process, failed book room`)
+          const foundRoom = await Hotel.Room.findById(roomID);
+          if (!foundRoom) {
+              return reject({
+                  status: "BAD",
+                  message: "Room not found",
+              });
           }
-        },1200000) //20m
-      }
-      else {
+
+          if (!foundRoom.isAvailable) {
+              return reject({
+                  status: "BAD",
+                  message: "Room is booked",
+              });
+          }
+
+          const roomPrice = foundRoom.money;
+          const total = roomPrice + roomPrice * 0.08; // VAT
+
+          const invoice = await Invoice.create({
+              cusID,
+              roomID,
+              total,
+              paymentMethod,
+          });
+
+          const voucherResponse = await axios.post('https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest', {
+              OrderID: invoice._id,
+              TotalMoney: total,
+              PartnerID: "1000000005",
+              ServiceName: `Book room`,
+              CustomerCode: "KH01",
+              Description:"test",
+              LinkHome: "https://mern-tab-be.vercel.app/",
+              LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
+          });
+
+          if (voucherResponse.status === 200 || voucherResponse.status === 'OK') {
+              resolve({
+                  status: "OK",
+                  message: "choose voucher succ",
+                  data: voucherResponse.data,
+              });
+
+              setTimeout(async () => {
+                  const foundInvoice = await Invoice.findById(invoice._id);
+                  if (foundInvoice && !foundInvoice.isPaid) {
+                      await Invoice.findByIdAndDelete(foundInvoice._id);
+                      console.log(`Deleted invoice ${foundInvoice._id} due to overtime process, failed book room`);
+                  }
+              }, 1200000); // 20 minutes
+          } else {
+              reject({
+                  status: 'BAD',
+                  message: '3rd choose voucher failed',
+              });
+          }
+      } catch (e) {
+          console.error("Error in bookRoom:", e);
           reject({
-              status: 'BAD',
-              message: '3rd choose voucher failed',
-          })
+              status: "ERROR",
+              message: "Error booking room",
+              error: e.message,
+          });
       }
-    } catch (e) {
-      console.error("Error in bookRoom:", e);
-    }
   });
 }
 //k can controller
