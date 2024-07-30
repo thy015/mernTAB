@@ -63,52 +63,45 @@ const TabDetail = ({ hotelId, tabs }) => {
                       className="object-cover w-full h-32 mb-4 rounded"
                     />
                     <div className="grid grid-cols-3 gap-1">
-                      {room.details.images.map((src, index) => (
+                      {/* {room.details.images.map((src, index) => (
                         <img
                           key={index}
                           src={src}
                           alt={`Room detail ${index + 1}`}
                           className="object-cover w-full h-16 rounded"
                         />
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                   <div className="col-span-1">
                     <h2 className="my-2 text-lg font-bold text-gray-600">
-                      Lợi ích
+                    Loại phòng: 
                     </h2>
                     <ul className="mb-4 list-none">
-                      {room.details.benefits.map((benefit, index) => (
-                        <li key={index}>&#10003; {benefit}</li>
-                      ))}
+                    {room.typeOfRoom}
                     </ul>
                   </div>
                   <div className="col-span-1">
                     <h2 className="my-2 text-lg font-bold text-gray-600">
                       Sức chứa
                     </h2>
-                    <p className="mb-2">{room.details.capacity}</p>
+                    <p className="mb-2">{room.capacity}</p>
+                  </div>
+                  <div className="col-span-1">
+                    <h2 className="my-2 text-lg font-bold text-gray-600">
+                      Số giường
+                    </h2>
+                    <p className="mb-2">{room.numberOfBeds}</p>
                   </div>
                   <div className="flex flex-col items-end justify-between col-span-1">
                     <div>
-                      <p className="mb-1 text-xs text-gray-500">
-                        {room.details.reviews} reviews
-                      </p>
-                      <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded">
-                        {room.details.rating}
+      
+                      <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded float-right">
+                        Tổng tiền: {room.money}
                       </span>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 line-through">
-                        {room.details.originalPrice}
-                      </p>
-                      <p className="text-sm text-gray-500 line-through">
-                        {room.details.discountPrice}
-                      </p>
-                      <p className="text-xl font-semibold text-red-500">
-                        {room.details.finalPrice}
-                      </p>
-                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded">
+                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right">
                         Đặt phòng
                       </button>
                     </div>

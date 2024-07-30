@@ -312,27 +312,30 @@ const handleCancelRoom = async (req, res) => {
 
   console.log(reqCancelID, accept, adminID, orderId, transactionId);
 
-  if (!reqCancelID || accept === undefined || !adminID|| !orderId || !transactionId) {
+  if (accept === undefined || !adminID) {
     return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
   }
 
   try {
-    const foundReqCancel = await reqCancel.findOne({ _id: reqCancelID });
+    const foundReqCancel = await reqCancel.findById(reqCancelID);
     if (!foundReqCancel) {
       return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
     }
 
     if (accept) {
       try {
+        // Cập nhật trạng thái yêu cầu hủy phòng
         // foundReqCancel.isAccept = "accepted";
         // foundReqCancel.adminID = adminID;
         // foundReqCancel.dateAccept = new Date();
         // await foundReqCancel.save();
 
         const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId: orderId,
+          orderId: foundReqCancel._id,
           transactionId: transactionId
         });
+
+        console.log("Refund response:", refundResponse.data);
 
         if (refundResponse.status === 200 || refundResponse.status === 201) {
           return res.status(200).json({
@@ -340,18 +343,19 @@ const handleCancelRoom = async (req, res) => {
             message: "Refund for customer and change status",
             data: refundResponse.data,
           });
-
         } else {
           return res.status(500).json({
             status: "BAD",
             message: "Refund processing failed",
+            data: refundResponse.data,
           });
         }
       } catch (e) {
-        console.error("Error in processing refund:", e);
+        console.error("Error in processing refund:", e.response ? e.response.data : e.message);
         return res.status(500).json({
           status: "BAD",
           message: "Error in processing refund",
+          error: e.response ? e.response.data : e.message,
         });
       }
     } else {
@@ -362,7 +366,7 @@ const handleCancelRoom = async (req, res) => {
 
         return res.status(200).json({
           status: "OK",
-          message: "Not refund money to cus",
+          message: "Not refund money to customer",
           data: foundReqCancel,
         });
       } catch (e) {
@@ -370,6 +374,7 @@ const handleCancelRoom = async (req, res) => {
         return res.status(500).json({
           status: "BAD",
           message: "Error in rejecting refund",
+          error: e.message,
         });
       }
     }
@@ -378,6 +383,7 @@ const handleCancelRoom = async (req, res) => {
     return res.status(500).json({
       status: "BAD",
       message: "An error occurred while fetching the cancellation requests",
+      error: e.message,
     });
   }
 };
@@ -399,7 +405,7 @@ function createHotel(newHotel, ownerID) {
     try {
       const checkExistedOwnerID = await Account.Account.findOne({ _id: ownerID });
       if (!checkExistedOwnerID) {
-        return reject({
+        return rejects({
           status: "BAD",
           message: "Owner ID does not exist",
         });
@@ -426,7 +432,7 @@ function createHotel(newHotel, ownerID) {
         });
       }
     } catch (e) {
-      reject(e);
+      rejects(e);
     }
   });
 };
