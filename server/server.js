@@ -30,9 +30,23 @@ app.use(bodyParser.json());
 app.use(morgan("combined"))
 
 app.use("/videos", videoRoutes)
-app.use(cors({
-    origin:process.env.CLIENT_ORIGIN || 'http://localhost:3000'
-}))
+const allowedOrigins = [
+    process.env.CLIENT_ORIGIN,
+    'https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/'
+  ];
+  
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin, like mobile apps or curl requests
+      if (!origin) return callback(null, true);
+  
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  }));
 app.use('/home',HomeRouter)
 app.use('/detail',DetailRouter)
 app.use('/hotelList',HotelListRouter)
