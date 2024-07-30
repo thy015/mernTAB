@@ -312,7 +312,7 @@ const handleCancelRoom = async (req, res) => {
 
   console.log(reqCancelID, accept, adminID, orderId, transactionId);
 
-  if (!accept === undefined || !adminID) {
+  if (accept === undefined || !adminID) {
     return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
   }
 
