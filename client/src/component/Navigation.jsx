@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../image/Component 33.png";
-
+import { Link } from "react-router-dom";
 export default function Navigation() {
   return (
     <div className="">
@@ -8,46 +8,41 @@ export default function Navigation() {
         <div className="flex items-center space-x-5">
           <img className="" src={logo} alt="Logo" />
           <h2 className="text-2xl font-semibold ">
-            <a
+            <Link to='/'
               className="text-blue-600 no-underline"
-              href="https://www.example.com"
             >
               Promotion
-            </a>
+            </Link>
           </h2>
           <h2 className="text-2xl font-semibold ">
-            <a
+            <Link to ='/hotellist'
               className="text-blue-600 no-underline"
-              href="https://www.example.com"
             >
               Hotel Collections
-            </a>
+            </Link>
           </h2>
           <h2 className="text-2xl font-semibold ">
-            <a
+            <Link to='/registerOwner'
               className="text-blue-600 no-underline"
-              href="https://www.example.com"
             >
               Become Our Partner
-            </a>
+            </Link>
           </h2>
         </div>
         <div className="flex items-center space-x-5">
           <h2 className="text-2xl font-semibold ">
-            <a
+            <Link to='/signUpCus'
               className="text-blue-600 no-underline"
-              href="https://www.example.com"
             >
               Register
-            </a>
+            </Link>
           </h2>
           <h2 className="text-2xl font-semibold text-sky-500">
-            <a
+            <Link to='/signInCus'
               className="text-blue-600 no-underline"
-              href="https://www.example.com"
             >
               Log in
-            </a>
+            </Link>
           </h2>
         </div>
       </nav>

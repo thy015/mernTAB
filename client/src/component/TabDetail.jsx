@@ -29,45 +29,42 @@ const TabDetail = ({ hotelId, tabs }) => {
     }
   }, [hotelId]);
 
-  // const handleBookRoom = async (room) => {
-  //   try {
-  //     const roomId = room.id;  // Assuming room.id is the room's ID
-  //     const totalMoney = room.money;  // Total money
-  //     const description = `Dịch vụ đặt phòng ${room.name}`;
+  const getToken = () => {
+    return localStorage.getItem('token'); 
+  };
 
-  //     const response = await axios.post(
-  //       "https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest",
-  //       {
-  //         OrderID: roomId,
-  //         PartnerID: "60c9c5d9c5f9c40015f6f7b6",
-  //         ServiceName: "Đặt phòng khách sạn",
-  //         TotalMoney: totalMoney,
-  //         CustomerCode: "KH01",
-  //         Description: description,
-  //         LinkHome: "https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/MainHome",
-  //         LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${roomId}`,
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
+  const handleBooking = async (roomID, paymentMethod) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        alert("Please log in");
+        return;
+      }
 
-  //     const voucherData = await resVoucher.json();
-  //     console.log("Phản hồi từ server tạo yêu cầu đối tác:", voucherData);
+      const response = await axios.post(
+        'https://mern-tab-be.vercel.app/book/bookRoom',
+        {
+          newInvoice: { paymentMethod },
+          roomID,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-  //     if (resVoucher.ok) {
-  //       window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=${buyTicketBus._id}`;
-  //     } else {
-  //       alert(voucherData.error || "Đã xảy ra lỗi khi truyền dữ liệu");
-  //     }
-  //   } catch (error) {
-  //     console.error("Lỗi khi truyền dữ liệu:", error);
-  //     alert("Không thể truyền dữ liệu");
-  //   }
-  // };
-
+      if (response.data.status === "OK") {
+        window.location.href = `https://client-voucher-b243d0019775.herokuapp.com/CreateVoucherPartner?service=1000000005`;
+      } else {
+        alert(response.data.message || "Đã xảy ra lỗi khi đặt phòng");
+      }
+    } catch (error) {
+      console.error("Lỗi khi đặt phòng:", error);
+      alert("Đã xảy ra lỗi khi kết nối tới máy chủ");
+    }
+  };
 
   const activeTabData = tabs.find((tab) => tab.type === activeTab);
 
@@ -141,7 +138,8 @@ const TabDetail = ({ hotelId, tabs }) => {
                       </span>
                     </div>
                     <div>
-                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right">
+                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right"
+                       onClick={() => handleBooking(room._id, 'creditCard')}>
                         Đặt phòng
                       </button>
                     </div>
