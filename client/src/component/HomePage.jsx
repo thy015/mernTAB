@@ -1,10 +1,12 @@
-import React from "react";
-import { Button, DatePicker, InputNumber, Select } from "antd";
+import React, { useState } from "react";
+import { Button, DatePicker, InputNumber, Select, message } from "antd";
 import "antd/dist/reset.css";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
+import axios from "axios";  // Thêm axios để gửi yêu cầu HTTP
+
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -28,12 +30,35 @@ const responsive = {
 };
 
 const HomePage = () => {
+  const [city, setCity] = useState("");
+  const [dates,setDates] = useState("") 
+  const [numberOfPeople, setnumberOfPeople] = useState(2);
+  const [hotels, setHotels] = useState([]);
+
   const contentStyle = {
     height: "160px",
     color: "#fff",
     lineHeight: "160px",
     textAlign: "center",
     background: "#364d79",
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/search`, {
+        params: {
+          city,
+          numberOfPeople,
+        },
+      });
+      setHotels(response.data.data);
+      if (hotels === 0) {
+        message.info('No hotels found matching your criteria');
+      }
+    } catch (error) {
+      console.error(error);
+      message.error('Error searching for hotels');
+    }
   };
 
   return (
@@ -43,13 +68,13 @@ const HomePage = () => {
         {/* search */}
         <div className="w-3/4 p-6 mx-auto my-4 bg-white rounded-lg shadow-md">
           <div className="flex space-x-4">
-            <Select className="w-1/4" placeholder="City">
+            <Select className="w-1/4" placeholder="City" onChange={setCity}>
               <Option value="Ho Chi Minh City">Ho Chi Minh City</Option>
               {/* Add more options as needed */}
             </Select>
-            <RangePicker className="w-1/4" />
-            <InputNumber className="w-1/4" min={1} max={10} defaultValue={2} />
-            <Button type="primary" className="w-1/4">
+            <RangePicker className="w-1/4" onChange={setDates} />
+            <InputNumber className="w-1/4" min={1} max={10} defaultValue={2} onChange={setnumberOfPeople} />
+            <Button type="primary" className="w-1/4" onClick={handleSearch}>
               Search
             </Button>
           </div>
@@ -58,7 +83,7 @@ const HomePage = () => {
         <div className="mt-6 text-center">
           <h2 className="text-2xl font-semibold">Accommodation Promotions</h2>
           <Carousel responsive={responsive} arrows>
-            <div style={contentStyle}>Slide 1</div>
+              <img style={contentStyle} src="https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
             <div style={contentStyle}>Slide 2</div>
             <div style={contentStyle}>Slide 3</div>
             <div style={contentStyle}>Slide 4</div>

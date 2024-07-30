@@ -527,35 +527,42 @@ const getHotelsByOwner = async (ownerID) => {
   }
 };
 
-const searchHotel = async (searchCriteria) => {
-  const { city, checkInDate, checkOutDate, numberOfPeople } = searchCriteria;
+const searchHotel = async (req, res) => {
+  const { city, checkInDate, checkOutDate, numberOfPeople  } = req.query;
   try {
-    const hotelCity = await Hotel.Hotel.find({ city });
+    const hotelsInCity = await Hotel.Hotel.find({ city });
 
     const availableHotels = await Promise.all(
-      hotelCity.map(async (h) => {
-        const hotelRooms = await Hotel.Room.find({
-          hotelID: h._id,
-          capacity: { $gte: numberOfPeople }, //>= số ng dc nhập
+      hotelsInCity.map(async (hotel) => {
+        const availableRooms = await Room.find({
+          hotel: hotel._id,
+          capacity: { $gte: numberOfPeople },
         });
-        if (hotelRooms.length > 0) {
+        if (availableRooms.length > 0) {
           return {
-            ...h._doc,
-            rooms: hotelRooms,
+            ...hotel._doc,
+            rooms: availableRooms,
           };
-        } else return null;
+        } else {
+          return null;
+        }
       })
     );
+
     const filteredHotels = availableHotels.filter((hotel) => hotel !== null);
 
-
-    return {
+    return res.status(200).json({
       status: "OK",
       message: "Find Hotel successfully",
       data: filteredHotels,
-    };
+    });
   } catch (e) {
-    console.error("There's no Hotel in your search place:", e);
+    console.error("Error searching for hotels:", e);
+    return res.status(500).json({
+      status: "Error",
+      message: "There was an error searching for hotels.",
+      error: e.message,
+    });
   }
 };
 
