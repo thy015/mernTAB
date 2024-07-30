@@ -10,6 +10,7 @@ import Login from './component/Login';
 import HomePage from './component/HomePage'
 import Confirmation from './component/Confirmation';
 import Booking from './component/Booking';
+import LoginCus from './component/LogInCus';
 export default function App() {
   return (
     <div className="App">
@@ -23,6 +24,7 @@ export default function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/booking' element={<Booking/>} />
           <Route path='/confirmation' element={<Confirmation/>} />
+          <Route path='/login_cus' element={<LoginCus/>}/>
         </Routes>
       </Router>
     </div>
