@@ -11,7 +11,7 @@ const TabDetail = ({ hotelId, tabs }) => {
     const fetchRoomsData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/rooms`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotellist/rooms`, {
           params: {
             hotelID: hotelId,
           },
