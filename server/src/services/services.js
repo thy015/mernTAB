@@ -123,9 +123,8 @@ async function signInOwner(existedOwner) {
 }
 // đăng ký luôn bên app t3
 async function signUpCustomer(newCustomer) {
-  return new Promise(async (resolve, rejects) => {
-    const { firstName, password, dob, phoneNumber, email, lastName } =
-      newCustomer;
+  return new Promise(async (resolve, reject) => {
+    const { firstName, password, dob, phoneNumber, email, lastName } = newCustomer;
     try {
       const response = await axios.post(
         "https://api.htilssu.com/api/v1/auth/register",
@@ -138,21 +137,21 @@ async function signUpCustomer(newCustomer) {
           phoneNumber: phoneNumber,
         }
       );
-      if (response.status === 200 || response.status === 201 || response.status==='OK') {
+      if (response.status === 200 || response.status === 201 || response.status === 'OK') {
         resolve({
           status: "OK",
           message: "Successfully created customer",
           data: response,
         });
       } else {
-        rejects({
+        reject({
           status: "BAD",
           message: "Third-party service auth failed",
         });
       }
     } catch (e) {
-      console.error('Error during sign-up:', e.response ? e.response.data : e);
-      rejects({
+      console.error('Error during sign-up:', e.response ? e.response.data : e.message);
+      reject({
         status: 'BAD',
         message: e.response ? e.response.data : 'Error during sign-up',
       });
