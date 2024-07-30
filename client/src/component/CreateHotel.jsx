@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
- 
+
 const CreateHotel = () => {
   const [formData, setFormData] = useState({
     companyName: "",
@@ -8,15 +8,14 @@ const CreateHotel = () => {
     nation: "",
     city: "",
     scale: "",
-    hotelAddress: "",
+    address: "",
     facilityName: "",
     taxCode: "",
-    businessType : "",
+    businessType: "",
     hotelImg: []
   });
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
-  
 
   const ownerID = localStorage.getItem("ownerID");
   const token = localStorage.getItem("authToken");
@@ -36,7 +35,7 @@ const CreateHotel = () => {
     if (!formData.nation) newErrors.nation = "Quốc gia cư trú là bắt buộc";
     if (!formData.city) newErrors.city = "Thành phố là bắt buộc";
     if (!formData.scale) newErrors.scale = "Quy mô chỗ nghỉ là bắt buộc";
-    if (!formData.hotelAddress) newErrors.hotelAddress = "Địa chỉ khách sạn là bắt buộc";
+    if (!formData.address) newErrors.address = "Địa chỉ khách sạn là bắt buộc";
     if (!formData.facilityName) newErrors.facilityName = "Tên doanh nghiệp là bắt buộc";
     if (!formData.taxCode) newErrors.taxCode = "Mã số thuế là bắt buộc";
     if (!formData.businessType) newErrors.businessType = "Loại hình kinh doanh là bắt buộc";
@@ -45,27 +44,27 @@ const CreateHotel = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-    //Up file lên cloudinary
-    const uploadFile = async (file) => {
-      const data = new FormData();
-      data.append("file", file );
-      data.append("upload_preset",'images_preset')
+  // Up file lên Cloudinary
+  const uploadFile = async (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", 'images_preset');
 
-      try {
-          let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-          let resourceType = 'image'
-          let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+    try {
+      const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+      const resourceType = 'image';
+      const api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
 
-          const res = await axios.post(api, data);
-          const { secure_url } = res.data;
-          console.log(secure_url);
-          return secure_url;
-      } catch (error) {
-          console.error(error);
-          throw error;
-      }
-  }
-  const handleImageChange = (e) => {
+      const res = await axios.post(api, data);
+      const { secure_url } = res.data;
+      return secure_url;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length < 3) {
       alert("Bạn cần chọn ít nhất 3 ảnh.");
@@ -77,12 +76,21 @@ const CreateHotel = () => {
       e.target.value = null;
       return;
     }
-    const fileArray = files.map((file) => URL.createObjectURL(file));
-    setFormData((prevdata) => ({
-      ...prevdata,
-      hotelImg: fileArray,
-    }));
+
+    try {
+      const uploadedImages = await Promise.all(
+        files.map((file) => uploadFile(file))
+      );
+
+      setFormData((prevData) => ({
+        ...prevData,
+        hotelImg: uploadedImages,
+      }));
+    } catch (error) {
+      setErrors({ apiError: "Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại." });
+    }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -90,16 +98,15 @@ const CreateHotel = () => {
         setErrors({});
         setSuccessMessage("");
 
-        const uploadedImages = await Promise.all(
-          formData.hotelImg.map((file) => uploadFile(file))
-        );
+
 
         const formDataWithOwner = {
-          ...formData, 
-          hotelImg : uploadedImages,
+          ...formData,
           ownerID,
         };
+        
         console.log(formDataWithOwner)
+
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
           formDataWithOwner,
           {
@@ -111,7 +118,18 @@ const CreateHotel = () => {
 
         if (response.data.status === "OK") {
           setSuccessMessage("Tạo khách sạn thành công!");
-          setFormData({});
+          setFormData({
+            companyName: "",
+            hotelPhone: "",
+            nation: "",
+            city: "",
+            scale: "",
+            address: "",
+            facilityName: "",
+            taxCode: "",
+            businessType: "",
+            hotelImg: []
+          });
         } else {
           setErrors({ apiError: "Có lỗi xảy ra khi tạo khách sạn. Vui lòng thử lại." });
         }
@@ -130,7 +148,7 @@ const CreateHotel = () => {
           <input
             type="text"
             name="companyName"
-            value={formData.companyName || ""}
+            value={formData.companyName}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -141,7 +159,7 @@ const CreateHotel = () => {
           <input
             type="tel"
             name="hotelPhone"
-            value={formData.hotelPhone || ""}
+            value={formData.hotelPhone}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -152,7 +170,7 @@ const CreateHotel = () => {
           <input
             type="text"
             name="nation"
-            value={formData.nation || ""}
+            value={formData.nation}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -163,18 +181,18 @@ const CreateHotel = () => {
           <input
             type="text"
             name="city"
-            value={formData.city || ""}
+            value={formData.city}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
+          {errors.city && <p className="text-red-500">{errors.city}</p>}
         </div>
-        {errors.city && <p className="text-red-500">{errors.city}</p>}
         <div className="mb-4">
           <label className="block text-gray-700">Quy mô chỗ nghỉ (m²):</label>
           <input
             type="number"
             name="scale"
-            value={formData.scale || ""}
+            value={formData.scale}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -185,7 +203,7 @@ const CreateHotel = () => {
           <input
             type="text"
             name="address"
-            value={formData.address || ""}
+            value={formData.address}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -196,18 +214,18 @@ const CreateHotel = () => {
           <input
             type="text"
             name="facilityName"
-            value={formData.facilityName || ""}
+            value={formData.facilityName}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.facilityName && <p className="text-red-500">{errors.facilityName}</p>}
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Mã số thuế</label>
+          <label className="block text-gray-700">Mã số thuế:</label>
           <input
             type="text"
             name="taxCode"
-            value={formData.taxCode || ""}
+            value={formData.taxCode}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -218,7 +236,7 @@ const CreateHotel = () => {
           <input
             type="text"
             name="businessType"
-            value={formData.businessType || ""}
+            value={formData.businessType}
             onChange={handleGeneralChange}
             className="w-full px-4 py-2 border rounded"
           />
@@ -227,7 +245,7 @@ const CreateHotel = () => {
         <div className="mb-4">
           <label className="block text-gray-700">Hình ảnh khách sạn:</label>
           <input
-            type="file" 
+            type="file"
             id="img"
             multiple
             onChange={handleImageChange}
