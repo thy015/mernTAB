@@ -354,7 +354,7 @@ const handleCancelRoomAccept = async (req, res) => {
       return res.status(500).json({
         status: "BAD",
         message: "Error in processing refund",
-        error: e.response ? e.response.data : e.message,
+        error: e.response ? JSON.stringify(e.response.data) : e.message,
       });
     }
   } catch (e) {
