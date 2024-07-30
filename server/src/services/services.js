@@ -317,7 +317,7 @@ const handleCancelRoom = async (req, res) => {
   }
 
   try {
-    const foundReqCancel = await reqCancel.findOne({ _id: reqCancelID });
+    const foundReqCancel = await reqCancel.findById(reqCancelID);
     if (!foundReqCancel) {
       return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
     }
