@@ -1,8 +1,8 @@
 //signUp,signIn
 const signUpService=require('../../services/services')
-const signUpOwner=async(req,res)=>{
+
+const signUpOwner = async(req,res)=>{
     try{
-        console.log(req.body)
         const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=req.body
 
         if(!name || !passWord || !email || !birthDate ||!phoneNum ||!address||!dueDatePCCC||!dueDateKD){
@@ -17,8 +17,8 @@ const signUpOwner=async(req,res)=>{
         }
         else{
             const currentDate=new Date()
-            const validDueDatePCCC= currentDate.getFullYear()-new Date(dueDatePCCC).getFullYear
-            const validDueDateKD= currentDate.getFullYear()-new Date(dueDateKD).getFullYear
+            const validDueDatePCCC= currentDate.getFullYear()-new Date(dueDatePCCC).getFullYear()
+            const validDueDateKD= currentDate.getFullYear()-new Date(dueDateKD).getFullYear()
 
             if(validDueDateKD<=1 || validDueDatePCCC<=1){
                 return res.status(400).json({ message:'Invalid due date'})
@@ -28,10 +28,8 @@ const signUpOwner=async(req,res)=>{
         return res.status(201).json(result)
         }
      catch(e){
-        console.log(e)
         return res.status(500).json({message:e})
     }
-
 }
 
 const signInOwner = async (req, res) => {
