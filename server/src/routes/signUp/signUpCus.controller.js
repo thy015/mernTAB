@@ -3,7 +3,7 @@ const services=require('../../services/services')
 const signUpCustomer = async (req, res) => {
     const { firstName, password, dob, phoneNumber, email, lastName } = req.body;
     try {
-      console.log(req.body);
+      console.log('Request body:', req.body);
       if (!firstName || !phoneNumber || !dob || !password || !lastName || !email) {
         return res.status(403).json({ message: 'Input is required' });
       }
@@ -19,6 +19,8 @@ const signUpCustomer = async (req, res) => {
           phoneNumber: phoneNumber,
         }
       );
+  
+      console.log('Response from third-party service:', response.data);
   
       if (response.status === 200 || response.status === 201 || response.status === 'OK') {
         return res.status(201).json({
@@ -40,7 +42,7 @@ const signUpCustomer = async (req, res) => {
         message: 'Internal server error in controller',
         error: {
           status: e.response ? e.response.status : 'UNKNOWN',
-          message: e.response ? e.response.data : 'Unknown error occurred'
+          message: e.response ? e.response.data : e.message || 'Unknown error occurred'
         }
       });
     }
