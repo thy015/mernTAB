@@ -8,7 +8,6 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
     setFormData({ [name]: value });
   };
 
-
   const validateForm = () => {
     const newErrors = {};
     if (!formData.businessName)
@@ -50,7 +49,7 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
       <div className="mb-4">
         <label className="block text-gray-700">MST Doanh nghiệp</label>
         <input
-          type="number"
+          type="text"
           name="taxId"
           value={formData.taxId}
           onChange={handleChange}
@@ -72,11 +71,9 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
         )}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">
-          Ngày hết hạn của giấy phép kinh doanh
-        </label>
+        <label className="block text-gray-700">Ngày hết hạn của giấy phép kinh doanh</label>
         <input
-          type="month"
+          type="date"
           name="dueDateKD"
           value={formData.dueDateKD}
           onChange={handleChange}
@@ -87,11 +84,9 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
         )}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">
-          Ngày hết hạn của giấy phép PCCC
-        </label>
+        <label className="block text-gray-700">Ngày hết hạn của giấy phép PCCC</label>
         <input
-          type="month"
+          type="date"
           name="dueDatePCCC"
           value={formData.dueDatePCCC}
           onChange={handleChange}
@@ -101,20 +96,19 @@ const Step2 = ({ onPrevious, formData, setFormData, onComplete }) => {
           <p className="text-red-500">{errors.dueDatePCCC}</p>
         )}
       </div>
-
       <div className="flex justify-between">
         <button
           type="button"
           onClick={onPrevious}
-          className="px-4 py-2 text-black bg-gray-300 rounded"
+          className="px-4 py-2 text-white bg-gray-500 rounded"
         >
           Quay lại
         </button>
         <button
           type="submit"
-          className="justify-end px-4 py-2 text-white bg-blue-500 rounded"
+          className="px-4 py-2 text-white bg-blue-500 rounded"
         >
-          Hoàn tất
+          Hoàn thành
         </button>
       </div>
     </form>
