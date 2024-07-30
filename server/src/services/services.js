@@ -457,6 +457,8 @@ const createRoom = async (newRoom, hotelID) => {
             hotel.minPrice = money;
             await hotel.save();
           }
+          hotel.numberOfRooms = hotel.numberOfRooms + 1
+          await hotel.save();
         }
         resolve({
           status: "OK",
