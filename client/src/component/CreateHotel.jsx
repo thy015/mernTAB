@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+ 
 const CreateHotel = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    companyName: "",
+    hotelPhone: "",
+    nation: "",
+    city: "",
+    scale: "",
+    hotelAddress: "",
+    facilityName: "",
+    taxCode: "",
+    businessType : "",
+    hotelImg: []
+  });
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+  
 
   const ownerID = localStorage.getItem("ownerID");
   const token = localStorage.getItem("authToken");
@@ -33,6 +45,44 @@ const CreateHotel = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+    //Up file lên cloudinary
+    const uploadFile = async (file) => {
+      const data = new FormData();
+      data.append("file", file );
+      data.append("upload_preset",'images_preset')
+
+      try {
+          let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+          let resourceType = 'image'
+          let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+
+          const res = await axios.post(api, data);
+          const { secure_url } = res.data;
+          console.log(secure_url);
+          return secure_url;
+      } catch (error) {
+          console.error(error);
+          throw error;
+      }
+  }
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length < 3) {
+      alert("Bạn cần chọn ít nhất 3 ảnh.");
+      e.target.value = null;
+      return;
+    }
+    if (files.length > 5) {
+      alert("Bạn chỉ được chọn tối đa 5 ảnh.");
+      e.target.value = null;
+      return;
+    }
+    const fileArray = files.map((file) => URL.createObjectURL(file));
+    setFormData((prevdata) => ({
+      ...prevdata,
+      hotelImg: fileArray,
+    }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -40,13 +90,17 @@ const CreateHotel = () => {
         setErrors({});
         setSuccessMessage("");
 
+        const uploadedImages = await Promise.all(
+          formData.hotelImg.map((file) => uploadFile(file))
+        );
+
         const formDataWithOwner = {
-          ...formData,
+          ...formData, 
+          hotelImg : uploadedImages,
           ownerID,
         };
         console.log(formDataWithOwner)
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
           formDataWithOwner,
           {
             headers: {
@@ -107,7 +161,7 @@ const CreateHotel = () => {
         <div className="mb-4">
           <label className="block text-gray-700">Thành phố:</label>
           <input
-            type="number"
+            type="text"
             name="city"
             value={formData.city || ""}
             onChange={handleGeneralChange}
@@ -169,6 +223,16 @@ const CreateHotel = () => {
             className="w-full px-4 py-2 border rounded"
           />
           {errors.businessType && <p className="text-red-500">{errors.businessType}</p>}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Hình ảnh khách sạn:</label>
+          <input
+            type="file" 
+            id="img"
+            multiple
+            onChange={handleImageChange}
+            className="w-full px-4 py-2 border rounded"
+          />
         </div>
         {errors.apiError && <p className="text-red-500">{errors.apiError}</p>}
         {successMessage && <p className="text-green-500">{successMessage}</p>}
