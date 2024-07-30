@@ -17,14 +17,19 @@ ListRouter.post('/create', authenToken, hotelListController.createHotel);
 ListRouter.get('/search', hotelListController.searchHotel);
 ListRouter.get('/owner', authenToken, hotelListController.getHotelsByOwner);
 
-ListRouter.get('/room', async (req, res) => {
+ListRouter.get('/rooms', async (req, res) => { 
   try {
-    const createdRoom = await Hotel.Room.find();
-    res.status(200).json(createdRoom);
+    const { hotelID } = req.query;
+    if (!hotelID) {
+      return res.status(400).json({ message: "hotelID is required" });
+    }
+    
+    const rooms = await Hotel.Room.find({ hotel: hotelID });
   } catch (e) {
     res.status(500).json(e);
   }
 });
+
 
 ListRouter.post('/createRoom', authenToken, hotelListController.createRoom);
 
