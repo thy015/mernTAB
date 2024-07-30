@@ -367,7 +367,7 @@ const handleCancelRoom = async (req, res) => {
         // await foundReqCancel.save();
 
         const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId: foundReqCancel.receiptID,
+          orderId: null,
           transactionId: "100000000000107"
         });
 
@@ -377,8 +377,6 @@ const handleCancelRoom = async (req, res) => {
             message: "Refund for customer and change status",
             data: refundResponse.data,
           });
-
-
 
         } else {
           return res.status(500).json({
