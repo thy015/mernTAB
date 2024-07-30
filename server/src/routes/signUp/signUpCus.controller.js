@@ -1,5 +1,4 @@
 const services=require('../../services/services')
-const { validateEmail} = require('./signUp.controller')
 
 const signUpCustomer=async(req,res)=>{
     const{ firstName, password, dob, phoneNumber, email, lastName }=req.body
@@ -7,11 +6,9 @@ const signUpCustomer=async(req,res)=>{
         console.log(req.body)
         if(!firstName||!phoneNumber || !dob ||!password||!lastName||!email){
             return res.status(403).json({message:'Input is required'})
-        }else if(!validateEmail(email)){ 
-            return res.status(400).json({ message:'Invalid email'})
         }
         const result= await services.signUpCustomer(req.body)
-        return res.status(200).json(result)
+        return res.status(201).json(result)
     }
     catch(e){
         console.error('Error in sign-up controller:', e);

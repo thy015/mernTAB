@@ -5,8 +5,7 @@ dotenv.config();
 const axios = require("axios");
 const {
   generalAccessTokens,
-  refreshAccessTokens,
-  paymentToken,
+  refreshAccessTokens
 } = require("./jwt");
 const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
@@ -229,14 +228,15 @@ async function bookRoom(newInvoice, cusID, roomID) {
         paymentMethod,
       });
 
-      const nameOfService = `Đặt phòng`;
       //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
       //Tổng tiền, id biên lai, id cus, biên lai sẽ dc xóa nếu 20m chưa thanh toán
       const voucherResponse=await axios.post('/appvoucher',{
-          invoiceID: invoice._id,
-          total,
-          cusID,
-          nameOfService
+          OrderID: invoice._id,
+          TotalMoney:total,
+          PartnerID:cusID,
+          ServiceName:`Book room`,
+          LinkHome:"",
+          LinkReturnSuccess:`https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
       })
 
       if(voucherResponse.status===200){
@@ -363,22 +363,23 @@ async function handleCancelRoom(reqCancelID, adminID, accept) {
             foundReqCancel.dateAccept = new Date();
             await foundReqCancel.save();
 
-            const refundResponse = await axios.post("/appThanhToan", {
-                orderID: foundReqCancel.receiptID,
+            const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
+                orderId: foundReqCancel.receiptID,
+                transactionId:""
             });
             if (refundResponse.status === 200 || refundResponse.status === 201) {
-                const newRefund = await refundMoney.create({
-                dateRefund: new Date(),
-                amountRefund: foundReqCancel.amount,
-                cusID: cusID,
-                });
+                // const newRefund = await refundMoney.create({
+                // dateRefund: new Date(),
+                // amountRefund: foundReqCancel.amount,
+                // cusID: cusID,
+                // });
 
-                await newRefund.save();
+                // await newRefund.save();
 
                 return resolve({
                 status: "OK",
                 message: "Refund for customer and change status",
-                data: newRefund,
+                data: refundResponse.data,
                 });
                 } else {
                     //# 2 status trên
