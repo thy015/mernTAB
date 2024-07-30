@@ -392,7 +392,6 @@ function createHotel(newHotel, ownerID) {
   return new Promise(async (resolve, rejects) => {
     const {
       address,
-      numberOfRooms,
       taxCode,
       companyName,
       nation,
@@ -401,8 +400,7 @@ function createHotel(newHotel, ownerID) {
       scale,
       city,
       hotelPhone,
-      hotelImg,
-      minPrice
+      hotelImg
     } = newHotel;
 
     try {
@@ -416,7 +414,6 @@ function createHotel(newHotel, ownerID) {
 
       const createdHotel = await Hotel.Hotel.create({
         address,
-        numberOfRooms,
         taxCode,
         companyName,
         nation,
