@@ -361,11 +361,16 @@ const handleCancelRoom = async (req, res) => {
 
     if (accept) {
       try {
+        // foundReqCancel.isAccept = "accepted";
+        // foundReqCancel.adminID = adminID;
+        // foundReqCancel.dateAccept = new Date();
+        // await foundReqCancel.save();
+
         const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
           orderId: foundReqCancel.receiptID,
-          transactionId: ""
+          transactionId: "100000000000107"
         });
-        
+
         if (refundResponse.status === 200 || refundResponse.status === 201) {
           return res.status(200).json({
             status: "OK",
@@ -373,10 +378,6 @@ const handleCancelRoom = async (req, res) => {
             data: refundResponse.data,
           });
 
-        foundReqCancel.isAccept = "accepted";
-        foundReqCancel.adminID = adminID;
-        foundReqCancel.dateAccept = new Date();
-        await foundReqCancel.save();
 
 
         } else {
