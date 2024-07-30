@@ -30,6 +30,8 @@ const CreateHotel = () => {
 
   const validateForm = () => {
     const newErrors = {};
+
+    
     if (!formData.companyName) newErrors.companyName = "Tên khách sạn là bắt buộc";
     if (!formData.hotelPhone) newErrors.hotelPhone = "Số điện thoại là bắt buộc";
     if (!formData.nation) newErrors.nation = "Quốc gia cư trú là bắt buộc";
