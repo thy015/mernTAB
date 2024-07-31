@@ -12,7 +12,7 @@ const CreateHotel = () => {
   const [facilityName, setFacilityName] = useState("");
   const [taxCode, setTaxCode] = useState("");
   const [businessType, setBusinessType] = useState("");
-  const [hotelImg, setHotelImg] = useState(null);
+  const [img, setImg] = useState(null);
 
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
@@ -39,33 +39,24 @@ const CreateHotel = () => {
   // Up file lên Cloudinary
   const uploadFile = async () => {
     const data = new FormData();
-    data.append("file", hotelImg);
-    data.append("upload_preset", 'images_preset');
+    data.append("file", img );
+    data.append("upload_preset",'images_preset')
 
     try {
-      const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-      const resourceType = 'image';
-      const api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+        let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+        let resourceType = 'image'
+        let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
 
-      const res = await axios.post(api, data);
-      const { secure_url } = res.data;
-      return secure_url;
+        const res = await axios.post(api, data);
+        const { secure_url } = res.data;
+        console.log(secure_url);
+        return secure_url;
     } catch (error) {
-      console.error(error);
-      throw error;
+        console.error(error);
+        throw error;
     }
-  };
+}
 
-  const handleImageChange = async (e) => {
-    
-    try {
-      const uploadedImage = await uploadFile('image')
-
-      setHotelImg(uploadedImage);
-    } catch (error) {
-      setErrors({ apiError: "Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại." });
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,7 +65,21 @@ const CreateHotel = () => {
         setErrors({});
         setSuccessMessage("");
 
+        const hotelImg = await uploadFile('image')
 
+        console.log({
+          companyName,
+          hotelPhone,
+          nation,
+          city,
+          scale,
+          address,
+          facilityName,
+          taxCode,
+          businessType,
+          hotelImg,
+          ownerID,
+        })
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
           {
@@ -97,6 +102,9 @@ const CreateHotel = () => {
           }
         );
 
+        setImg(null);
+        console.log("File upload success!");
+
         if (response.data.status === "OK") {
           setSuccessMessage("Tạo khách sạn thành công!");
           setCompanyName("");
@@ -108,7 +116,6 @@ const CreateHotel = () => {
           setFacilityName("");
           setTaxCode("");
           setBusinessType("");
-          setHotelImg("");
         } else {
           setErrors({ apiError: "Có lỗi xảy ra khi tạo khách sạn. Vui lòng thử lại." });
         }
@@ -221,20 +228,17 @@ const CreateHotel = () => {
           />
           {errors.businessType && <p className="text-red-500">{errors.businessType}</p>}
         </div>
-        <form onSubmit={handleImageChange}>
-                <br />
-                <div>
-                    <label htmlFor="img">Image:</label>
-                    <br />
-                    <input 
-                        type="file" 
-                        id="img" 
-                        onChange={(e) => setHotelImg(e.target.file)} 
-                    />
-                </div>
-                <br />
-                <button type='submit'>Upload</button>
-            </form>
+          <br />
+          <div>
+              <label htmlFor="img">Image:</label>
+              <br />
+              <input 
+                  type="file" 
+                  id="img" 
+                  onChange={(e) => setImg(e.target.files[0])} 
+              />
+          </div>
+          <br />
         {errors.apiError && <p className="text-red-500">{errors.apiError}</p>}
         {successMessage && <p className="text-green-500">{successMessage}</p>}
         <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
