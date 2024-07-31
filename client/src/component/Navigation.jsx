@@ -45,7 +45,7 @@ export default function Navigation() {
             </Link>
           </h2>
           <h2 className="text-2xl font-semibold text-sky-500">
-            <Link to='/signInCus'
+            <Link to='/logInCus'
               className="text-blue-600 no-underline"
             >
               Log in
