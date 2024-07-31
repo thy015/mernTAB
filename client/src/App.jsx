@@ -13,6 +13,7 @@ import Booking from './component/Booking';
 import LoginCus from './component/LogInCus';
 import SignUp from './component/SignUp';
 import Admin from './component/Admin';
+import BookingHistory from './component/BookingHistory'
 export default function App() {
   return (
     <div className="App">
@@ -29,6 +30,7 @@ export default function App() {
           <Route path='/logInCus' element={<LoginCus/>}/>
           <Route path='/signUpCus' element={<SignUp/>}/>
           <Route path='/admin' element={<Admin/>}/>
+          <Route path='/bookingHistory' element={<BookingHistory/>}/>
         </Routes>
       </Router>
     </div>

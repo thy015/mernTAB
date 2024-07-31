@@ -28,6 +28,13 @@ export default function Navigation() {
               Become Our Partner
             </Link>
           </h2>
+          <h2 className="text-2xl font-semibold ">
+            <Link to='/bookingHistory'
+              className="text-blue-600 no-underline"
+            >
+             Booking history
+            </Link>
+          </h2>
         </div>
         <div className="flex items-center space-x-5">
           <h2 className="text-2xl font-semibold ">

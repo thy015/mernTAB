@@ -7,4 +7,6 @@ bookRouter.get('/', bookController.getInvoicesWithReceipts);
 
 bookRouter.post('/bookRoom',authenCusToken, bookController.bookRoom);
 bookRouter.post('/completedTran/${invoice}',services.completedTran)
+
+bookRouter.get('/bookingHistory',authenCusToken,bookController.getRoomsBookedCustomer)
 module.exports = bookRouter;
