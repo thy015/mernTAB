@@ -307,7 +307,8 @@ async function reqCancelRoom(receiptID, cusID) {
 //ko accept => đổi trạng thái req, trả về cho user
 
 const handleCancelRoomAccept = async (req, res) => {
-  const { reqCancelID, orderId, transactionId } = req.body;
+  const {reqCancelID}=req.params
+  const {orderId, transactionId } = req.body;
   const adminID = req.adminID;
 
   console.log(reqCancelID, adminID, orderId, transactionId);
