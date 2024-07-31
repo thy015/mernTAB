@@ -26,6 +26,24 @@ const bookRoom = async (req, res) => {
     }
 };
 
+const getRoomsBookedCustomer = async (req, res) => {
+    const cusID = req.cusID;
+    if (!cusID) {
+        return res.status(403).json({ message: 'Missing customer ID' });
+    }
+    try {
+        const bookedRooms = await Invoice.find({ cusID: cusID });
+        const paidRooms = bookedRooms.filter(room => room.isPaid === true);
+
+        if (paidRooms.length > 0) {
+            return res.status(200).json(paidRooms);
+        } else {
+            return res.status(200).json({ message: "There's no room booked successfully" });
+        }
+    } catch (e) {
+        return res.status(500).json({ message: 'Error in controller', error: e });
+    }
+};
 const getInvoicesWithReceipts = async (req, res) => {
     try {
         const invoices = await Invoice.find().populate('receiptID');
@@ -38,5 +56,6 @@ const getInvoicesWithReceipts = async (req, res) => {
 
 module.exports = { 
     bookRoom,
-    getInvoicesWithReceipts
+    getInvoicesWithReceipts,
+    getRoomsBookedCustomer
  };
