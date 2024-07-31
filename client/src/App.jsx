@@ -12,6 +12,7 @@ import Confirmation from './component/Confirmation';
 import Booking from './component/Booking';
 import LoginCus from './component/LogInCus';
 import SignUp from './component/SignUp';
+import Admin from './component/Admin';
 export default function App() {
   return (
     <div className="App">
@@ -25,8 +26,9 @@ export default function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/booking' element={<Booking/>} />
           <Route path='/confirmation' element={<Confirmation/>} />
-          <Route path='/signInCus' element={<LoginCus/>}/>
+          <Route path='/logInCus' element={<LoginCus/>}/>
           <Route path='/signUpCus' element={<SignUp/>}/>
+          <Route path='/admin' element={<Admin/>}/>
         </Routes>
       </Router>
     </div>

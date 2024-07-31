@@ -161,7 +161,7 @@ const SignUp = () => {
           </button>
           <p className="mt-4 text-sm text-center text-gray-600">
             Bạn đã có tài khoản?
-            <a href="/login" className="text-blue-500 hover:underline">
+            <a href="/logInCus" className="text-blue-500 hover:underline">
               Đăng nhập
             </a>
           </p>

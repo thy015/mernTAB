@@ -11,11 +11,13 @@ const Dashboard = ({ ownerID }) => {
       try {
         const token = localStorage.getItem("authToken"); // Lấy token từ localStorage
         console.log(token);
+        console.log(ownerID)
         const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/owner`, {
           headers: {
             Authorization: `Bearer ${token}`, // Thêm token vào header
           },
         });
+
         setHotelListState(res.data.data);
       } catch (error) {
         console.error(error.message);
