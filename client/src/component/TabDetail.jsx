@@ -56,7 +56,7 @@ const TabDetail = ({ hotelId, tabs }) => {
       );
 
       if (response.data.status === "OK") {
-        window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=66a93d1915ce5a88011982f9`;
+        window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=${response.data.orderID}`;
       } else {
         alert(response.data.message || "Đã xảy ra lỗi khi đặt phòng");
       }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { Button } from "antd";
+import { Link } from "react-router-dom";
 const CreateHotel = () => {
   const [formData, setFormData] = useState({
     companyName: "",
@@ -258,6 +259,9 @@ const CreateHotel = () => {
           Tạo khách sạn
         </button>
       </form>
+      <Link to='https://client-voucher-b243d0019775.herokuapp.com/CreateVoucherPartner?service=1000000005'>
+      <Button type="primary" className="mt-8">Tạo voucher</Button>
+      </Link>
     </div>
   );
 };
