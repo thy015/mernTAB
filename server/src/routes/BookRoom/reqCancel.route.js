@@ -9,5 +9,5 @@ reqCancelRouter.get('/rejected',reqCancelController.getReqCancelRoomRejected)
 
 reqCancelRouter.post('/cusSend',authenCusToken,reqCancelController.reqCancelRoom)
 reqCancelRouter.post('/admin/accept/:reqCancelID',authenAdminToken,services.handleCancelRoomAccept)
-reqCancelRouter.post('/admin/reject',authenAdminToken,services.handleCancelRoomReject)
+reqCancelRouter.post('/admin/reject/:reqCancelID',authenAdminToken,services.handleCancelRoomReject)
 module.exports=reqCancelRouter
