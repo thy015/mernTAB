@@ -9,7 +9,7 @@ const {
 } = require("./jwt");
 const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
-
+const mongoose = require('mongoose');
 
 
 async function signUpOwner(newOwner){
@@ -314,6 +314,10 @@ const handleCancelRoomAccept = async (req, res) => {
 
   if (!adminID) {
     return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(reqCancelID)) {
+    console.log("Invalid reqCancelID");
+    return res.status(400).json({ status: 'BAD', message: 'Invalid reqCancelID' });
   }
 
   try {
