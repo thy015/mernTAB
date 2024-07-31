@@ -169,6 +169,7 @@ async function bookRoom(newInvoice, cusID, roomID) {
           }
 
           const fromHotel = await Hotel.Hotel.find({ _id: foundRoom.hotelID });
+          const hotelName = fromHotel.companyName;
 
           if (!foundRoom.isAvailable) {
               return reject({
@@ -193,7 +194,7 @@ async function bookRoom(newInvoice, cusID, roomID) {
               PartnerID: "1000000005",
               ServiceName: `Book room`,
               CustomerCode: invoice.cusID,
-              Description:`Book ${foundRoom.typeOfRoom} from ${fromHotel.companyName}`,
+              Description:`Book ${foundRoom.typeOfRoom} from ${hotelName}`,
               LinkHome: "https://mern-tab-be.vercel.app/",
               LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
           });
