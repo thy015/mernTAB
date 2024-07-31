@@ -3,8 +3,8 @@ import logo from "../image/Component 33.png";
 import { Link } from "react-router-dom";
 export default function Navigation() {
   return (
-    <div className="">
-      <nav className="sticky top-0 flex items-center justify-between w-full h-24 px-5 bg-white shadow-md">
+    <div className="z-50">
+      <nav className="sticky top-0 flex z-30 items-center justify-between w-full h-24 px-5 bg-white shadow-md">
         <div className="flex items-center space-x-5">
           <img className="" src={logo} alt="Logo" />
           <h2 className="text-2xl font-semibold ">
@@ -45,7 +45,7 @@ export default function Navigation() {
             </Link>
           </h2>
           <h2 className="text-2xl font-semibold text-sky-500">
-            <Link to='/signInCus'
+            <Link to='/logInCus'
               className="text-blue-600 no-underline"
             >
               Log in

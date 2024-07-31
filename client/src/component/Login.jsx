@@ -22,9 +22,15 @@ const Login = () => {
       if (response.data.status === "OK") {
         setSuccess("Đăng nhập thành công!");
         localStorage.setItem("ownerID", response.data.ownerID);
+        localStorage.setItem("isAdmin",response.data.redirect)
         localStorage.setItem("authToken", response.data.access_token); 
+        console.log(response.data.redirect)
         console.log(response.data.access_token)// Lưu token vào localStorage
-        window.location.href = "/manage";
+        if(response.data.redirect === "/") {
+          window.location.href = "/manage";
+        }else {
+          window.location.href = "/admin"
+        }
       } else {
         setError("Email hoặc mật khẩu không chính xác.");
       }
@@ -69,7 +75,7 @@ const Login = () => {
           <button type="submit" className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">Đăng Nhập</button>
           <p className="mt-4 text-sm text-center text-gray-600">
             Bạn chưa có tài khoản?
-            <a href="/signup" className="text-blue-500 hover:underline">Đăng ký</a>
+            <a href="/registerOwner" className="text-blue-500 hover:underline">Đăng ký</a>
           </p>
         </form>
       </div>

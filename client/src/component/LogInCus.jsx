@@ -73,7 +73,7 @@ const LoginCus = () => {
           <button type="submit" className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">Đăng Nhập</button>
           <p className="mt-4 text-sm text-center text-gray-600">
             Bạn chưa có tài khoản?
-            <a href="/signup" className="text-blue-500 hover:underline">Đăng ký</a>
+            <a href="/signUpCus" className="text-blue-500 hover:underline">Đăng ký</a>
           </p>
         </form>
       </div>
