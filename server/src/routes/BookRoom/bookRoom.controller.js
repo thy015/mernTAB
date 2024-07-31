@@ -52,7 +52,15 @@ const getRoomsBookedCustomer = async (req, res) => {
         return res.status(500).json({ message: 'Error in controller', error: e });
     }
 };
-
+const getInvoicesWithReceipts = async (req, res) => {
+    try {
+        const invoices = await Invoice.find().populate('receiptID');
+        res.status(200).json(invoices);
+    } catch (e) {
+        console.error('Error fetching invoices with receipts:', e);
+        res.status(500).json(e);
+    }
+};
 
 module.exports = { 
     bookRoom,

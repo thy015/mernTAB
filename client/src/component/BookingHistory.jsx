@@ -29,12 +29,20 @@ const BookingHistory = () => {
           }
         );
 
-        if (response.data && Array.isArray(response.data)) {
-          setBookingHistoryData(response.data);
+        if (response.data) {
+          const { paidRooms, hotelNames } = response.data;
+          
+          // Merge room and hotel data
+          const mergedData = paidRooms.map(room => {
+            const hotel = hotelNames.find(h => h.hotelID === room.hotelID);
+            return { ...room, companyName: hotel ? hotel.companyName : "Unknown" };
+          });
+
+          setBookingHistoryData(mergedData);
         } else {
           setBookingHistoryData([]);
         }
-        
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching booking history:", error);
@@ -69,10 +77,6 @@ const BookingHistory = () => {
                 <p>
                   <strong>Room name:</strong> {booking.typeOfRoom}
                 </p>
-                {/* <p>
-                  <strong>Check in - Check out date:</strong> {booking.checkInDate} -{" "}
-                  {booking.checkOutDate}
-                </p> */}
                 <p>
                   <strong>Capacity:</strong> {booking.capacity}
                 </p>
@@ -86,8 +90,7 @@ const BookingHistory = () => {
                   <strong>Discount:</strong> {booking.discount}
                 </p>
                 <p>
-                  <strong>Hotel name:</strong>{" "}
-                  <span className="text-red-500">{booking.totalPrice}</span>
+                  <strong>Hotel name:</strong> {booking.companyName}
                 </p>
                 <button
                   className="absolute bottom-0 right-0 px-4 py-2 mt-4 text-white bg-red-500 rounded-md hover:bg-blue-600"
