@@ -3,58 +3,57 @@ const Hotel = require("../models/hotel.model");
 const dotenv = require("dotenv");
 dotenv.config();
 const axios = require("axios");
-const {
-  generalAccessTokens,
-  refreshAccessTokens
-} = require("./jwt");
+const { generalAccessTokens, refreshAccessTokens } = require("./jwt");
 const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
+const mongoose = require("mongoose");
 
-const Video = require('../models/Video')
-
-const jwt=require('jsonwebtoken')
-
-
-const { default: mongoose } = require('mongoose');
-
-async function signUpOwner(newOwner){
-    return new Promise(async (resolve,rejects)=>{
-        const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=newOwner
-        try{
-            const checkAccountExisted=await Account.Account.findOne({
-                email:email
-            })
-            const isAdmin=await Account.Admin.findOne({
-                email:email
-            })
-            if(checkAccountExisted!==null || isAdmin!=null){
-                rejects({
-                    status:'BAD',
-                    message:'Email existed'
-                })
-            }
-            const createdOwner=await Account.Account.create({
-                name,
-                passWord,
-                email,
-                birthDate,
-                phoneNum,
-                address,
-                dueDatePCCC,
-                dueDateKD
-            })
-            if(createdOwner){
-                resolve({
-                    status:'OK',
-                    message:'Succ',
-                    data:createdOwner
-                })
-            }
-        } catch(e){
-            rejects(e)
-        }
-    })
-
+async function signUpOwner(newOwner) {
+  return new Promise(async (resolve, rejects) => {
+    const {
+      name,
+      passWord,
+      email,
+      birthDate,
+      phoneNum,
+      address,
+      dueDatePCCC,
+      dueDateKD,
+    } = newOwner;
+    try {
+      const checkAccountExisted = await Account.Account.findOne({
+        email: email,
+      });
+      const isAdmin = await Account.Admin.findOne({
+        email: email,
+      });
+      if (checkAccountExisted !== null || isAdmin != null) {
+        rejects({
+          status: "BAD",
+          message: "Email existed",
+        });
+      }
+      const createdOwner = await Account.Account.create({
+        name,
+        passWord,
+        email,
+        birthDate,
+        phoneNum,
+        address,
+        dueDatePCCC,
+        dueDateKD,
+      });
+      if (createdOwner) {
+        resolve({
+          status: "OK",
+          message: "Succ",
+          data: createdOwner,
+        });
+      }
+    } catch (e) {
+      rejects(e);
+    }
+  });
 }
 //chung của owner và admin
 async function signInOwner(existedOwner) {
@@ -85,6 +84,7 @@ async function signInOwner(existedOwner) {
           access_token: access_token,
           // refresh_token: refresh_token,
           ownerID: foundOwner._id,
+          isUse:'Owner',
           //owner đi vào trang chủ
           redirect: "/",
         });
@@ -104,6 +104,7 @@ async function signInOwner(existedOwner) {
             status: "OK",
             message: "Admin logged in",
             access_token,
+            isUse:'Admin',
             //admin đi vào dashboard admin
             redirect: "/Admin",
           });
@@ -163,9 +164,8 @@ async function bookRoom(newInvoice, cusID, roomID) {
   return new Promise(async (resolve, reject) => {
     const { paymentMethod } = newInvoice;
     try {
-      //chuyển cusID trong schema thành string
       console.log(`Customer ID extracted from token: ${cusID}`);
-      //ko có phòng, đă dc book
+
       const foundRoom = await Hotel.Room.findById(roomID);
       if (!foundRoom) {
         return reject({
@@ -174,15 +174,19 @@ async function bookRoom(newInvoice, cusID, roomID) {
         });
       }
 
+      const fromHotel = await Hotel.Hotel.find({ _id: foundRoom.hotelID });
+      const hotelName = fromHotel.companyName;
+
       if (!foundRoom.isAvailable) {
         return reject({
           status: "BAD",
           message: "Room is booked",
         });
       }
+
       const roomPrice = foundRoom.money;
-      const total = roomPrice + roomPrice * 0.08; //vat
-      //tạo biên lai
+      const total = roomPrice + roomPrice * 0.08; // VAT
+
       const invoice = await Invoice.create({
         cusID,
         roomID,
@@ -190,45 +194,56 @@ async function bookRoom(newInvoice, cusID, roomID) {
         paymentMethod,
       });
 
-      //đẩy qua bên t3 để sử dụng voucher,bên fe post thẳng vào luồng này của be
-      //Tổng tiền, id biên lai, id cus, biên lai sẽ dc xóa nếu 20m chưa thanh toán
-      const voucherResponse=await axios.post('/appvoucher',{
+      const voucherResponse = await axios.post(
+        "https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest",
+        {
           OrderID: invoice._id,
-          TotalMoney:total,
-          PartnerID:cusID,
-          ServiceName:`Book room`,
-          LinkHome:"",
-          LinkReturnSuccess:`https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
-      })
+          TotalMoney: total,
+          PartnerID: "1000000005",
+          ServiceName: `Book room`,
+          CustomerCode: invoice.cusID,
+          Description: `Book ${foundRoom.typeOfRoom} from ${hotelName}`,
+          LinkHome: "https://mern-tab-be.vercel.app/",
+          LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`,
+        }
+      );
 
-      if(voucherResponse.status===200){
-        setTimeout(async()=>{
-          const foundInvoice=await findById(invoice._id)
-          if(foundInvoice && !foundInvoice.isPaid){
-            await Invoice.findByIdAndDelete(foundInvoice._id)
-            console.log(`Delete invoice ${foundInvoice._id} due to overtime process, failed book room`)
+      if (voucherResponse.status === 200 || voucherResponse.status === "OK") {
+        resolve({
+          status: "OK",
+          message: "choose voucher succ",
+          data: voucherResponse.data,
+          orderID: voucherResponse.data.partNerRequest.OrderID,
+        });
+
+        setTimeout(async () => {
+          const foundInvoice = await Invoice.findById(invoice._id);
+          if (foundInvoice && !foundInvoice.isPaid) {
+            await Invoice.findByIdAndDelete(foundInvoice._id);
+            console.log(
+              `Deleted invoice ${foundInvoice._id} due to overtime process, failed book room`
+            );
           }
-        },1200000) //20m
-      resolve({
-        status: "OK",
-        message: "choose voucher succ",
-        data: voucherResponse.data,
-      });
-      }
-      else {
-          reject({
-              status: 'BAD',
-              message: '3rd choose voucher failed',
-          })
+        }, 1200000); // 20 minutes
+      } else {
+        reject({
+          status: "BAD",
+          message: "3rd choose voucher failed",
+        });
       }
     } catch (e) {
       console.error("Error in bookRoom:", e);
+      reject({
+        status: "ERROR",
+        message: "Error booking room",
+        error: e.message,
+      });
     }
   });
 }
 //k can controller
 async function completedTran(req, res) {
-  const { id } = req.params; 
+  const { id } = req.params;
   try {
     const invoice = await Invoice.findById(id);
     if (!invoice) {
@@ -250,7 +265,7 @@ async function completedTran(req, res) {
 
     res.status(200).json({
       status: "OK",
-      message: "Transaction completed, room booked successfully"
+      message: "Transaction completed, room booked successfully",
     });
   } catch (e) {
     console.error("Error in completedTran:", e);
@@ -306,77 +321,129 @@ async function reqCancelRoom(receiptID, cusID) {
 //admin handle hủy phòng. ok => đổi trạng thái req, post qua app khác để hoàn tiền
 //ko accept => đổi trạng thái req, trả về cho user
 
-const handleCancelRoom = async (req, res) => {
-  const { reqCancelID, accept, orderId, transactionId } = req.body;
+const handleCancelRoomAccept = async (req, res) => {
+  const { reqCancelID } = req.params;
+  const { orderId, transactionId } = req.body;
   const adminID = req.adminID;
 
-  console.log(reqCancelID, accept, adminID, orderId, transactionId);
+  console.log(reqCancelID, adminID, orderId, transactionId);
 
-  if (accept === undefined || !adminID) {
-    return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+  if (!adminID) {
+    return res
+      .status(403)
+      .json({ status: "BAD", message: "Missing required fields" });
+  }
+  if (!mongoose.Types.ObjectId.isValid(reqCancelID)) {
+    console.log("Invalid reqCancelID");
+    return res
+      .status(400)
+      .json({ status: "BAD", message: "Invalid reqCancelID" });
   }
 
   try {
     const foundReqCancel = await reqCancel.findById(reqCancelID);
     if (!foundReqCancel) {
-      return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
+      return res
+        .status(404)
+        .json({ status: "BAD", message: "There's no reqCancel" });
     }
 
-    if (accept) {
-      try {
-        // Cập nhật trạng thái yêu cầu hủy phòng
-        // foundReqCancel.isAccept = "accepted";
-        // foundReqCancel.adminID = adminID;
-        // foundReqCancel.dateAccept = new Date();
-        // await foundReqCancel.save();
-
-        const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-          orderId: foundReqCancel._id,
-          transactionId: transactionId
-        });
-
-        console.log("Refund response:", refundResponse.data);
-
-        if (refundResponse.status === 200 || refundResponse.status === 201) {
-          return res.status(200).json({
-            status: "OK",
-            message: "Refund for customer and change status",
-            data: refundResponse.data,
-          });
-        } else {
-          return res.status(500).json({
-            status: "BAD",
-            message: "Refund processing failed",
-            data: refundResponse.data,
-          });
+    try {
+      const refundResponse = await axios.post(
+        "https://api.htilssu.com/api/v1/refund",
+        {
+          orderId: orderId,
+          transactionId: transactionId,
+        },
+        {
+          Headers: {
+            "X-Api":
+              "c1f3fe7e4b97d023548d3aa5eaee38993c2849b2a0f5425d72df862f508cfc58",
+          },
         }
-      } catch (e) {
-        console.error("Error in processing refund:", e.response ? e.response.data : e.message);
-        return res.status(500).json({
-          status: "BAD",
-          message: "Error in processing refund",
-          error: e.response ? e.response.data : e.message,
-        });
-      }
-    } else {
-      try {
-        foundReqCancel.isAccept = "rejected";
+      );
+
+      console.log("Refund response:", refundResponse.data);
+
+      if (
+        refundResponse.status === 200 ||
+        refundResponse.status === 201 ||
+        refundResponse.status === "OK"
+      ) {
+        // Cập nhật trạng thái yêu cầu hủy phòng
+        foundReqCancel.isAccept = "accepted";
         foundReqCancel.adminID = adminID;
+        foundReqCancel.dateAccept = new Date();
         await foundReqCancel.save();
 
         return res.status(200).json({
           status: "OK",
-          message: "Not refund money to customer",
-          data: foundReqCancel,
+          message: "Refund for customer and change status",
+          data: refundResponse.data,
         });
-      } catch (e) {
-        console.error("Error in processing refund where accept == false:", e);
-        return res.status(500).json({
+      } else {
+        return res.status(400).json({
           status: "BAD",
-          message: "Error in rejecting refund",
-          error: e.message,
+          message: "Refund processing failed",
+          data: refundResponse.data,
         });
       }
+    } catch (e) {
+      console.error("Error in processing refund:", e);
+      return res.status(500).json({
+        status: "BAD",
+        message: "Error in processing refund",
+        error: e.response ? JSON.stringify(e.response.data) : e.message,
+      });
+    }
+  } catch (e) {
+    console.error("Error in handleCancelRoom:", e);
+    return res.status(500).json({
+      status: "BAD",
+      message: "An error occurred while fetching the cancellation requests",
+      error: e.message,
+    });
+  }
+};
+
+const handleCancelRoomReject = async (req, res) => {
+  const { reqCancelID } = req.params;
+  const { orderId } = req.body;
+  const adminID = req.adminID;
+
+  console.log(reqCancelID, adminID, orderId);
+
+  if (!adminID) {
+    return res
+      .status(403)
+      .json({ status: "BAD", message: "Missing required fields" });
+  }
+
+  try {
+    const foundReqCancel = await reqCancel.findById(reqCancelID);
+    if (!foundReqCancel) {
+      return res
+        .status(404)
+        .json({ status: "BAD", message: "There's no reqCancel" });
+    }
+
+    try {
+      foundReqCancel.isAccept = "rejected";
+      foundReqCancel.adminID = adminID;
+      await foundReqCancel.save();
+
+      return res.status(200).json({
+        status: "OK",
+        message: "Not refund money to customer",
+        data: foundReqCancel,
+      });
+    } catch (e) {
+      console.error("Error in processing refund where accept == false:", e);
+      return res.status(500).json({
+        status: "BAD",
+        message: "Error in rejecting refund",
+        error: e.message,
+      });
     }
   } catch (e) {
     console.error("Error in handleCancelRoom:", e);
@@ -400,11 +467,13 @@ function createHotel(newHotel, ownerID) {
       scale,
       city,
       hotelPhone,
-      hotelImg
+      hotelImg,
     } = newHotel;
 
     try {
-      const checkExistedOwnerID = await Account.Account.findOne({ _id: ownerID });
+      const checkExistedOwnerID = await Account.Account.findOne({
+        _id: ownerID,
+      });
       if (!checkExistedOwnerID) {
         return rejects({
           status: "BAD",
@@ -423,7 +492,7 @@ function createHotel(newHotel, ownerID) {
         city,
         hotelPhone,
         hotelImg,
-        ownerID
+        ownerID,
       });
 
       if (createdHotel) {
@@ -437,7 +506,7 @@ function createHotel(newHotel, ownerID) {
       rejects(e);
     }
   });
-};
+}
 
 const createRoom = async (newRoom, hotelID) => {
   return new Promise(async (resolve, reject) => {
@@ -459,7 +528,7 @@ const createRoom = async (newRoom, hotelID) => {
             hotel.minPrice = money;
             await hotel.save();
           }
-          hotel.numberOfRooms = hotel.numberOfRooms + 1
+          hotel.numberOfRooms = hotel.numberOfRooms + 1;
           await hotel.save();
         }
         resolve({
@@ -533,8 +602,7 @@ module.exports = {
   bookRoom,
   searchHotel,
   reqCancelRoom,
-  handleCancelRoom,
+  handleCancelRoomAccept,
   completedTran,
-  handleCancelRoom
+  handleCancelRoomReject,
 };
-

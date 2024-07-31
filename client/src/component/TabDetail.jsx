@@ -29,6 +29,43 @@ const TabDetail = ({ hotelId, tabs }) => {
     }
   }, [hotelId]);
 
+  const getToken = () => {
+    return localStorage.getItem('authToken'); 
+  };
+
+  const handleBooking = async (roomID, paymentMethod) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        alert("Please log in");
+        return;
+      }
+      console.log(token)
+      const response = await axios.post(
+        'https://mern-tab-be.vercel.app/book/bookRoom',
+        {
+          paymentMethod:'Visa',
+          roomID,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.status === "OK") {
+        window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=${response.data.orderID}`;
+      } else {
+        alert(response.data.message || "Đã xảy ra lỗi khi đặt phòng");
+      }
+    } catch (error) {
+      console.error("Lỗi khi đặt phòng:", error);
+      alert("Đã xảy ra lỗi khi kết nối tới máy chủ");
+    }
+  };
+
   const activeTabData = tabs.find((tab) => tab.type === activeTab);
 
   return (
@@ -93,7 +130,7 @@ const TabDetail = ({ hotelId, tabs }) => {
                     </h2>
                     <p className="mb-2">{room.numberOfBeds}</p>
                   </div>
-                  <div className="flex flex-col items-end justify-between col-span-1">
+                  <div className="flex flex-col items-end float-right">
                     <div>
       
                       <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded float-right">
@@ -101,7 +138,8 @@ const TabDetail = ({ hotelId, tabs }) => {
                       </span>
                     </div>
                     <div>
-                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right">
+                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right"
+                       onClick={() => handleBooking(room._id)}>
                         Đặt phòng
                       </button>
                     </div>

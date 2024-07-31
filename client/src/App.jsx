@@ -25,7 +25,7 @@ export default function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/booking' element={<Booking/>} />
           <Route path='/confirmation' element={<Confirmation/>} />
-          <Route path='/login_cus' element={<LoginCus/>}/>
+          <Route path='/signInCus' element={<LoginCus/>}/>
           <Route path='/signUpCus' element={<SignUp/>}/>
         </Routes>
       </Router>
