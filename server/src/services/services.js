@@ -423,7 +423,6 @@ function createHotel(newHotel, ownerID) {
         city,
         hotelPhone,
         hotelImg,
-        minPrice,
         ownerID,
       });
 
