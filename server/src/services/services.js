@@ -84,6 +84,7 @@ async function signInOwner(existedOwner) {
           access_token: access_token,
           // refresh_token: refresh_token,
           ownerID: foundOwner._id,
+          isUse:'Owner',
           //owner đi vào trang chủ
           redirect: "/",
         });
@@ -103,6 +104,7 @@ async function signInOwner(existedOwner) {
             status: "OK",
             message: "Admin logged in",
             access_token,
+            isUse:'Admin',
             //admin đi vào dashboard admin
             redirect: "/Admin",
           });
