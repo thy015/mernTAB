@@ -1,5 +1,5 @@
 const services = require('../../services/services');
-const {Invoice}=require('../../models/invoice.model')
+const {Invoice, Receipt}=require('../../models/invoice.model')
 const {Hotel,Room}=require('../../models/hotel.model')
 const bookRoom = async (req, res) => {
     const { roomID, paymentMethod } = req.body;
@@ -37,9 +37,9 @@ const getRoomsBookedCustomer = async (req, res) => {
         const roomIDs = paidRoomsInvoice.map(invoice => invoice.roomID);
 
         const paidRooms = await Room.find({ _id: roomIDs });
-
+        const receiptID = await Receipt.find({invoiceID:paidRoomsInvoice._id})
         if (paidRooms.length > 0) {
-            return res.status(200).json({ paidRooms,bookedRooms });
+            return res.status(200).json({ paidRooms,bookedRooms,receiptID });
         } else {
             return res.status(200).json({ message: "There's no room booked successfully" });
         }
@@ -50,8 +50,8 @@ const getRoomsBookedCustomer = async (req, res) => {
 
 const getInvoicesWithReceipts = async (req, res) => {
     try {
-        const invoices = await Invoice.find().populate('receiptID');
-        res.status(200).json(invoices);
+        const receipt = await Receipt.find().populate('invoiceID');
+        res.status(200).json(receipt);
     } catch (e) {
         console.error('Error fetching invoices with receipts:', e);
         res.status(500).json(e);

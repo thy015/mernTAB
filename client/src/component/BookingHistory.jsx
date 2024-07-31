@@ -30,9 +30,14 @@ const BookingHistory = () => {
         );
 
         if (response.data) {
-          const { paidRooms = [] } = response.data; // Provide default value
+          const { paidRooms = [], receiptIDs = [] } = response.data; // Provide default value
           console.log(paidRooms);
-          setBookingHistoryData(paidRooms);
+          // Combine paidRooms and receiptIDs based on some matching logic
+          const bookingData = paidRooms.map((room, index) => ({
+            ...room,
+            receiptID: receiptIDs[index]?._id // Assuming order matches, adjust as necessary
+          }));
+          setBookingHistoryData(bookingData);
         } else {
           setBookingHistoryData([]);
         }
@@ -47,6 +52,32 @@ const BookingHistory = () => {
 
     fetchBookingHistory();
   }, []);
+
+  const handleCancelRoom = async (receiptID, cusID) => {
+    try {
+      console.log(`Attempting to cancel room with receiptID: ${receiptID}, cusID: ${cusID}`);
+      const response = await axios.post(
+        'https://mern-tab-be.vercel.app/reqCancel/cusSend',
+        { receiptID, cusID },
+        {
+          headers: {
+            'Authorization': `Bearer ${getToken()}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Cancel room response:", response.data);
+      if (response.data.status === "OK") {
+        alert("Request to cancel room sent to admin.");
+      } else {
+        alert(response.data.message || "An error occurred while sending the cancel room request.");
+      }
+    } catch (error) {
+      console.error("Error in handleCancelRoom:", error);
+      alert("An error occurred while connecting to the server.");
+    }
+  };
 
   return (
     <div className="p-8 bg-gray-100">
@@ -82,7 +113,10 @@ const BookingHistory = () => {
                 <p>
                   <strong>Total price:</strong> {booking.money} vnd
                 </p>
-                <button className="absolute bottom-0 right-0 px-4 py-2 mt-4 text-white bg-red-500 rounded-md hover:bg-blue-600">
+                <button
+                  className="absolute bottom-0 right-0 px-4 py-2 mt-4 text-white bg-red-500 rounded-md hover:bg-blue-600"
+                  onClick={() => handleCancelRoom(booking.receiptID, booking.cusID)}
+                >
                   Cancel room
                 </button>
               </div>
