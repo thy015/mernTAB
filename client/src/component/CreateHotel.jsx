@@ -2,54 +2,43 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const CreateHotel = () => {
-  const [formData, setFormData] = useState({
-    companyName: "",
-    hotelPhone: "",
-    nation: "",
-    city: "",
-    scale: "",
-    address: "",
-    facilityName: "",
-    taxCode: "",
-    businessType: "",
-    hotelImg: []
-  });
+  const [companyName, setCompanyName] = useState("");
+  const [hotelPhone, setHotelPhone] = useState("");
+  const [nation, setNation] = useState("");
+  const [city, setCity] = useState("");
+  const [scale, setScale] = useState("");
+  const [address, setAddress] = useState("");
+  const [facilityName, setFacilityName] = useState("");
+  const [taxCode, setTaxCode] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [hotelImg, setHotelImg] = useState(null);
+
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
   const ownerID = localStorage.getItem("ownerID");
   const token = localStorage.getItem("authToken");
 
-  const handleGeneralChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   const validateForm = () => {
     const newErrors = {};
-
-    
-    if (!formData.companyName) newErrors.companyName = "Tên khách sạn là bắt buộc";
-    if (!formData.hotelPhone) newErrors.hotelPhone = "Số điện thoại là bắt buộc";
-    if (!formData.nation) newErrors.nation = "Quốc gia cư trú là bắt buộc";
-    if (!formData.city) newErrors.city = "Thành phố là bắt buộc";
-    if (!formData.scale) newErrors.scale = "Quy mô chỗ nghỉ là bắt buộc";
-    if (!formData.address) newErrors.address = "Địa chỉ khách sạn là bắt buộc";
-    if (!formData.facilityName) newErrors.facilityName = "Tên doanh nghiệp là bắt buộc";
-    if (!formData.taxCode) newErrors.taxCode = "Mã số thuế là bắt buộc";
-    if (!formData.businessType) newErrors.businessType = "Loại hình kinh doanh là bắt buộc";
+    if (!companyName) newErrors.companyName = "Tên khách sạn là bắt buộc";
+    if (!hotelPhone) newErrors.hotelPhone = "Số điện thoại là bắt buộc";
+    if (!nation) newErrors.nation = "Quốc gia cư trú là bắt buộc";
+    if (!city) newErrors.city = "Thành phố là bắt buộc";
+    if (!scale) newErrors.scale = "Quy mô chỗ nghỉ là bắt buộc";
+    if (!address) newErrors.address = "Địa chỉ khách sạn là bắt buộc";
+    if (!facilityName) newErrors.facilityName = "Tên doanh nghiệp là bắt buộc";
+    if (!taxCode) newErrors.taxCode = "Mã số thuế là bắt buộc";
+    if (!businessType) newErrors.businessType = "Loại hình kinh doanh là bắt buộc";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Up file lên Cloudinary
-  const uploadFile = async (file) => {
+  const uploadFile = async () => {
     const data = new FormData();
-    data.append("file", file);
+    data.append("file", hotelImg);
     data.append("upload_preset", 'images_preset');
 
     try {
@@ -67,27 +56,11 @@ const CreateHotel = () => {
   };
 
   const handleImageChange = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length < 3) {
-      alert("Bạn cần chọn ít nhất 3 ảnh.");
-      e.target.value = null;
-      return;
-    }
-    if (files.length > 5) {
-      alert("Bạn chỉ được chọn tối đa 5 ảnh.");
-      e.target.value = null;
-      return;
-    }
-
+    
     try {
-      const uploadedImages = await Promise.all(
-        files.map((file) => uploadFile(file))
-      );
+      const uploadedImage = await uploadFile('image')
 
-      setFormData((prevData) => ({
-        ...prevData,
-        hotelImg: uploadedImages,
-      }));
+      setHotelImg(uploadedImage);
     } catch (error) {
       setErrors({ apiError: "Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại." });
     }
@@ -101,16 +74,21 @@ const CreateHotel = () => {
         setSuccessMessage("");
 
 
-
-        const formDataWithOwner = {
-          ...formData,
-          ownerID,
-        };
-        
-        console.log(formDataWithOwner)
-
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
-          formDataWithOwner,
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_BASEURL}/hotelList/create`,
+          {
+            companyName,
+            hotelPhone,
+            nation,
+            city,
+            scale,
+            address,
+            facilityName,
+            taxCode,
+            businessType,
+            hotelImg,
+            ownerID,
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -120,18 +98,16 @@ const CreateHotel = () => {
 
         if (response.data.status === "OK") {
           setSuccessMessage("Tạo khách sạn thành công!");
-          setFormData({
-            companyName: "",
-            hotelPhone: "",
-            nation: "",
-            city: "",
-            scale: "",
-            address: "",
-            facilityName: "",
-            taxCode: "",
-            businessType: "",
-            hotelImg: []
-          });
+          setCompanyName("");
+          setHotelPhone("");
+          setNation("");
+          setCity("");
+          setScale("");
+          setAddress("");
+          setFacilityName("");
+          setTaxCode("");
+          setBusinessType("");
+          setHotelImg("");
         } else {
           setErrors({ apiError: "Có lỗi xảy ra khi tạo khách sạn. Vui lòng thử lại." });
         }
@@ -150,8 +126,8 @@ const CreateHotel = () => {
           <input
             type="text"
             name="companyName"
-            value={formData.companyName}
-            onChange={handleGeneralChange}
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.companyName && <p className="text-red-500">{errors.companyName}</p>}
@@ -161,8 +137,8 @@ const CreateHotel = () => {
           <input
             type="tel"
             name="hotelPhone"
-            value={formData.hotelPhone}
-            onChange={handleGeneralChange}
+            value={hotelPhone}
+            onChange={(e) => setHotelPhone(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.hotelPhone && <p className="text-red-500">{errors.hotelPhone}</p>}
@@ -172,8 +148,8 @@ const CreateHotel = () => {
           <input
             type="text"
             name="nation"
-            value={formData.nation}
-            onChange={handleGeneralChange}
+            value={nation}
+            onChange={(e) => setNation(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.nation && <p className="text-red-500">{errors.nation}</p>}
@@ -183,8 +159,8 @@ const CreateHotel = () => {
           <input
             type="text"
             name="city"
-            value={formData.city}
-            onChange={handleGeneralChange}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.city && <p className="text-red-500">{errors.city}</p>}
@@ -194,8 +170,8 @@ const CreateHotel = () => {
           <input
             type="number"
             name="scale"
-            value={formData.scale}
-            onChange={handleGeneralChange}
+            value={scale}
+            onChange={(e) => setScale(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.scale && <p className="text-red-500">{errors.scale}</p>}
@@ -205,8 +181,8 @@ const CreateHotel = () => {
           <input
             type="text"
             name="address"
-            value={formData.address}
-            onChange={handleGeneralChange}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.address && <p className="text-red-500">{errors.address}</p>}
@@ -216,8 +192,8 @@ const CreateHotel = () => {
           <input
             type="text"
             name="facilityName"
-            value={formData.facilityName}
-            onChange={handleGeneralChange}
+            value={facilityName}
+            onChange={(e) => setFacilityName(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.facilityName && <p className="text-red-500">{errors.facilityName}</p>}
@@ -227,8 +203,8 @@ const CreateHotel = () => {
           <input
             type="text"
             name="taxCode"
-            value={formData.taxCode}
-            onChange={handleGeneralChange}
+            value={taxCode}
+            onChange={(e) => setTaxCode(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.taxCode && <p className="text-red-500">{errors.taxCode}</p>}
@@ -238,22 +214,26 @@ const CreateHotel = () => {
           <input
             type="text"
             name="businessType"
-            value={formData.businessType}
-            onChange={handleGeneralChange}
+            value={businessType}
+            onChange={(e) => setBusinessType(e.target.value)}
             className="w-full px-4 py-2 border rounded"
           />
           {errors.businessType && <p className="text-red-500">{errors.businessType}</p>}
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Hình ảnh khách sạn:</label>
-          <input
-            type="file"
-            id="img"
-            multiple
-            onChange={handleImageChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-        </div>
+        <form onSubmit={handleImageChange}>
+                <br />
+                <div>
+                    <label htmlFor="img">Image:</label>
+                    <br />
+                    <input 
+                        type="file" 
+                        id="img" 
+                        onChange={(e) => setHotelImg(e.target.file)} 
+                    />
+                </div>
+                <br />
+                <button type='submit'>Upload</button>
+            </form>
         {errors.apiError && <p className="text-red-500">{errors.apiError}</p>}
         {successMessage && <p className="text-green-500">{successMessage}</p>}
         <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
