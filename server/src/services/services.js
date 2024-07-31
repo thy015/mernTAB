@@ -324,13 +324,13 @@ const handleCancelRoomAccept = async (req, res) => {
 
     try {
       // Cập nhật trạng thái yêu cầu hủy phòng
-      // foundReqCancel.isAccept = "accepted";
-      // foundReqCancel.adminID = adminID;
-      // foundReqCancel.dateAccept = new Date();
-      // await foundReqCancel.save();
+      foundReqCancel.isAccept = "accepted";
+      foundReqCancel.adminID = adminID;
+      foundReqCancel.dateAccept = new Date();
+      await foundReqCancel.save();
 
       const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-        orderId: foundReqCancel._id,
+        orderId: orderId,
         transactionId: transactionId
       });
 
