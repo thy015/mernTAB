@@ -201,6 +201,7 @@ async function bookRoom(newInvoice, cusID, roomID) {
                   status: "OK",
                   message: "choose voucher succ",
                   data: voucherResponse.data,
+                  orderID:voucherResponse.data.partNerRequest.OrderID
               });
 
               setTimeout(async () => {

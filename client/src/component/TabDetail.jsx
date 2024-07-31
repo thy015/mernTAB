@@ -30,7 +30,7 @@ const TabDetail = ({ hotelId, tabs }) => {
   }, [hotelId]);
 
   const getToken = () => {
-    return localStorage.getItem('token'); 
+    return localStorage.getItem('authToken'); 
   };
 
   const handleBooking = async (roomID, paymentMethod) => {
@@ -40,11 +40,11 @@ const TabDetail = ({ hotelId, tabs }) => {
         alert("Please log in");
         return;
       }
-
+      console.log(token)
       const response = await axios.post(
         'https://mern-tab-be.vercel.app/book/bookRoom',
         {
-          newInvoice: { paymentMethod },
+          paymentMethod:'Visa',
           roomID,
         },
         {
@@ -56,7 +56,7 @@ const TabDetail = ({ hotelId, tabs }) => {
       );
 
       if (response.data.status === "OK") {
-        window.location.href = `https://client-voucher-b243d0019775.herokuapp.com/CreateVoucherPartner?service=1000000005`;
+        window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=66a93d1915ce5a88011982f9`;
       } else {
         alert(response.data.message || "Đã xảy ra lỗi khi đặt phòng");
       }
@@ -139,7 +139,7 @@ const TabDetail = ({ hotelId, tabs }) => {
                     </div>
                     <div>
                       <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right"
-                       onClick={() => handleBooking(room._id, 'creditCard')}>
+                       onClick={() => handleBooking(room._id)}>
                         Đặt phòng
                       </button>
                     </div>
