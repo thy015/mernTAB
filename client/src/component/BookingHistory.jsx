@@ -29,7 +29,12 @@ const BookingHistory = () => {
           }
         );
 
-        setBookingHistoryData(response.data);
+        if (response.data && Array.isArray(response.data)) {
+          setBookingHistoryData(response.data);
+        } else {
+          setBookingHistoryData([]);
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error("Error fetching booking history:", error);
@@ -62,26 +67,26 @@ const BookingHistory = () => {
               <div className="w-2/3 mb-4">
                 <h3 className="mb-2 font-semibold text-sky-600">{booking.companyName}</h3>
                 <p>
-                  <strong>Room name:</strong> {booking.roomName}
+                  <strong>Room name:</strong> {booking.typeOfRoom}
                 </p>
-                <p>
+                {/* <p>
                   <strong>Check in - Check out date:</strong> {booking.checkInDate} -{" "}
                   {booking.checkOutDate}
-                </p>
+                </p> */}
                 <p>
-                  <strong>Nights:</strong> {booking.nights}
+                  <strong>Capacity:</strong> {booking.capacity}
                 </p>
               </div>
               <div className="relative w-1/3 mb-4">
                 <br />
                 <p>
-                  <strong>Room price:</strong> {booking.roomPrice}
+                  <strong>Room price:</strong> {booking.money}
                 </p>
                 <p>
                   <strong>Discount:</strong> {booking.discount}
                 </p>
                 <p>
-                  <strong>Total price:</strong>{" "}
+                  <strong>Hotel name:</strong>{" "}
                   <span className="text-red-500">{booking.totalPrice}</span>
                 </p>
                 <button
@@ -97,6 +102,5 @@ const BookingHistory = () => {
     </div>
   );
 };
-
 
 export default BookingHistory;
