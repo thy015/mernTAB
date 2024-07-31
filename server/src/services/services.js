@@ -331,7 +331,7 @@ const handleCancelRoomAccept = async (req, res) => {
       
       console.log("Refund response:", refundResponse.data);
       
-      if (refundResponse.status === 200 || refundResponse.status === 201) {
+      if (refundResponse.status === 200 || refundResponse.status === 201|| refundResponse.status === 'OK' ) {
         // Cập nhật trạng thái yêu cầu hủy phòng
         foundReqCancel.isAccept = "accepted";
         foundReqCancel.adminID = adminID;
