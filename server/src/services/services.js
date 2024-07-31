@@ -323,34 +323,35 @@ const handleCancelRoomAccept = async (req, res) => {
     }
 
     try {
-      // Cập nhật trạng thái yêu cầu hủy phòng
-      foundReqCancel.isAccept = "accepted";
-      foundReqCancel.adminID = adminID;
-      foundReqCancel.dateAccept = new Date();
-      await foundReqCancel.save();
-
+      
       const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
         orderId: orderId,
         transactionId: transactionId
       });
-
+      
       console.log("Refund response:", refundResponse.data);
-
+      
       if (refundResponse.status === 200 || refundResponse.status === 201) {
+        // Cập nhật trạng thái yêu cầu hủy phòng
+        foundReqCancel.isAccept = "accepted";
+        foundReqCancel.adminID = adminID;
+        foundReqCancel.dateAccept = new Date();
+        await foundReqCancel.save();
+        
         return res.status(200).json({
           status: "OK",
           message: "Refund for customer and change status",
           data: refundResponse.data,
         });
       } else {
-        return res.status(500).json({
+        return res.status(400).json({
           status: "BAD",
           message: "Refund processing failed",
           data: refundResponse.data,
         });
       }
     } catch (e) {
-      console.error("Error in processing refund:", e.response ? e.response.data : e.message);
+      console.error("Error in processing refund:", e);
       return res.status(500).json({
         status: "BAD",
         message: "Error in processing refund",
