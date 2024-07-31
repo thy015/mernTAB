@@ -32,12 +32,13 @@ const BookingHistory = () => {
         if (response.data) {
           const { paidRooms, hotelNames } = response.data;
           
-          // Merge room and hotel data
+          // Merge room data with hotel names
           const mergedData = paidRooms.map(room => {
             const hotel = hotelNames.find(h => h.hotelID === room.hotelID);
             return { ...room, companyName: hotel ? hotel.companyName : "Unknown" };
           });
 
+          console.log(mergedData);
           setBookingHistoryData(mergedData);
         } else {
           setBookingHistoryData([]);
@@ -55,8 +56,8 @@ const BookingHistory = () => {
   }, []);
 
   return (
-    <div className="p-8 bg-gray-100 ">
-      <div className="max-w-6xl p-6 mx-auto bg-white rounded-lg shadow-md ">
+    <div className="p-8 bg-gray-100">
+      <div className="max-w-6xl p-6 mx-auto bg-white rounded-lg shadow-md">
         <h1 className="flex items-center justify-center mx-auto mb-4 text-2xl text-sky-500">
           Booking History
         </h1>
@@ -90,7 +91,7 @@ const BookingHistory = () => {
                   <strong>Discount:</strong> {booking.discount}
                 </p>
                 <p>
-                  <strong>Hotel name:</strong> {booking.companyName}
+                  <strong>Total price:</strong> {booking.totalPrice}
                 </p>
                 <button
                   className="absolute bottom-0 right-0 px-4 py-2 mt-4 text-white bg-red-500 rounded-md hover:bg-blue-600"
