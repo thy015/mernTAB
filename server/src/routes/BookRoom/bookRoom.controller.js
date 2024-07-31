@@ -39,7 +39,7 @@ const getRoomsBookedCustomer = async (req, res) => {
         const paidRooms = await Room.find({ _id: roomIDs });
 
         if (paidRooms.length > 0) {
-            return res.status(200).json({ paidRooms });
+            return res.status(200).json({ paidRooms,bookedRooms });
         } else {
             return res.status(200).json({ message: "There's no room booked successfully" });
         }

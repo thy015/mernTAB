@@ -11,14 +11,17 @@ const TabDetail = ({ hotelId, tabs }) => {
     const fetchRoomsData = async () => {
       try {
         setLoading(true);
+        console.log("Fetching rooms data for hotel ID:", hotelId);
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASEURL}/hotellist/rooms`, {
           params: {
             hotelID: hotelId,
           },
         });
+        console.log("Rooms data fetched:", response.data);
         setRoomsData(response.data);
         setLoading(false);
       } catch (error) {
+        console.error("Error fetching rooms data:", error);
         setError(error.message);
         setLoading(false);
       }
@@ -30,21 +33,24 @@ const TabDetail = ({ hotelId, tabs }) => {
   }, [hotelId]);
 
   const getToken = () => {
-    return localStorage.getItem('authToken'); 
+    const token = localStorage.getItem('authToken');
+    console.log("Fetched auth token:", token);
+    return token;
   };
 
-  const handleBooking = async (roomID, paymentMethod) => {
+  const handleBooking = async (roomID) => {
     try {
       const token = getToken();
       if (!token) {
         alert("Please log in");
         return;
       }
-      console.log(token)
+
+      console.log("Booking room with ID:", roomID);
       const response = await axios.post(
         'https://mern-tab-be.vercel.app/book/bookRoom',
         {
-          paymentMethod:'Visa',
+          paymentMethod: 'Visa',
           roomID,
         },
         {
@@ -55,14 +61,16 @@ const TabDetail = ({ hotelId, tabs }) => {
         }
       );
 
+      console.log("Booking response:", response.data);
+
       if (response.data.status === "OK") {
         window.location.href = `https://checkout-page-54281a5e23aa.herokuapp.com/?OrderID=${response.data.orderID}`;
       } else {
-        alert(response.data.message || "Đã xảy ra lỗi khi đặt phòng");
+        alert(response.data.message || "An error occurred while booking the room");
       }
     } catch (error) {
-      console.error("Lỗi khi đặt phòng:", error);
-      alert("Đã xảy ra lỗi khi kết nối tới máy chủ");
+      console.error("Error booking room:", error);
+      alert("An error occurred while connecting to the server");
     }
   };
 
@@ -89,10 +97,10 @@ const TabDetail = ({ hotelId, tabs }) => {
         {activeTabData && (
           <div className="p-4 bg-blue-100 rounded">
             {roomsData.map((room) => (
-              <div key={room.name} className="mb-6">
+              <div key={room._id} className="mb-6">
                 <div className="grid grid-cols-5 gap-4 p-4 bg-white shadow-md rounded-xl">
                   <div className="col-span-2">
-                    <h2 className="text-2xl font-bold text-blue-500 ">
+                    <h2 className="text-2xl font-bold text-blue-500">
                       {room.name}
                     </h2>
                     <img
@@ -112,35 +120,36 @@ const TabDetail = ({ hotelId, tabs }) => {
                   </div>
                   <div className="col-span-1">
                     <h2 className="my-2 text-lg font-bold text-gray-600">
-                    Loại phòng: 
+                      Room Type:
                     </h2>
                     <ul className="mb-4 list-none">
-                    {room.typeOfRoom}
+                      {room.typeOfRoom}
                     </ul>
                   </div>
                   <div className="col-span-1">
                     <h2 className="my-2 text-lg font-bold text-gray-600">
-                      Sức chứa
+                      Capacity:
                     </h2>
                     <p className="mb-2">{room.capacity}</p>
                   </div>
                   <div className="col-span-1">
                     <h2 className="my-2 text-lg font-bold text-gray-600">
-                      Số giường
+                      Number of Beds:
                     </h2>
                     <p className="mb-2">{room.numberOfBeds}</p>
                   </div>
                   <div className="flex flex-col items-end float-right">
                     <div>
-      
                       <span className="inline-block px-2 py-1 mb-2 text-green-500 bg-green-200 rounded float-right">
-                        Tổng tiền: {room.money}
+                        Total Price: {room.money}
                       </span>
                     </div>
                     <div>
-                      <button className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right"
-                       onClick={() => handleBooking(room._id)}>
-                        Đặt phòng
+                      <button
+                        className="px-4 py-2 mt-2 text-white bg-blue-500 rounded float-right"
+                        onClick={() => handleBooking(room._id)}
+                      >
+                        Book Room
                       </button>
                     </div>
                   </div>

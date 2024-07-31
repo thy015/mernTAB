@@ -7,7 +7,7 @@ const BookingHistory = () => {
   const [error, setError] = useState(null);
 
   const getToken = () => {
-    return localStorage.getItem('authToken'); 
+    return localStorage.getItem("authToken");
   };
 
   useEffect(() => {
@@ -20,26 +20,19 @@ const BookingHistory = () => {
         }
 
         const response = await axios.get(
-          'https://mern-tab-be.vercel.app/book/bookingHistory',
+          "https://mern-tab-be.vercel.app/book/bookingHistory",
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
 
         if (response.data) {
-          const { paidRooms, hotelNames } = response.data;
-          
-          // Merge room data with hotel names
-          const mergedData = paidRooms.map(room => {
-            const hotel = hotelNames.find(h => h.hotelID === room.hotelID);
-            return { ...room, companyName: hotel ? hotel.companyName : "Unknown" };
-          });
-
-          console.log(mergedData);
-          setBookingHistoryData(mergedData);
+          const { paidRooms = [] } = response.data; // Provide default value
+          console.log(paidRooms);
+          setBookingHistoryData(paidRooms);
         } else {
           setBookingHistoryData([]);
         }
@@ -69,14 +62,13 @@ const BookingHistory = () => {
           <p>No booking history available.</p>
         ) : (
           bookingHistoryData.map((booking, index) => (
-            <div
-              key={index}
-              className="flex p-4 my-3 bg-blue-100 rounded-md"
-            >
+            <div key={index} className="flex p-4 my-3 bg-blue-100 rounded-md">
               <div className="w-2/3 mb-4">
-                <h3 className="mb-2 font-semibold text-sky-600">{booking.companyName}</h3>
+                <h3 className="mb-2 font-semibold text-sky-600">
+                  {booking.companyName}
+                </h3>
                 <p>
-                  <strong>Room name:</strong> {booking.typeOfRoom}
+                  <strong>Type of room:</strong> {booking.typeOfRoom}
                 </p>
                 <p>
                   <strong>Capacity:</strong> {booking.capacity}
@@ -85,17 +77,12 @@ const BookingHistory = () => {
               <div className="relative w-1/3 mb-4">
                 <br />
                 <p>
-                  <strong>Room price:</strong> {booking.money}
+                  <strong>Number of beds:</strong> {booking.numberOfBeds}
                 </p>
                 <p>
-                  <strong>Discount:</strong> {booking.discount}
+                  <strong>Total price:</strong> {booking.money} vnd
                 </p>
-                <p>
-                  <strong>Total price:</strong> {booking.totalPrice}
-                </p>
-                <button
-                  className="absolute bottom-0 right-0 px-4 py-2 mt-4 text-white bg-red-500 rounded-md hover:bg-blue-600"
-                >
+                <button className="absolute bottom-0 right-0 px-4 py-2 mt-4 text-white bg-red-500 rounded-md hover:bg-blue-600">
                   Cancel room
                 </button>
               </div>
