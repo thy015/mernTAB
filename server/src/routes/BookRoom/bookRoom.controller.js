@@ -36,7 +36,7 @@ const getRoomsBookedCustomer = async (req, res) => {
         const paidRoomsInvoice = bookedRooms.filter(room => room.isPaid === true);
         const roomIDs = paidRoomsInvoice.map(invoice => invoice.roomID);
 
-        const paidRooms = await Room.find({ _id: { $in: roomIDs } });
+        const paidRooms = await Room.find({ _id: roomIDs });
 
         if (paidRooms.length > 0) {
             return res.status(200).json({ paidRooms });
