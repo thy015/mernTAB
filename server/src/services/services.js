@@ -3,53 +3,57 @@ const Hotel = require("../models/hotel.model");
 const dotenv = require("dotenv");
 dotenv.config();
 const axios = require("axios");
-const {
-  generalAccessTokens,
-  refreshAccessTokens
-} = require("./jwt");
+const { generalAccessTokens, refreshAccessTokens } = require("./jwt");
 const { Invoice, Receipt } = require("../models/invoice.model");
 const { reqCancel, refundMoney } = require("../models/reqCancel.model");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-
-async function signUpOwner(newOwner){
-    return new Promise(async (resolve,rejects)=>{
-        const{name,passWord,email,birthDate,phoneNum,address,dueDatePCCC,dueDateKD}=newOwner
-        try{
-            const checkAccountExisted=await Account.Account.findOne({
-                email:email
-            })
-            const isAdmin=await Account.Admin.findOne({
-                email:email
-            })
-            if(checkAccountExisted!==null || isAdmin!=null){
-                rejects({
-                    status:'BAD',
-                    message:'Email existed'
-                })
-            }
-            const createdOwner=await Account.Account.create({
-                name,
-                passWord,
-                email,
-                birthDate,
-                phoneNum,
-                address,
-                dueDatePCCC,
-                dueDateKD
-            })
-            if(createdOwner){
-                resolve({
-                    status:'OK',
-                    message:'Succ',
-                    data:createdOwner
-                })
-            }
-        } catch(e){
-            rejects(e)
-        }
-    })
-
+async function signUpOwner(newOwner) {
+  return new Promise(async (resolve, rejects) => {
+    const {
+      name,
+      passWord,
+      email,
+      birthDate,
+      phoneNum,
+      address,
+      dueDatePCCC,
+      dueDateKD,
+    } = newOwner;
+    try {
+      const checkAccountExisted = await Account.Account.findOne({
+        email: email,
+      });
+      const isAdmin = await Account.Admin.findOne({
+        email: email,
+      });
+      if (checkAccountExisted !== null || isAdmin != null) {
+        rejects({
+          status: "BAD",
+          message: "Email existed",
+        });
+      }
+      const createdOwner = await Account.Account.create({
+        name,
+        passWord,
+        email,
+        birthDate,
+        phoneNum,
+        address,
+        dueDatePCCC,
+        dueDateKD,
+      });
+      if (createdOwner) {
+        resolve({
+          status: "OK",
+          message: "Succ",
+          data: createdOwner,
+        });
+      }
+    } catch (e) {
+      rejects(e);
+    }
+  });
 }
 //chung của owner và admin
 async function signInOwner(existedOwner) {
@@ -156,83 +160,88 @@ async function signInCustomer(existedCustomer) {
 //truyền qua token của cus tạo từ signInCus, roomID nhập tay
 async function bookRoom(newInvoice, cusID, roomID) {
   return new Promise(async (resolve, reject) => {
-      const { paymentMethod } = newInvoice;
-      try {
-          console.log(`Customer ID extracted from token: ${cusID}`);
+    const { paymentMethod } = newInvoice;
+    try {
+      console.log(`Customer ID extracted from token: ${cusID}`);
 
-          const foundRoom = await Hotel.Room.findById(roomID);
-          if (!foundRoom) {
-              return reject({
-                  status: "BAD",
-                  message: "Room not found",
-              });
-          }
-
-          const fromHotel = await Hotel.Hotel.find({ _id: foundRoom.hotelID });
-          const hotelName = fromHotel.companyName;
-
-          if (!foundRoom.isAvailable) {
-              return reject({
-                  status: "BAD",
-                  message: "Room is booked",
-              });
-          }
-
-          const roomPrice = foundRoom.money;
-          const total = roomPrice + roomPrice * 0.08; // VAT
-
-          const invoice = await Invoice.create({
-              cusID,
-              roomID,
-              total,
-              paymentMethod,
-          });
-
-          const voucherResponse = await axios.post('https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest', {
-              OrderID: invoice._id,
-              TotalMoney: total,
-              PartnerID: "1000000005",
-              ServiceName: `Book room`,
-              CustomerCode: invoice.cusID,
-              Description:`Book ${foundRoom.typeOfRoom} from ${hotelName}`,
-              LinkHome: "https://mern-tab-be.vercel.app/",
-              LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`
-          });
-
-          if (voucherResponse.status === 200 || voucherResponse.status === 'OK') {
-              resolve({
-                  status: "OK",
-                  message: "choose voucher succ",
-                  data: voucherResponse.data,
-                  orderID:voucherResponse.data.partNerRequest.OrderID
-              });
-
-              setTimeout(async () => {
-                  const foundInvoice = await Invoice.findById(invoice._id);
-                  if (foundInvoice && !foundInvoice.isPaid) {
-                      await Invoice.findByIdAndDelete(foundInvoice._id);
-                      console.log(`Deleted invoice ${foundInvoice._id} due to overtime process, failed book room`);
-                  }
-              }, 1200000); // 20 minutes
-          } else {
-              reject({
-                  status: 'BAD',
-                  message: '3rd choose voucher failed',
-              });
-          }
-      } catch (e) {
-          console.error("Error in bookRoom:", e);
-          reject({
-              status: "ERROR",
-              message: "Error booking room",
-              error: e.message,
-          });
+      const foundRoom = await Hotel.Room.findById(roomID);
+      if (!foundRoom) {
+        return reject({
+          status: "BAD",
+          message: "Room not found",
+        });
       }
+
+      const fromHotel = await Hotel.Hotel.find({ _id: foundRoom.hotelID });
+      const hotelName = fromHotel.companyName;
+
+      if (!foundRoom.isAvailable) {
+        return reject({
+          status: "BAD",
+          message: "Room is booked",
+        });
+      }
+
+      const roomPrice = foundRoom.money;
+      const total = roomPrice + roomPrice * 0.08; // VAT
+
+      const invoice = await Invoice.create({
+        cusID,
+        roomID,
+        total,
+        paymentMethod,
+      });
+
+      const voucherResponse = await axios.post(
+        "https://voucher-server-alpha.vercel.app/api/vouchers/createPartNerRequest",
+        {
+          OrderID: invoice._id,
+          TotalMoney: total,
+          PartnerID: "1000000005",
+          ServiceName: `Book room`,
+          CustomerCode: invoice.cusID,
+          Description: `Book ${foundRoom.typeOfRoom} from ${hotelName}`,
+          LinkHome: "https://mern-tab-be.vercel.app/",
+          LinkReturnSuccess: `https://mern-tab-be.vercel.app/book/completedTran/${invoice._id}`,
+        }
+      );
+
+      if (voucherResponse.status === 200 || voucherResponse.status === "OK") {
+        resolve({
+          status: "OK",
+          message: "choose voucher succ",
+          data: voucherResponse.data,
+          orderID: voucherResponse.data.partNerRequest.OrderID,
+        });
+
+        setTimeout(async () => {
+          const foundInvoice = await Invoice.findById(invoice._id);
+          if (foundInvoice && !foundInvoice.isPaid) {
+            await Invoice.findByIdAndDelete(foundInvoice._id);
+            console.log(
+              `Deleted invoice ${foundInvoice._id} due to overtime process, failed book room`
+            );
+          }
+        }, 1200000); // 20 minutes
+      } else {
+        reject({
+          status: "BAD",
+          message: "3rd choose voucher failed",
+        });
+      }
+    } catch (e) {
+      console.error("Error in bookRoom:", e);
+      reject({
+        status: "ERROR",
+        message: "Error booking room",
+        error: e.message,
+      });
+    }
   });
 }
 //k can controller
 async function completedTran(req, res) {
-  const { id } = req.params; 
+  const { id } = req.params;
   try {
     const invoice = await Invoice.findById(id);
     if (!invoice) {
@@ -254,7 +263,7 @@ async function completedTran(req, res) {
 
     res.status(200).json({
       status: "OK",
-      message: "Transaction completed, room booked successfully"
+      message: "Transaction completed, room booked successfully",
     });
   } catch (e) {
     console.error("Error in completedTran:", e);
@@ -311,42 +320,60 @@ async function reqCancelRoom(receiptID, cusID) {
 //ko accept => đổi trạng thái req, trả về cho user
 
 const handleCancelRoomAccept = async (req, res) => {
-  const {reqCancelID}=req.params
-  const {orderId, transactionId } = req.body;
+  const { reqCancelID } = req.params;
+  const { orderId, transactionId } = req.body;
   const adminID = req.adminID;
 
   console.log(reqCancelID, adminID, orderId, transactionId);
 
   if (!adminID) {
-    return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+    return res
+      .status(403)
+      .json({ status: "BAD", message: "Missing required fields" });
   }
   if (!mongoose.Types.ObjectId.isValid(reqCancelID)) {
     console.log("Invalid reqCancelID");
-    return res.status(400).json({ status: 'BAD', message: 'Invalid reqCancelID' });
+    return res
+      .status(400)
+      .json({ status: "BAD", message: "Invalid reqCancelID" });
   }
 
   try {
     const foundReqCancel = await reqCancel.findById(reqCancelID);
     if (!foundReqCancel) {
-      return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
+      return res
+        .status(404)
+        .json({ status: "BAD", message: "There's no reqCancel" });
     }
 
     try {
-      
-      const refundResponse = await axios.post("https://api.htilssu.com/api/v1/refund", {
-        orderId: orderId,
-        transactionId: transactionId
-      });
-      
+      const refundResponse = await axios.post(
+        "https://api.htilssu.com/api/v1/refund",
+        {
+          orderId: orderId,
+          transactionId: transactionId,
+        },
+        {
+          Headers: {
+            "X-Api":
+              "c1f3fe7e4b97d023548d3aa5eaee38993c2849b2a0f5425d72df862f508cfc58",
+          },
+        }
+      );
+
       console.log("Refund response:", refundResponse.data);
-      
-      if (refundResponse.status === 200 || refundResponse.status === 201|| refundResponse.status === 'OK' ) {
+
+      if (
+        refundResponse.status === 200 ||
+        refundResponse.status === 201 ||
+        refundResponse.status === "OK"
+      ) {
         // Cập nhật trạng thái yêu cầu hủy phòng
         foundReqCancel.isAccept = "accepted";
         foundReqCancel.adminID = adminID;
         foundReqCancel.dateAccept = new Date();
         await foundReqCancel.save();
-        
+
         return res.status(200).json({
           status: "OK",
           message: "Refund for customer and change status",
@@ -378,20 +405,24 @@ const handleCancelRoomAccept = async (req, res) => {
 };
 
 const handleCancelRoomReject = async (req, res) => {
-  const {reqCancelID}=req.params
-  const {  orderId } = req.body;
+  const { reqCancelID } = req.params;
+  const { orderId } = req.body;
   const adminID = req.adminID;
 
   console.log(reqCancelID, adminID, orderId);
 
   if (!adminID) {
-    return res.status(403).json({ status: 'BAD', message: 'Missing required fields' });
+    return res
+      .status(403)
+      .json({ status: "BAD", message: "Missing required fields" });
   }
 
   try {
     const foundReqCancel = await reqCancel.findById(reqCancelID);
     if (!foundReqCancel) {
-      return res.status(404).json({ status: 'BAD', message: "There's no reqCancel" });
+      return res
+        .status(404)
+        .json({ status: "BAD", message: "There's no reqCancel" });
     }
 
     try {
@@ -434,11 +465,13 @@ function createHotel(newHotel, ownerID) {
       scale,
       city,
       hotelPhone,
-      hotelImg
+      hotelImg,
     } = newHotel;
 
     try {
-      const checkExistedOwnerID = await Account.Account.findOne({ _id: ownerID });
+      const checkExistedOwnerID = await Account.Account.findOne({
+        _id: ownerID,
+      });
       if (!checkExistedOwnerID) {
         return rejects({
           status: "BAD",
@@ -457,7 +490,7 @@ function createHotel(newHotel, ownerID) {
         city,
         hotelPhone,
         hotelImg,
-        ownerID
+        ownerID,
       });
 
       if (createdHotel) {
@@ -471,7 +504,7 @@ function createHotel(newHotel, ownerID) {
       rejects(e);
     }
   });
-};
+}
 
 const createRoom = async (newRoom, hotelID) => {
   return new Promise(async (resolve, reject) => {
@@ -493,7 +526,7 @@ const createRoom = async (newRoom, hotelID) => {
             hotel.minPrice = money;
             await hotel.save();
           }
-          hotel.numberOfRooms = hotel.numberOfRooms + 1
+          hotel.numberOfRooms = hotel.numberOfRooms + 1;
           await hotel.save();
         }
         resolve({
@@ -569,6 +602,5 @@ module.exports = {
   reqCancelRoom,
   handleCancelRoomAccept,
   completedTran,
-  handleCancelRoomReject
+  handleCancelRoomReject,
 };
-
