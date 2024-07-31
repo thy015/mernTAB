@@ -424,6 +424,8 @@ function createHotel(newHotel, ownerID) {
         hotelPhone,
         hotelImg,
         ownerID,
+        minPrice,
+        numberOfRooms
       });
 
       if (createdHotel) {
