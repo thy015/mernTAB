@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
 import ".././index.css";
+
 const Header = ({ children }) => {
   const hoverEffect =
     "text-white font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
@@ -16,7 +17,7 @@ const Header = ({ children }) => {
           rel="noopener noreferrer"
           href="https://www.antgroup.com"
         >
-          1st menu item
+          My Reservation
         </a>
       ),
       key: "0",
@@ -28,24 +29,47 @@ const Header = ({ children }) => {
           rel="noopener noreferrer"
           href="https://www.aliyun.com"
         >
-          2nd menu item
+          Register Owner!
         </a>
       ),
+      danger: true,
       key: "1",
     },
     {
       type: "divider",
+      key: "divider-1",
     },
     {
-      label: "3rd menu item（disabled）",
+      label: "   Tiếng Việt",
+      key: "2",
+      icon: (
+        <img
+          src="/img/vietFlag.png"
+          alt="Vietnam Flag"
+          style={{ width: "16px", marginRight: "8px" }}
+        />
+      ),
+    },
+    {
+      label: "English",
       key: "3",
-      disabled: true,
+      icon: (
+        <img
+          src="/img/united-states.png"
+          alt="USA Flag"
+          style={{ width: "16px", marginRight: "8px" }}
+        />
+      ),
     },
   ];
   return (
     <div>
-      <nav class="bg-[#114098] flex justify-between items-center p-4">
-        <ul class="flex space-x-5 ">
+      <nav class="bg-[#114098] flex justify-between items-center p-4 relative">
+        <ul class="flex space-x-5 pt-5 ">
+          <div className="absolute top-2 text-white left-[5%] text-[20px]">
+            {" "}
+            Take A Breath
+          </div>
           <li>
             <Link to="/" className="no-underline ">
               <p className={hoverEffect}>Booking</p>
@@ -92,11 +116,14 @@ const Header = ({ children }) => {
               menu={{
                 items,
               }}
+              trigger={["click"]}
+              arrow
+              placement="bottomRight"
             >
               <FontAwesomeIcon
                 icon={faBars}
-                size="lg"
-                className="mt-2 text-white"
+                size="xl"
+                className="mt-1 text-white cursor-pointer"
               />
             </Dropdown>
           </li>
