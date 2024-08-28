@@ -7,7 +7,7 @@ import ".././index.css";
 
 const Header = ({ children }) => {
   const hoverEffect =
-    "text-white font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
+    "text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
 
   const items = [
     {
@@ -65,8 +65,8 @@ const Header = ({ children }) => {
   return (
     <div>
       <nav class="bg-[#114098] flex justify-between items-center p-4 relative">
-        <ul class="flex space-x-5 pt-5 ">
-          <div className="absolute top-2 text-white left-[5%] text-[20px]">
+        <ul class="flex space-x-5 pt-7 ">
+          <div className="absolute top-2 text-white left-[2.5%] text-[25px] font-lobster cursor-pointer">
             {" "}
             Take A Breath
           </div>
