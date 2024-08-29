@@ -3,27 +3,47 @@ import { Input, DatePicker, Dropdown, Button, Row, Col } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { triggerFocus } from "antd/es/input/Input";
 const { RangePicker } = DatePicker;
 
 const Booking = () => {
+  // date picker
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");
-  // date picker
+
   dayjs.extend(customParseFormat);
   const disabledDate = (current) => {
     return current && current < dayjs().endOf("day") - 1;
   };
+
   // for the person
+  const [count, setCount] = useState(0);
   const items = [
     {
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          My Reservation
-        </a>
+        <div className="p-4">
+          <div className="flex items-center justify-between">
+            <span>Adults</span>
+            <div className="flex items-center">
+              <Button
+                onClick={() => setCount(prevCount=>prevCount-1)}
+                size="small"
+                className="mr-2"
+                disabled={count===0}
+              >
+                -
+              </Button>
+              <span>{count}</span>
+              <Button
+                onClick={() => setCount(prevCount=>prevCount+1)}
+                size="small"
+                className="ml-2"
+              >
+                +
+              </Button>
+            </div>
+          </div>
+        </div>
       ),
       key: "0",
     },
@@ -39,9 +59,11 @@ const Booking = () => {
   };
 
   return (
-    <div className="flex absolute top-[68%] left-[20%] w-[60%] 
+    <div
+      className="flex absolute top-[68%] left-[20%] w-[60%] 
      bg-gray-100 border-4 border-yellow-400 rounded-lg 
-     overflow-hidden h-16 items-center">
+     overflow-hidden h-16 items-center"
+    >
       <Row gutter={0} className="w-full">
         <Col span={6}>
           <Input
@@ -70,6 +92,7 @@ const Booking = () => {
             trigger={["click"]}
             arrow
             placement="bottomRight"
+            getPopupContainer={(triggerFocus)}
           >
             <div className="h-16 w-full rounded-none justify-center flex items-center">
               People
