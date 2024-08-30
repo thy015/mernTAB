@@ -1,4 +1,4 @@
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, Row, Col } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -64,71 +64,78 @@ const Header = ({ children }) => {
   ];
   return (
     <div>
-      <nav class="bg-[#114098] flex justify-between items-center p-4 relative">
-        <ul class="flex space-x-5 pt-7 ">
-          <div className="absolute top-2 text-white left-[2.5%] text-[25px] font-lobster cursor-pointer">
-            {" "}
-            Take A Breath
+      <Row justify={"center"} className="bg-[#114098]">
+        <Col span={2}></Col>
+        <Col span={20}>
+          <div class="bg-[#114098] flex justify-between items-center p-4 relative">
+            <ul class="flex space-x-5 pt-7 ">
+              <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer">
+                {" "}
+                Take A Breath
+              </div>
+              <li>
+                <Link to="/" className="no-underline ">
+                  <p className={hoverEffect}>Booking</p>
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="no-underline">
+                  <p className={hoverEffect}>Activities</p>
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="no-underline">
+                  <p className={hoverEffect}>Coupons and Discount</p>
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="no-underline">
+                  <p className={hoverEffect}>Membership</p>
+                </Link>
+              </li>
+            </ul>
+            <ul class="flex space-x-5">
+              <li>
+                <Link to="/" className="no-underline">
+                  <Button>Log In</Button>
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="no-underline">
+                  <Button>Sign Up</Button>
+                </Link>
+              </li>{" "}
+              <li>
+                <Link to="/" className="no-underline">
+                  <FontAwesomeIcon
+                    icon={faShoppingCart}
+                    size="lg"
+                    className="mt-2 text-white"
+                  />
+                </Link>
+              </li>
+              <li>
+                <Dropdown
+                  menu={{
+                    items,
+                  }}
+                  trigger={["click"]}
+                  arrow
+                  placement="bottomRight"
+                >
+                  <FontAwesomeIcon
+                    icon={faBars}
+                    size="xl"
+                    className="mt-1 text-white cursor-pointer"
+                  />
+                </Dropdown>
+              </li>
+            </ul>
           </div>
-          <li>
-            <Link to="/" className="no-underline ">
-              <p className={hoverEffect}>Booking</p>
-            </Link>
-          </li>
-          <li>
-            <Link to="/" className="no-underline">
-              <p className={hoverEffect}>Activities</p>
-            </Link>
-          </li>
-          <li>
-            <Link to="/" className="no-underline">
-              <p className={hoverEffect}>Coupons and Discount</p>
-            </Link>
-          </li>
-          <li>
-            <Link to="/" className="no-underline">
-              <p className={hoverEffect}>Membership</p>
-            </Link>
-          </li>
-        </ul>
-        <ul class="flex space-x-5">
-          <li>
-            <Link to="/" className="no-underline">
-              <Button>Log In</Button>
-            </Link>
-          </li>
-          <li>
-            <Link to="/" className="no-underline">
-              <Button>Sign Up</Button>
-            </Link>
-          </li>{" "}
-          <li>
-            <Link to="/" className="no-underline">
-              <FontAwesomeIcon
-                icon={faShoppingCart}
-                size="lg"
-                className="mt-2 text-white"
-              />
-            </Link>
-          </li>
-          <li>
-            <Dropdown
-              menu={{
-                items,
-              }}
-              trigger={["click"]}
-              arrow
-              placement="bottomRight"
-            >
-              <FontAwesomeIcon
-                icon={faBars}
-                size="xl"
-                className="mt-1 text-white cursor-pointer"
-              />
-            </Dropdown>
-          </li>
-        </ul>
-      </nav>
+        </Col>
+        <Col span={2}></Col>
+      </Row>
+
       {children}
     </div>
   );

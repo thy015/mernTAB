@@ -1,4 +1,4 @@
-import HomePage from "../pages/HomePage";
+import HomePage from "../pages/user/HomePage";
 
 export const routers = [
   {
@@ -7,5 +7,4 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
- 
 ];

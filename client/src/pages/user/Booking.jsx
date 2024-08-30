@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Input, DatePicker, Dropdown, Button, Row, Col } from "antd";
+import { Input, DatePicker, Dropdown, Button, Row, Col,Grid } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { triggerFocus } from "antd/es/input/Input";
+import { useCount } from "../../hooks/hooks";
+
 const { RangePicker } = DatePicker;
 
 const Booking = () => {
@@ -13,11 +14,12 @@ const Booking = () => {
 
   dayjs.extend(customParseFormat);
   const disabledDate = (current) => {
-    return current && current < dayjs().endOf("day") - 1;
+    return current && current < dayjs().startOf("day") ;
   };
 
   // for the person
-  const [count, setCount] = useState(0);
+  const [aCount, aIncrement, aDecrement] = useCount(0);
+  const [cCount,cIncrement,cDecrement]=useCount(0)
   const items = [
     {
       label: (
@@ -26,16 +28,16 @@ const Booking = () => {
             <span>Adults</span>
             <div className="flex items-center">
               <Button
-                onClick={() => setCount(prevCount=>prevCount-1)}
+                onClick={aDecrement}
                 size="small"
                 className="mr-2"
-                disabled={count===0}
+                disabled={aCount === 0}
               >
                 -
               </Button>
-              <span>{count}</span>
+              <span>{aCount}</span>
               <Button
-                onClick={() => setCount(prevCount=>prevCount+1)}
+                onClick={aIncrement}
                 size="small"
                 className="ml-2"
               >
@@ -46,6 +48,34 @@ const Booking = () => {
         </div>
       ),
       key: "0",
+    },
+    {
+      label: (
+        <div className="p-4">
+          <div className="flex items-center justify-between">
+            <span>Childrens</span>
+            <div className="flex items-center">
+              <Button
+                onClick={cDecrement}
+                size="small"
+                className="mr-2"
+                disabled={cCount === 0}
+              >
+                -
+              </Button>
+              <span>{cCount}</span>
+              <Button
+                onClick={cIncrement}
+                size="small"
+                className="ml-2"
+              >
+                +
+              </Button>
+            </div>
+          </div>
+        </div>
+      ),
+      key: "1",
     },
   ];
   const handleDateChange = (dates) => {
@@ -92,10 +122,10 @@ const Booking = () => {
             trigger={["click"]}
             arrow
             placement="bottomRight"
-            getPopupContainer={(triggerFocus)}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="h-16 w-full rounded-none justify-center flex items-center">
-              People
+              {aCount+cCount} People
             </div>
           </Dropdown>
         </Col>

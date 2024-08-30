@@ -18,6 +18,7 @@ const HomePage = () => {
         </div>
       </div>
       <Booking></Booking>
+
     </div>
   );
 };
