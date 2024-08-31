@@ -7,7 +7,7 @@ import ".././index.css";
 
 const Header = ({ children }) => {
   const hoverEffect =
-    "text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
+    "text-white text-[18px] pl-5 font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105";
 
   const items = [
     {
@@ -67,15 +67,17 @@ const Header = ({ children }) => {
       <Row justify={"center"} className="bg-[#114098]">
         <Col span={2}></Col>
         <Col span={20}>
-          <div class="bg-[#114098] flex justify-between items-center p-4 relative">
-            <ul class="flex space-x-5 pt-7 ">
+          <div class="bg-[#114098] flex justify-between items-center pt-4 pb-2 relative">
+            <ul class="flex pt-7 ">
               <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer">
                 {" "}
                 Take A Breath
               </div>
               <li>
                 <Link to="/" className="no-underline ">
-                  <p className={hoverEffect}>Booking</p>
+                  <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
+                    Booking
+                  </p>
                 </Link>
               </li>
               <li>

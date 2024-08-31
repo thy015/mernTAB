@@ -35,4 +35,5 @@ function useGet(link) {
   }, [link]);
   return { data, error, loading };
 }
+
 export { useCount, useGet };

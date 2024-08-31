@@ -17,6 +17,15 @@ const Booking = () => {
     return current && current < dayjs().startOf("day") ;
   };
 
+  const handleDateChange = (dates) => {
+    if (dates && dates.length === 2) {
+      setDayStart(dates[0].format("YYYY-MM-DD"));
+      setDayEnd(dates[1].format("YYYY-MM-DD"));
+    } else {
+      setDayStart(null);
+      setDayEnd(null);
+    }
+  };
   // for the person
   const [aCount, aIncrement, aDecrement] = useCount(0);
   const [cCount,cIncrement,cDecrement]=useCount(0)
@@ -53,7 +62,7 @@ const Booking = () => {
       label: (
         <div className="p-4">
           <div className="flex items-center justify-between">
-            <span>Childrens</span>
+            <span className="mr-4">Childrens</span>
             <div className="flex items-center">
               <Button
                 onClick={cDecrement}
@@ -78,15 +87,7 @@ const Booking = () => {
       key: "1",
     },
   ];
-  const handleDateChange = (dates) => {
-    if (dates && dates.length === 2) {
-      setDayStart(dates[0].format("YYYY-MM-DD"));
-      setDayEnd(dates[1].format("YYYY-MM-DD"));
-    } else {
-      setDayStart(null);
-      setDayEnd(null);
-    }
-  };
+  
 
   return (
     <div
