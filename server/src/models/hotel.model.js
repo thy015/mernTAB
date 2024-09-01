@@ -5,7 +5,7 @@ const hotelSchema =new mongoose.Schema(
         address: { type: String, required: true },
         numberOfRooms: { type: Number, required: true, default:0},
         taxCode: { type: String, required: true },
-        companyName: { type: String, required: true },
+        hotelName: { type: String, required: true },
         nation: { type: String, required: true },
         facilityName: { type: String, required: true },
         businessType: { type: String, required: true },
@@ -14,7 +14,9 @@ const hotelSchema =new mongoose.Schema(
         hotelPhone:{type:String,required:true},
         minPrice:{type: Number,required: true, default: 0},
         hotelImg:{type:String, required:false},
-        ownerID:{type:mongoose.Schema.ObjectId,ref:'Account',require:true}
+        rating:{type:Number,required:false, default: 0},
+        numberOfRated:{type:Number,required:false, default: 0},
+        ownerID:{type:mongoose.Schema.Types.ObjectId,ref:'Account',require:true}
     }
 )
 const roomSchema=new mongoose.Schema({

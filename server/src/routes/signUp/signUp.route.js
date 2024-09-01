@@ -1,18 +1,22 @@
-const express =require('express')
-const signUpController=require('./signUp.controller')
-const signUprouter=express.Router()
-const Account=require('../../models/signUp.model')
+const express = require("express");
+const signUpController = require("./signUp.controller");
+const signUpRouter = express.Router();
+const Account = require("../../models/signUp.model");
 
-signUprouter.get('/', async(req, res) => {
-    try{
-      const RegOwner=await Account.find()
-      res.status(200).json(RegOwner)
-    }catch(e){
-      res.status(500).json(e);
-    }
-  });
+// Owner
+signUpRouter.get("/getOwner", async (req, res) => {
+  try {
+    const RegOwner = await Account.find();
+    res.status(200).json(RegOwner);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
 
-signUprouter.post('/create', signUpController.signUpOwner);
-signUprouter.post('/signIn', signUpController.signInOwner);
+signUpRouter.post("/signUpOwner", signUpController.signUpOwner);
+signUpRouter.post("/signInOwner", signUpController.signInOwner);
+// Cus
+signUpRouter.post("/signInCus", signUpController.signInCustomer);
+signUpRouter.post("/signUpCus", signUpController.signUpCustomer);
 
-module.exports=signUprouter
+module.exports = signUpRouter;

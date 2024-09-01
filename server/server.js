@@ -1,74 +1,75 @@
+const PORT = process.env.PORT || 4000;
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
+dotenv.config();
+const app = express();
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const http = require("http");
+const HomeRouter = require("./src/routes/Home/home.route");
+const DetailRouter = require("./src/routes/HotelDetail/detail.route");
+const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
+const signUpCusRouter = require("./src/routes/signUp/signUpCus.route");
+const signUpRouter = require("./src/routes/signUp/signUp.route");
+const bookRouter = require("./src/routes/BookRoom/book.route");
 
-const PORT=process.env.PORT || 4000;
-const express=require('express');
-const cors=require('cors');
-const dotenv=require('dotenv')
-const bodyParser=require('body-parser')
-dotenv.config()
-const app=express();
-const mongoose=require('mongoose')
-const morgan=require('morgan')
-const http=require('http');
-const HomeRouter = require('./src/routes/Home/home.route');
-const DetailRouter = require('./src/routes/HotelDetail/detail.route');
-const HotelListRouter = require('./src/routes/HotelList/hotelList.route');
-const signUpCusRouter = require('./src/routes/signUp/signUpCus.route');
-const signUpRouter = require('./src/routes/signUp/signUp.route');
-const bookRouter = require('./src/routes/BookRoom/book.route');
-
-const reqCancelRouter=require('./src/routes/BookRoom/reqCancel.route')
+const reqCancelRouter = require("./src/routes/BookRoom/reqCancel.route");
 //always put first
 
-
-
-const videoRoutes = require('./src/routes/Upload/video')
+const videoRoutes = require("./src/routes/Upload/video");
 
 // Cấu hình middleware
 
 app.use(bodyParser.json());
 
-app.use(morgan("combined"))
+app.use(morgan("combined"));
 
-app.use("/videos", videoRoutes)
+app.use("/videos", videoRoutes);
 const allowedOrigins = [
-    process.env.CLIENT_ORIGIN,
-    'https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/'
-  ];
-  
-  app.use(cors({
+  process.env.CLIENT_ORIGIN,
+  "https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/",
+];
+
+app.use(
+  cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-  
+
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
-    }
-  }));
-app.use('/home',HomeRouter)
-app.use('/detail',DetailRouter)
-app.use('/hotelList',HotelListRouter)
-app.use('/signUp',signUpRouter)
-app.use('/signUpCus',signUpCusRouter)
-app.use('/book',bookRouter)
-app.use('/reqCancel',reqCancelRouter)
+    },
+  })
+);
+app.use("/api/home", HomeRouter);
+app.use("/api/detail", DetailRouter);
+app.use("/api/hotelList", HotelListRouter);
+app.use("/api/auth", signUpRouter);
+app.use("/api/book", bookRouter);
+app.use("/api/reqCancel", reqCancelRouter);
 //mongo connect
 
-mongoose.connect(`mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`)
+mongoose
+  .connect(
+    `mongodb+srv://thymai1510:${process.env.MONGO_DB}@cluster0.ibhghsi.mongodb.net/?appName=Cluster0`
+  )
   .then(() => {
-    console.log('Connect successfully');
+    console.log("Connect successfully");
   })
   .catch((err) => {
     console.log(err);
   });
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // Xử lý lỗi
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 const server = http.createServer(app);
