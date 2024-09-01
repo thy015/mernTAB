@@ -91,11 +91,11 @@ const Booking = () => {
 
   return (
     <div
-      className="flex absolute top-[68%] left-[20%] w-[60%] 
+      className="flex absolute top-[73%] left-[20%] w-[60%] 
      bg-gray-100 border-4 border-yellow-400 rounded-lg 
-     overflow-hidden h-16 items-center"
+     overflow-hidden h-20 items-center"
     >
-      <Row gutter={0} className="w-full">
+      <Row gutter={0} className="w-full items-center">
         <Col span={6}>
           <Input
             placeholder="Where you want to go?"
@@ -111,7 +111,7 @@ const Booking = () => {
             suffixIcon={<CalendarOutlined />}
             disabledDate={disabledDate}
             onChange={handleDateChange}
-            className="rounded-none h-16 w-full"
+            className="rounded-none h-20 w-full"
             bordered={false}
           />
         </Col>
@@ -125,13 +125,13 @@ const Booking = () => {
             placement="bottomRight"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="h-16 w-full rounded-none justify-center flex items-center">
+            <div className="h-20 w-full rounded-none justify-center flex items-center">
               {aCount+cCount} People
             </div>
           </Dropdown>
         </Col>
         <Col span={4}>
-          <Button type="primary" className="h-16 w-full rounded-none">
+          <Button type="primary" className="h-20 w-full rounded-none text-[18px]">
             Search
           </Button>
         </Col>

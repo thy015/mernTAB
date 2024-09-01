@@ -5,10 +5,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 import { cardData } from "../../localData/localData";
 import "../../index.css";
+import PropertyGrid from "./HotelDisplay";
 const HomePage = () => {
+  const h4Design = "items-start flex font-bold pb-4";
   // Carousel n Cards
-
-  // Grouping cards into slides of 3 cards per slide
   const slides = [];
   const itemsPerSlide = 4;
 
@@ -25,7 +25,8 @@ const HomePage = () => {
           className="h-96 object-cover w-full relative"
         />
       </div>
-      <div className="flex top-[30%] left-[15%] absolute flex-col text-white ">
+      <div className="flex top-[30%] left-[15%] absolute 
+      flex-col text-white ">
         <div className="font-lobster text-4xl">Find your next stay</div>
         <div className="text-lg mt-4">
           Search deals on hotels, homes, and much more...
@@ -34,11 +35,12 @@ const HomePage = () => {
       <div>
         <Booking></Booking>
       </div>
-      {/* Carousel with card groups */}
-      <div className="mt-20">
-        <Row justify={"center"} className="pl-8">
+      <div className="mt-24">
+        <Row className="pl-8">
           <Col span={2}></Col>
           <Col span={20}>
+            <h4 className={h4Design}>Search by type of accomodation</h4>
+            {/* Carousel with card groups */}
             <Carousel arrows swipeToSlide>
               {slides.map((slide, index) => (
                 <div key={index}>
@@ -61,6 +63,9 @@ const HomePage = () => {
                 </div>
               ))}
             </Carousel>
+            {/* display homestay */}
+            <h4 className={h4Design}>High rated accomodation</h4>
+            <PropertyGrid></PropertyGrid>
           </Col>
           <Col span={2}></Col>
         </Row>
