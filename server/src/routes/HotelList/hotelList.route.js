@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const ListRouter = express.Router();
-const hotelListController = require('./hotelList.controller');
-const Hotel = require('../../models/hotel.model');
-const { authenToken } = require('../../services/jwt');
+const hotelListController = require("./hotelList.controller");
+const Hotel = require("../../models/hotel.model");
+const { authenToken } = require("../../services/jwt");
 
-ListRouter.get('/', async (req, res) => {
+ListRouter.get("/hotel", async (req, res) => {
   try {
     const createdHotel = await Hotel.Hotel.find();
     res.status(200).json(createdHotel);
@@ -13,25 +13,41 @@ ListRouter.get('/', async (req, res) => {
   }
 });
 
-ListRouter.post('/create', authenToken, hotelListController.createHotel);
-ListRouter.get('/search', hotelListController.searchHotel);
-ListRouter.get('/owner', authenToken, hotelListController.getHotelsByOwner);
+ListRouter.get("/hotel/:_id", async (req, res) => {
+  try {
+    const hotel = await Hotel.Hotel.findById(req.params._id);
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+    res.json(hotel);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-ListRouter.get('/rooms', async (req, res) => { 
+ListRouter.post("/create", authenToken, hotelListController.createHotel);
+ListRouter.get("/criteriaSearch", hotelListController.searchHotel);
+// all hotel from owner that logged in
+ListRouter.get(
+  "/hotelOwner",
+  authenToken,
+  hotelListController.getHotelsByOwner
+);
+
+ListRouter.get("/rooms", async (req, res) => {
   try {
     const { hotelID } = req.query;
     if (!hotelID) {
       return res.status(400).json({ message: "hotelID is required" });
     }
-    
+
     const rooms = await Hotel.Room.find({ hotelID: hotelID });
-    res.status(200).json(rooms)
+    res.status(200).json(rooms);
   } catch (e) {
     res.status(500).json(e);
   }
 });
 
-
-ListRouter.post('/createRoom', authenToken, hotelListController.createRoom);
+ListRouter.post("/createRoom", authenToken, hotelListController.createRoom);
 
 module.exports = ListRouter;

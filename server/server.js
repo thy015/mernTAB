@@ -8,10 +8,10 @@ const app = express();
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
-const HomeRouter = require("./src/routes/Home/home.route");
-const DetailRouter = require("./src/routes/HotelDetail/detail.route");
+
+
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
-const signUpCusRouter = require("./src/routes/signUp/signUpCus.route");
+
 const signUpRouter = require("./src/routes/signUp/signUp.route");
 const bookRouter = require("./src/routes/BookRoom/book.route");
 
@@ -45,8 +45,7 @@ app.use(
     },
   })
 );
-app.use("/api/home", HomeRouter);
-app.use("/api/detail", DetailRouter);
+
 app.use("/api/hotelList", HotelListRouter);
 app.use("/api/auth", signUpRouter);
 app.use("/api/book", bookRouter);
