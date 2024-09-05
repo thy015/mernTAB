@@ -7,7 +7,7 @@ import { useGet } from "../../hooks/hooks";
 
 const PropertyCard = ({ property }) => {
   return (
-    <Card className="shadow-sm " style={{ borderRadius: "12px" }}>
+    <Card className="shadow-sm h-full" style={{ borderRadius: "12px" }}>
       <Card.Img
         variant="top"
         src={property.hotelImg}
@@ -17,7 +17,7 @@ const PropertyCard = ({ property }) => {
           objectFit: "cover",
         }}
       />
-      <Card.Body className="max-h-42">
+      <Card.Body className="h-[180px] flex flex-col flex-grow-1">
         <Card.Title>{property.hotelName}</Card.Title>
         <Card.Text>{property.address}</Card.Text>
         <div className="d-flex align-items-center">

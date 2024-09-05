@@ -3,6 +3,7 @@ import "./App.css";
 import { routers } from "./routers/router";
 import { Fragment } from "react";
 import Header from "./partials/Header";
+import Footer from "./partials/Footer";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           {routers.map((r) => {
             const Page = r.page;
             const Layout = r.isShowHeader ? Header : Fragment;
+            const FooterLayout = r.isShowFooter ? Footer : Fragment;
             return (
               <Route
                 key={r.path}
@@ -19,6 +21,7 @@ function App() {
                 element={
                   <Layout>
                     <Page />
+                    <FooterLayout></FooterLayout>
                   </Layout>
                 }
               />
