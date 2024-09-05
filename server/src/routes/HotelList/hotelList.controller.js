@@ -1,10 +1,30 @@
-const service = require('../../services/services');
+const service = require("../../services/services");
 
 const createHotel = async (req, res) => {
   try {
-    const { address, taxCode, companyName, nation, facilityName, businessType, scale, city,hotelPhone } = req.body;
-    if (!address || !taxCode || !companyName || !nation || !facilityName || !businessType || !scale || !city || !hotelPhone) {
-      return res.status(403).json({ message: 'Input is required' });
+    const {
+      address,
+      taxCode,
+      hotelName,
+      nation,
+      facilityName,
+      businessType,
+      scale,
+      city,
+      hotelPhone,
+    } = req.body;
+    if (
+      !address ||
+      !taxCode ||
+      !hotelName ||
+      !nation ||
+      !facilityName ||
+      !businessType ||
+      !scale ||
+      !city ||
+      !hotelPhone
+    ) {
+      return res.status(403).json({ message: "Input is required" });
     }
     const result = await service.createHotel(req.body, req.ownerID);
     return res.status(201).json(result);
@@ -16,7 +36,7 @@ const createHotel = async (req, res) => {
 const getHotelsByOwner = async (req, res) => {
   try {
     const hotels = await service.getHotelsByOwner(req.ownerID);
-    return res.status(200).json({ status: 'OK', data: hotels });
+    return res.status(200).json({ status: "OK", data: hotels });
   } catch (e) {
     console.error("Error in getHotelsByOwner controller:", e);
     return res.status(500).json({ message: e.message });
@@ -25,9 +45,10 @@ const getHotelsByOwner = async (req, res) => {
 
 const createRoom = async (req, res) => {
   try {
-    const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } = req.body;
+    const { numberOfBeds, typeOfRoom, money, hotelID, capacity, roomImages } =
+      req.body;
     if (!numberOfBeds || !typeOfRoom || !money || !hotelID || !capacity) {
-      return res.status(403).json({ message: 'Input is required' });
+      return res.status(403).json({ message: "Input is required" });
     }
     const result = await service.createRoom(req.body, hotelID);
     return res.status(201).json(result);
@@ -41,10 +62,10 @@ const searchHotel = async (req, res) => {
   try {
     const { city } = req.body;
     if (!city) {
-      return res.status(403).json({ message: 'Input is required' });
+      return res.status(403).json({ message: "Input is required" });
     }
     const result = await service.searchHotel(city);
-    return res.status(200).json({ status: 'OK', data: result });
+    return res.status(200).json({ status: "OK", data: result });
   } catch (e) {
     console.error("Error in searchHotels controller:", e);
     return res.status(500).json({ message: e.message });

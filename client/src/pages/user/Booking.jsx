@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Input, DatePicker, Dropdown, Button, Row, Col,Grid } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -8,6 +8,8 @@ import { useCount } from "../../hooks/hooks";
 const { RangePicker } = DatePicker;
 
 const Booking = () => {
+  // place to go
+
   // date picker
   const [dayStart, setDayStart] = useState("");
   const [dayEnd, setDayEnd] = useState("");

@@ -84,7 +84,7 @@ async function signInOwner(existedOwner) {
           access_token: access_token,
           // refresh_token: refresh_token,
           ownerID: foundOwner._id,
-          isUse:'Owner',
+          isUse: "Owner",
           //owner đi vào trang chủ
           redirect: "/",
         });
@@ -104,7 +104,7 @@ async function signInOwner(existedOwner) {
             status: "OK",
             message: "Admin logged in",
             access_token,
-            isUse:'Admin',
+            isUse: "Admin",
             //admin đi vào dashboard admin
             redirect: "/Admin",
           });
@@ -460,7 +460,7 @@ function createHotel(newHotel, ownerID) {
     const {
       address,
       taxCode,
-      companyName,
+      hotelName,
       nation,
       facilityName,
       businessType,
@@ -484,8 +484,8 @@ function createHotel(newHotel, ownerID) {
       const createdHotel = await Hotel.Hotel.create({
         address,
         taxCode,
-        companyName,
         nation,
+        hotelName,
         facilityName,
         businessType,
         scale,

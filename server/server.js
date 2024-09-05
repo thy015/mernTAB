@@ -9,7 +9,6 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
 
-
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 
 const signUpRouter = require("./src/routes/signUp/signUp.route");
@@ -27,10 +26,7 @@ app.use(bodyParser.json());
 app.use(morgan("combined"));
 
 app.use("/videos", videoRoutes);
-const allowedOrigins = [
-  process.env.CLIENT_ORIGIN,
-  "https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/",
-];
+const allowedOrigins = ["http://localhost:3000"];
 
 app.use(
   cors({
