@@ -545,14 +545,6 @@ const createRoom = async (newRoom, hotelID) => {
 };
 
 //chỉ cần truyền token
-const getHotelsByOwner = async (ownerID) => {
-  try {
-    return await Hotel.Hotel.find({ ownerID });
-  } catch (e) {
-    console.error("Error in getHotelsByOwner service:", e);
-    throw e;
-  }
-};
 
 const searchHotel = async (req, res) => {
   const { city } = req.query;
@@ -598,7 +590,6 @@ module.exports = {
   signInOwner,
   signInCustomer,
   createRoom,
-  getHotelsByOwner,
   bookRoom,
   searchHotel,
   reqCancelRoom,

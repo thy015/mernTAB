@@ -44,8 +44,8 @@ app.use(
 
 app.use("/api/hotelList", HotelListRouter);
 app.use("/api/auth", signUpRouter);
-app.use("/api/book", bookRouter);
-app.use("/api/reqCancel", reqCancelRouter);
+app.use("/api/booking", bookRouter);
+app.use("/api/cancelReq", reqCancelRouter);
 //mongo connect
 
 mongoose

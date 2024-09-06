@@ -4,7 +4,7 @@ const signUpRouter = express.Router();
 const Account = require("../../models/signUp.model");
 
 // Owner
-signUpRouter.get("/getOwner", async (req, res) => {
+signUpRouter.get("/owner", async (req, res) => {
   try {
     const RegOwner = await Account.find();
     res.status(200).json(RegOwner);

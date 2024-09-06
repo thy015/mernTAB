@@ -34,7 +34,7 @@ ListRouter.get(
   hotelListController.getHotelsByOwner
 );
 
-ListRouter.get("/rooms", async (req, res) => {
+ListRouter.get("/room", async (req, res) => {
   try {
     const { hotelID } = req.query;
     if (!hotelID) {

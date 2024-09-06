@@ -1,5 +1,5 @@
 const service = require("../../services/services");
-
+const { Hotel } = require("../../models/hotel.model");
 const createHotel = async (req, res) => {
   try {
     const {
@@ -35,10 +35,11 @@ const createHotel = async (req, res) => {
 
 const getHotelsByOwner = async (req, res) => {
   try {
-    const hotels = await service.getHotelsByOwner(req.ownerID);
+    // Fetch hotels by ownerID from the request
+    const hotels = await Hotel.find({ ownerID: req.ownerID });
     return res.status(200).json({ status: "OK", data: hotels });
   } catch (e) {
-    console.error("Error in getHotelsByOwner controller:", e);
+    console.error("Error in getHotelsByOwner:", e);
     return res.status(500).json({ message: e.message });
   }
 };
