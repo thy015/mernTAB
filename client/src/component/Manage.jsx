@@ -8,7 +8,6 @@ import {
   faChartBar,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../image/Component 33.png";
 
 export default function Layout() {
   return (
@@ -18,7 +17,7 @@ export default function Layout() {
         <nav className="p-4 text-blue-500 bg-slate-900 w-[300px]">
           <div className="my-6 font-bold text-center">
             <h3 className="flex items-center space-x-2">
-              <img src={logo} alt="Logo" className="w-auto h-20" />
+              <img src="/img/logo.png" alt="Logo" className="w-auto h-20" />
               <span>Owner Dashboard</span>
             </h3>
           </div>
