@@ -16,50 +16,29 @@ import { useState } from "react";
 function App() {
   const [formData, setFormData] = useState({});
   return (
-    // <div className="App">
-    //   <Router>
-    //     <Routes>
-    //       {routers.map((r) => {
-    //         const Page = r.page;
-    //         const Layout = r.isShowHeader ? Header : Fragment;
-    //         const FooterLayout = r.isShowFooter ? Footer : Fragment;
-    //         return (
-    //           <Route
-    //             key={r.path}
-    //             path={r.path}
-    //             element={
-    //               <Layout>
-    //                 <Page />
-    //                 <FooterLayout></FooterLayout>
-    //               </Layout>
-    //             }
-    //           />
-    //         );
-    //       })}
-    //     </Routes>
-    //   </Router>
-    // </div>
-
-    <Router>
-      <div className="App">
+    <div className="App">
+      <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="register-owner" element={<Register />} />
-          <Route path="/" element={<Manage />}>
-            <Route index element={<Dashboard />} />
-            <Route
-              path="create-room"
-              element={
-                <CreateRoom formData={formData} setFormData={setFormData} />
-              }
-            />
-            <Route path="revenue-stats" element={<RevenueStats />} />
-            <Route path="room-list" element={<RoomList />} />
-            <Route path="profile/:id" element={<ProfileDetail />} />
-          </Route>
+          {routers.map((r) => {
+            const Page = r.page;
+            const Layout = r.isShowHeader ? Header : Fragment;
+            const FooterLayout = r.isShowFooter ? Footer : Fragment;
+            return (
+              <Route
+                key={r.path}
+                path={r.path}
+                element={
+                  <Layout>
+                    <Page />
+                    <FooterLayout></FooterLayout>
+                  </Layout>
+                }
+              />
+            );
+          })}
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 }
 
