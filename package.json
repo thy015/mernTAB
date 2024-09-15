@@ -15,7 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "html-webpack-plugin": "^5.6.0",
-    "module-federation-plugin": "^0.8.4",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
