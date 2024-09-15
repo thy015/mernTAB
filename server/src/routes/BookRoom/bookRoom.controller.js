@@ -1,24 +1,24 @@
 
-const { Invoice, Receipt } = require("../../models/invoice.model");
+const { Invoice,Receipt} = require("../../models/invoice.model");
 const { Hotel, Room } = require("../../models/hotel.model");
 
 const bookRoom = async (req, res) => {
-  const { roomID, paymentMethod } = req.body;
+  const { roomID, checkInDay,checkOutDay,price} = req.body;
   const cusID = req.cusID;
 
   console.log("Request body:", req.body);
   console.log("Customer ID:", cusID);
 
   // Validate input
-  if (!roomID || !paymentMethod || !cusID) {
-    console.error("Missing required fields:", { roomID, paymentMethod, cusID });
+  if (!roomID ||  !cusID||  ! checkInDay||  ! checkOutDay||  ! price) {
+    console.error("Missing required fields:", { roomID, cusID,checkInDay,checkOutDay,price });
     return res.status(403).json({ message: "Missing required fields" });
   }
 
   try {
     console.log(`Customer ID extracted from token: ${cusID}`);
 
-    const foundRoom = await Hotel.Room.findById(roomID);
+    const foundRoom = await Room.findById(roomID);
     if (!foundRoom) {
       return res.status(404).json({
         status: "BAD",
@@ -26,15 +26,8 @@ const bookRoom = async (req, res) => {
       });
     }
 
-    const fromHotel = await Hotel.Hotel.findById(foundRoom.hotelID);
-    const hotelName = fromHotel.companyName;
-
-    if (!foundRoom.isAvailable) {
-      return res.status(400).json({
-        status: "BAD",
-        message: "Room is booked",
-      });
-    }
+    // found room - continue search if there's an invoice matching checkInDay
+    
 
     const roomPrice = foundRoom.money;
     const total = roomPrice + roomPrice * 0.08; // VAT
@@ -110,7 +103,7 @@ const completedTran = async (req, res) => {
     invoice.isPaid = true;
     await invoice.save();
 
-    const foundRoom = await Hotel.Room.findById(invoice.roomID);
+    const foundRoom = await Room.findById(invoice.roomID);
     if (foundRoom) {
       foundRoom.isAvailable = false;
       await foundRoom.save();
@@ -163,7 +156,10 @@ const getInvoicesWithReceipts = async (req, res) => {
     res.status(500).json(e);
   }
 };
-
+const handleApproriateDay=async(req,res)=>{
+  const {checkInDay,checkOutDay}=req.body
+  
+}
 module.exports = {
   bookRoom,
   getInvoicesWithReceipts,
