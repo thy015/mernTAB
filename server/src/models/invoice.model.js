@@ -25,6 +25,4 @@ const InvoiceSchema = new mongoose.Schema({
 });
 
 const Invoice = mongoose.model("Invoice", InvoiceSchema);
-module.exports = {
-  Invoice,
-};
+module.exports = Invoice;
