@@ -22,6 +22,7 @@ function useGet(link) {
     const fetchData = async () => {
       try {
         const res = await axios.get(link);
+        console.log("API response: ", res.data); 
         setData(res.data);
       } catch (e) {
         setError(e);

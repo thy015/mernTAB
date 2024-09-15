@@ -9,16 +9,13 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
 
-
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 
 const signUpRouter = require("./src/routes/signUp/signUp.route");
 const bookRouter = require("./src/routes/BookRoom/book.route");
 
-const reqCancelRouter = require("./src/routes/BookRoom/reqCancel.route");
+const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
 //always put first
-
-const videoRoutes = require("./src/routes/Upload/video");
 
 // Cấu hình middleware
 
@@ -26,11 +23,8 @@ app.use(bodyParser.json());
 
 app.use(morgan("combined"));
 
-app.use("/videos", videoRoutes);
-const allowedOrigins = [
-  process.env.CLIENT_ORIGIN,
-  "https://cnpm-fe-thanh-b1c064a3f59c.herokuapp.com/",
-];
+// app.use("/videos", videoRoutes);
+const allowedOrigins = ["http://localhost:3000"];
 
 app.use(
   cors({
@@ -48,8 +42,8 @@ app.use(
 
 app.use("/api/hotelList", HotelListRouter);
 app.use("/api/auth", signUpRouter);
-app.use("/api/book", bookRouter);
-app.use("/api/reqCancel", reqCancelRouter);
+app.use("/api/booking", bookRouter);
+app.use("/api/cancelReq", reqCancelRouter);
 //mongo connect
 
 mongoose
