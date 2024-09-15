@@ -43,24 +43,24 @@ const HomePage = () => {
             {/* Carousel with card groups */}
             <Carousel arrows swipeToSlide>
               {slides.map((slide, index) => (
-                <div key={index}>
-                  <Row justify="space-around" gutter={[16, 16]}>
-                    {slide.map((c, index) => (
-                      <Col key={index} xs={24} sm={12} md={6}>
-                        <Card className="w-[100%] h-[200px] flex flex-col items-center card-no-border ">
-                          <Card.Img
-                            variant="top"
-                            src={c.imgSrc}
-                            className="rounded-lg h-[150px] object-cover"
-                          />
-                          <Card.Body>
-                            <Card.Title>{c.title}</Card.Title>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                </div>
+                  <div key={index}>
+                    <Row justify="space-around" gutter={[16, 16]}>
+                      {slide.map((c, index) => (
+                          <Col key={index} xs={24} sm={12} md={6}>
+                            <Card className="w-[100%] h-[200px] flex flex-col items-center card-no-border ">
+                              <Card.Img
+                                  variant="top"
+                                  src={c.imgSrc}
+                                  className="rounded-lg h-[150px] object-cover"
+                              />
+                              <Card.Body>
+                                <Card.Title>{c.title}</Card.Title>
+                              </Card.Body>
+                            </Card>
+                          </Col>
+                      ))}
+                    </Row>
+                  </div>
               ))}
             </Carousel>
             {/* display homestay */}
