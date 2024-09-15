@@ -24,5 +24,17 @@ const InvoiceSchema = new mongoose.Schema({
   roomID: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
 });
 
+const ReceiptSchema=new mongoose.Schema({
+  checkInDay: { type: Date, required: true },
+  checkOutDay: { type: Date, required: true },
+  totalPrice: { type: Number, required: true },
+  cusID: { type: String, required: true }, //take from microfe
+  roomID: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
+})
 const Invoice = mongoose.model("Invoice", InvoiceSchema);
-module.exports = Invoice;
+const Receipt=mongoose.model('Receipt',ReceiptSchema)
+module.exports = {
+  Invoice,
+  Receipt
+};
+
