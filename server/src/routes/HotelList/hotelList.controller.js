@@ -101,7 +101,6 @@ const createRoom = async (req, res) => {
         await hotel.save();
       }
 
-      // Respond with success
       return res.status(201).json({
         status: "OK",
         message: "Room created successfully",
@@ -114,10 +113,8 @@ const createRoom = async (req, res) => {
   }
 };
 
-//get info
 const getHotelsByOwner = async (req, res) => {
   try {
-    // Fetch hotels by ownerID from the request
     const hotels = await Hotel.find({ ownerID: req.ownerID });
     return res.status(200).json({ status: "OK", data: hotels });
   } catch (e) {
@@ -176,31 +173,26 @@ const searchRoom = async (req, res) => {
   const { city, checkInDate, checkOutDate } = req.query;
 
   try {
-    // Validate input
     if (!city || !checkInDate || !checkOutDate) {
       return res
         .status(400)
         .json({ message: "City, checkInDate, and checkOutDate are required" });
     }
 
-    // Convert checkInDate and checkOutDate to Date objects
     const checkIn = new Date(checkInDate);
     const checkOut = new Date(checkOutDate);
 
-    // Find all hotels in the specified city
     const hotelsInCity = await Hotel.Hotel.find({ city: city });
 
-    // If no hotels are found in the city
     if (!hotelsInCity || hotelsInCity.length === 0) {
       return res.status(404).json({ message: "No hotels found in this city." });
     }
 
-    // Find available rooms for each hotel
     const availableHotels = await Promise.all(
       hotelsInCity.map(async (hotel) => {
         const roomsInHotel = await Hotel.Room.find({ hotelID: hotel._id });
         console.log(roomsInHotel);
-        // Check each room to see if it is booked in the given date range
+
         const availableRooms = await Promise.all(
           roomsInHotel.map(async (room) => {
             const conflictingInvoice = await Invoice.findOne({
@@ -221,15 +213,13 @@ const searchRoom = async (req, res) => {
               console.log(room);
               return room;
             } else {
-              return null; // Room is booked during the date range, exclude it
+              return null;
             }
           })
         );
 
-        // Filter out null values (rooms that are booked)
         const filteredRooms = availableRooms.filter((room) => room !== null);
 
-        // If the hotel has available rooms, return hotel with those rooms
         if (filteredRooms.length > 0) {
           return {
             ...hotel._doc,
@@ -239,15 +229,13 @@ const searchRoom = async (req, res) => {
           return {
             ...hotel._doc,
             rooms: null,
-          }; // No available rooms in this hotel
+          };
         }
       })
     );
 
-    // Filter out hotels with no available rooms
     const filteredHotels = availableHotels.filter((hotel) => hotel !== null);
 
-    // Respond with the available hotels and rooms
     return res.status(200).json({
       status: "OK",
       message: "Rooms found successfully",
