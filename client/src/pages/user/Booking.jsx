@@ -146,7 +146,7 @@ const Booking = () => {
 
   return (
     <div
-      className="flex absolute top-[50%] left-[20%] w-[60%] 
+      className="flex w-[60%] 
      bg-gray-100 border-4 border-yellow-400 rounded-lg 
      overflow-hidden h-20 items-center"
     >
