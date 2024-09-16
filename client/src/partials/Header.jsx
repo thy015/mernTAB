@@ -100,7 +100,7 @@ const Header = ({ children }) => {
             </ul>
             <ul className="flex space-x-5 pt-3">
               <li>
-                <Link to="/" className="no-underline">
+                <Link to="/sign-in" className="no-underline">
                   <Button>Log In</Button>
                 </Link>
               </li>
