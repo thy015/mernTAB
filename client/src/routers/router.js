@@ -1,5 +1,6 @@
 import Login from "../component/Login";
 import HomePage from "../pages/user/HomePage";
+import SignInPage from '../pages/auth/SignInPage';
 
 export const routers = [
   {
@@ -13,6 +14,12 @@ export const routers = [
     page: Login,
     isShowHeader: false,
     isShowFooter: true,
+  },
+  {
+    path: "/sign-in",
+    page: SignInPage,
+    isShowHeader: false,
+    isShowFooter: false,
   },
 ];
 

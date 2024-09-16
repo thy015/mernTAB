@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const path = require('path');
 
 module.exports = {
@@ -29,22 +28,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-    }),
-    new ModuleFederationPlugin({
-      name: 'Remote', 
-      remotes: {
-        authApp: 'authApp@https://wowo.htilssu.id.vn/assets/remoteEntry.js',
-      },
-      shared: {
-        react: {
-          singleton: true,
-          requiredVersion: '^17.0.0',
-        },
-        'react-dom': {
-          singleton: true,
-          requiredVersion: '^17.0.0',
-        },
-      },
     }),
   ],
 };
