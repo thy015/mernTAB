@@ -7,6 +7,7 @@ import { useGet } from "../../hooks/hooks";
 
 const PropertyCard = ({ property }) => {
   return (
+
     <Card className="shadow-sm h-full" style={{ borderRadius: "12px" }}>
       <Card.Img
         variant="top"
@@ -41,6 +42,7 @@ const PropertyCard = ({ property }) => {
         </div>
       </Card.Body>
     </Card>
+    
   );
 };
 
