@@ -38,8 +38,10 @@ const HomePage = () => {
       <div className="mt-24">
         <Row className="pl-8">
           <Col span={2}></Col>
+
           <Col span={20} >
           <div className="h-[800px]">
+
             <h4 className={h4Design}>Search by type of accomodation</h4>
             {/* Carousel with card groups */}
             <div className="h-72">

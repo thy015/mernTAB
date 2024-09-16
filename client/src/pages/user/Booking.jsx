@@ -132,6 +132,7 @@ const Booking = () => {
   if (error) {
     return (
       <Alert
+          className={'mt-12'}
         message="Error"
         description="Failed to load properties."
         type="error"
@@ -185,7 +186,7 @@ const Booking = () => {
         <Col span={6}>
           <Dropdown
             menu={{
-              items,
+              items
             }}
             trigger={["click"]}
             arrow
