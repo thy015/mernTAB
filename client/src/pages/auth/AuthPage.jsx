@@ -1,7 +1,7 @@
 import React, {lazy, Suspense} from 'react';
 
 const SignInRemote = lazy(() => import('remote/SignInPage'));
-
+const SignUpRemote=lazy(()=>import('remote/SignUpPage'))
 const SignInPage = () => {
   return (
       <div>
@@ -11,5 +11,14 @@ const SignInPage = () => {
       </div>
   );
 };
+const SignUpPage = () => {
+  return (
+      <div>
+        <Suspense fallback="Loading...">
+         <SignUpRemote></SignUpRemote>
+        </Suspense>
+      </div>
+  );
+};
 
-export default SignInPage;
+export{SignInPage,SignUpPage}

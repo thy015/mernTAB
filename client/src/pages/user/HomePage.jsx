@@ -1,11 +1,11 @@
 import React from "react";
-import Booking from "./Booking";
+import Booking from "../../component/Booking";
 import { Row, Col, Carousel } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 import { cardData } from "../../localData/localData";
 import "../../index.css";
-import PropertyGrid from "./HotelDisplay";
+import PropertyGrid from "./Home_HotelDisplay";
 const HomePage = () => {
   const h4Design = "items-start flex font-bold pb-4";
   // Carousel n Cards

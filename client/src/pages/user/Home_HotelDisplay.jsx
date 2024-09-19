@@ -4,47 +4,8 @@ import { Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // Ensure you have antd's CSS
 import { useGet } from "../../hooks/hooks";
+import { PropertyCard } from "../../component/AccomodationCard";
 
-const PropertyCard = ({ property }) => {
-  return (
-
-    <Card className="shadow-sm h-full" style={{ borderRadius: "12px" }}>
-      <Card.Img
-        variant="top"
-        src={property.hotelImg}
-        style={{
-          borderRadius: "12px 12px 0 0",
-          height: "180px",
-          objectFit: "cover",
-        }}
-      />
-      <Card.Body className="h-[180px] flex flex-col flex-grow-1">
-        <Card.Title>{property.hotelName}</Card.Title>
-        <Card.Text>{property.address}</Card.Text>
-        <div className="d-flex align-items-center">
-          <div
-            style={{
-              backgroundColor: "#003580",
-              color: "white",
-              padding: "0 8px",
-              borderRadius: "5px",
-              fontWeight: "bold",
-            }}
-          >
-            {property.rating}
-          </div>
-          <div style={{ marginLeft: "8px" }}>
-            {property.numberOfRated} people have rated - {property.businessType}
-          </div>
-        </div>
-        <div className="mt-3" style={{ fontWeight: "bold", fontSize: "16px" }}>
-          Start from {property.minPrice} vnd
-        </div>
-      </Card.Body>
-    </Card>
-    
-  );
-};
 
 const PropertyGrid = () => {
   const slides = [];
