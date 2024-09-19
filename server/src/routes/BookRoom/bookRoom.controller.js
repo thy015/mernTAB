@@ -156,10 +156,52 @@ const getInvoicesWithReceipts = async (req, res) => {
     res.status(500).json(e);
   }
 };
-const handleApproriateDay=async(req,res)=>{
-  const {checkInDay,checkOutDay}=req.body
-  
-}
+
+const handleApproriateDay = async (req, res) => {
+  try {
+    const { roomID, checkInDayInput, checkOutDayInput, price } = req.body;
+    const cusID = req.cusID;
+
+    // type coercion input checkin and out day
+    const inputCheckInDay = new Date(checkInDayInput).getDate();
+    const inputCheckOutDay = new Date(checkOutDayInput).getDate();
+
+    
+    const existingInvoice = await Invoice.findOne({ roomID:roomID });
+
+    if (!existingInvoice) {
+      return res.status(404).json({ message: 'No booking found for this room' });
+    }
+
+    // type coercion existed checkin and out day in db
+    const existingCheckInDay = new Date(existingInvoice.checkInDay).getDate();
+    const existingCheckOutDay = new Date(existingInvoice.checkOutDay).getDate();
+
+    // COmpare the day as case
+    const isApproriateRoom =
+      (inputCheckInDay > existingCheckInDay && inputCheckOutDay > existingCheckInDay && inputCheckInDay < existingCheckOutDay && inputCheckOutDay > existingCheckOutDay) ||
+      (inputCheckInDay > existingCheckInDay && inputCheckOutDay > existingCheckInDay && inputCheckInDay === existingCheckOutDay && inputCheckOutDay > existingCheckOutDay) ||
+      (inputCheckInDay < existingCheckInDay && inputCheckOutDay === existingCheckInDay && inputCheckInDay < existingCheckOutDay && inputCheckOutDay < existingCheckOutDay) ||
+      (inputCheckInDay < existingCheckInDay && inputCheckOutDay < existingCheckInDay && inputCheckInDay < existingCheckOutDay && inputCheckOutDay < existingCheckOutDay)|| 
+      null
+
+    if (isApproriateRoom) {
+      // Return the appropriate room details
+      return res.status(200).json({
+        message: 'This room is appropriate for booking',
+        roomID,
+        cusID,
+        price,
+      });
+    } else {
+      return res.status(400).json({ message: 'This room is not available for the selected days' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   bookRoom,
   getInvoicesWithReceipts,

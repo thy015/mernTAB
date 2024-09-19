@@ -13,7 +13,7 @@ import {
 import { CalendarOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useCount, useGet } from "../../hooks/hooks";
+import { useCount, useGet } from "../hooks/hooks";
 
 const { RangePicker } = DatePicker;
 
