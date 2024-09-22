@@ -1,6 +1,5 @@
 import React from "react";
 import { Carousel, Row, Col, Spin, Alert } from "antd";
-import { Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // Ensure you have antd's CSS
 import { useGet } from "../../hooks/hooks";

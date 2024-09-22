@@ -1,6 +1,6 @@
-import Login from "../component/Login";
+
 import HomePage from "../pages/user/HomePage";
-import {SignInPage, SignUpPage} from '../pages/auth/AuthPage';
+import {SignInPage,SignUpPage} from '../pages/auth/AuthPage'
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
 
 export const routers = [
@@ -16,24 +16,18 @@ export const routers = [
     isShowHeader: true,
     isShowFooter: true,
   },
-  {
-    path: "/ownerLogin",
-    page: Login,
-    isShowHeader: false,
-    isShowFooter: true,
-  },
-  {
-    path: "/sign-in",
-    page: SignInPage,
-    isShowHeader: false,
-    isShowFooter: false,
-  },
-  {
-    path: "/sign-up",
-    page: SignUpPage,
-    isShowHeader: false,
-    isShowFooter: false,
-  },
+  // {
+  //   path: "/sign-in",
+  //   page: SignInPage,
+  //   isShowHeader: false,
+  //   isShowFooter: false,
+  // },
+  // {
+  //   path: "/sign-up",
+  //   page: SignUpPage,
+  //   isShowHeader: false,
+  //   isShowFooter: false,
+  // },
 ];
 
 {

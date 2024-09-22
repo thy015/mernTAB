@@ -1,37 +1,38 @@
-const Hotel = require("../../models/hotel.model");
+const {Hotel, Room} = require("../../models/hotel.model");
 const Invoice = require("../../models/invoice.model");
+const {Owner}=require("../../models/signUp.model");
+
 const createHotel = async (req, res) => {
   const {
     address,
-    taxCode,
     hotelName,
     nation,
-    facilityName,
-    businessType,
-    scale,
+    numberOfRooms,
+    hotelType,
     city,
-    hotelPhone,
-    hotelImg,
+    phoneNum,
+    imgLink,
+    rate,
+    numberOfRates,
+    revenue
   } = req.body;
-
+  const ownerID=req.ownerID
   try {
-    // Validate input
     if (
       !address ||
-      !taxCode ||
+      !numberOfRooms ||
       !hotelName ||
       !nation ||
-      !facilityName ||
-      !businessType ||
-      !scale ||
-      !city ||
-      !hotelPhone
+      !numberOfRooms||
+      !hotelType||
+      !city||
+      !phoneNum
     ) {
       return res.status(403).json({ message: "Input is required" });
     }
 
     // Check if the owner ID exists
-    const checkExistedOwnerID = await Account.Account.findOne({
+    const checkExistedOwnerID = await Owner.findOne({
       _id: req.ownerID,
     });
     if (!checkExistedOwnerID) {
@@ -42,18 +43,19 @@ const createHotel = async (req, res) => {
     }
 
     // Create the hotel
-    const createdHotel = await Hotel.Hotel.create({
+    const createdHotel = await Hotel.create({
       address,
-      taxCode,
-      nation,
-      hotelName,
-      facilityName,
-      businessType,
-      scale,
-      city,
-      hotelPhone,
-      hotelImg,
-      ownerID: req.ownerID,
+    hotelName,
+    nation,
+    numberOfRooms,
+    hotelType,
+    city,
+    phoneNum,
+    imgLink,
+    rate,
+    numberOfRates,
+    revenue,
+    ownerID
     });
 
     // Respond with success
@@ -79,7 +81,7 @@ const createRoom = async (req, res) => {
     }
 
     // Create the room
-    const createdRoom = await Hotel.Room.create({
+    const createdRoom = await Room.create({
       numberOfBeds,
       typeOfRoom,
       money,
@@ -89,7 +91,7 @@ const createRoom = async (req, res) => {
     });
 
     if (createdRoom) {
-      const hotel = await Hotel.Hotel.findById(hotelID);
+      const hotel = await Hotel.findById(hotelID);
       if (hotel) {
         // Update hotel minPrice if necessary
         if (hotel.minPrice === 0 || hotel.minPrice > money) {

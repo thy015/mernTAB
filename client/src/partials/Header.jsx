@@ -69,7 +69,7 @@ const Header = ({ children }) => {
       <Row justify={"center"} className="bg-[#114098]">
         <Col span={2}></Col>
         <Col span={20}>
-          <div className="bg-[#114098] flex justify-between items-center pt-4 pb-1 relative">
+          <div className="bg-[#114098] flex justify-between items-center pt-12 pb-8 relative">
             <ul className="flex pt-7 mt-3 ">
               <div className="absolute top-2 text-white left-[3%] text-[25px] font-lobster cursor-pointer pt-2">
                 {" "}

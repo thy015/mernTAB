@@ -35,7 +35,7 @@ const cardData = [
     imgSrc: "https://via.placeholder.com/150",
   },
   {
-    title: "Guest House",
+    title: "B&B",
     text: "This is card number 5",
     imgSrc: "https://via.placeholder.com/150",
   },

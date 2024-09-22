@@ -1,12 +1,12 @@
 const express = require("express");
 const ListRouter = express.Router();
 const hotelListController = require("./hotelList.controller");
-const Hotel = require("../../models/hotel.model");
+const {Hotel,Room} = require("../../models/hotel.model");
 const { authenToken } = require("../../services/jwt");
 
 ListRouter.get("/hotel", async (req, res) => {
   try {
-    const createdHotel = await Hotel.Hotel.find();
+    const createdHotel = await Hotel.find();
     res.status(200).json(createdHotel);
   } catch (e) {
     res.status(500).json(e);
@@ -15,7 +15,7 @@ ListRouter.get("/hotel", async (req, res) => {
 
 ListRouter.get("/hotel/:_id", async (req, res) => {
   try {
-    const hotel = await Hotel.Hotel.findById(req.params._id);
+    const hotel = await Hotel.findById(req.params._id);
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });
     }
@@ -42,7 +42,7 @@ ListRouter.get("/rooms/hotel/:hotelID", async (req, res) => {
       return res.status(400).json({ message: "hotelID is required" });
     }
 
-    const rooms = await Hotel.Room.find({ hotelID: hotelID });
+    const rooms = await Room.find({ hotelID: hotelID });
 
     if (rooms.length === 0) {
       return res.status(404).json({ message: "No rooms found for this hotel" });

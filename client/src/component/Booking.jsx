@@ -99,15 +99,16 @@ const Booking = () => {
   );
   useEffect(() => {
     if (data && selectedCity) {
-      const filteredCity = data
+      const filteredCity = Array.from(new Set(data
         .map((hotel) => hotel.city)
         .filter((city) =>
-          city.toLowerCase().includes(selectedCity.toLowerCase())
-        );
+          city.toLowerCase().includes(selectedCity.toLowerCase())))
+        ).slice(0,5)
       setFilteredCities(filteredCity);
     } else if (data) {
       //no input yet, show all
-      setFilteredCities(data.map((h) => h.city));
+      const allCities = Array.from(new Set(data.map((h) => h.city))).slice(0, 5);
+      setFilteredCities(allCities);
     } else {
       setFilteredCities([]);
     }
@@ -148,8 +149,8 @@ const Booking = () => {
   return (
     <div
       className="flex w-[60%] 
-     bg-gray-100 border-4 border-yellow-400 rounded-lg 
-     overflow-hidden h-20 items-center"
+     bg-white border-4 border-yellow-400 rounded-lg 
+     overflow-hidden h-20 items-center shadow-md"
     >
       <Row gutter={0} className="w-full items-center">
         <Col span={6}>
