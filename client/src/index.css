@@ -4,12 +4,64 @@
 
 .ant-carousel .slick-prev,
 .ant-carousel .slick-next {
-  color: #1d4ed8; 
+  color: #1d4ed8;
 }
+
 .ant-carousel .slick-arrow {
-    margin: -20px -40px; 
-  }
-  .card-no-border {
-    border: none!important;
-    padding: 0; 
-  }
+  margin: -20px -40px;
+}
+
+.card-no-border {
+  border: none !important;
+  padding: 0;
+}
+/* donot use thks, effect others antd code */
+/* .anticon svg{
+  color:white;
+} */
+
+/* .ant-input::placeholder{
+  color: white;
+} */
+:where(.css-dev-only-do-not-override-11lehqq).ant-form-item .ant-form-item-label >label {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  min-width: 150px;
+  margin-left: 5px;
+  width: 42px;
+}
+
+.register-owner label{
+  color: black !important;
+  font-size: large;
+  min-width: 200px  !important ;
+  font-size: 20px !important ;
+}
+
+.ant-form-item-feedback-icon svg{
+  color: green !important;
+}
+
+.ant-form-item-feedback-icon-error svg{
+  color: red !important;
+}
+
+.register-owner svg{
+  color: black;
+}
+
+.ant-notification-notice-close svg{
+  color: black !important;
+}
+.ant-notification-notice{
+  color: red !important;
+}
+
+ul{
+  margin: 0!important;
+  padding: 0!important;
+}
+.link-property{
+  text-decoration: none;
+}

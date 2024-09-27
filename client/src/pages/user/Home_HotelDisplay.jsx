@@ -1,6 +1,5 @@
 import React from "react";
 import { Carousel, Row, Col, Spin, Alert } from "antd";
-import { Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // Ensure you have antd's CSS
 import { useGet } from "../../hooks/hooks";
@@ -40,7 +39,7 @@ const PropertyGrid = () => {
         <Row gutter={[16, 16]}>
           {data.slice(i, i + 4).map((property, index) => (
             <Col key={index} xs={24} sm={12} md={6}>
-              <PropertyCard property={property} />
+              <PropertyCard property={property} link_property={`/hotel/${property._id}`} />
             </Col>
           ))}
         </Row>
