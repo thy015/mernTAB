@@ -1,28 +1,72 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import './App.css';
-import {routers} from './routers/router';
-import Header from './partials/Header';
-import Footer from './partials/Footer';
-import React, {Fragment, useState} from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import { routers } from "./routers/router";
+import axios from "axios";
+import Header from "./partials/Header";
+import Footer from "./partials/Footer";
+import { Fragment, useContext, useEffect } from "react";
+import { AuthContext } from "./hooks/auth.context";
 
 function App() {
-  const [formData, setFormData] = useState();
-  return (<div className="App">
+  const { auth, setAuth } = useContext(AuthContext);
+  axios.defaults.withCredentials = true;
 
-<Router>
+  useEffect(() => {
+    const fetchUser = () => {
+      axios
+        .get("http://localhost:4000/api/auth/verify")
+        .then((res) => {
+          const userRes = res.data;
+          setAuth({
+            isAuthenticated: true,
+            user: {
+              id: userRes.id,
+              email: userRes.email,
+              name: userRes.name,
+            },
+          });
+        })
+        .catch((err) => {
+          console.log("[APP]", err);
+        });
+    };
+
+    fetchUser();
+  }, []);
+
+  return (
+    <div className="App">
+      <Router>
         <Routes>
-          {routers.map((r) => {
-            const Page = r.page;
-            const Layout = r.isShowHeader ? Header : Fragment;
-            const FooterLayout = r.isShowFooter ? Footer : Fragment;
+          {routers.map((route) => {
+            // Admin routes
+            if (route.isAdmin) {
+              return (
+                <Route key={route.path} path={route.path} element={<route.page />}>
+                  {route.children &&
+                    route.children.map((child) => (
+                      <Route
+                        key={child.path}
+                        path={child.path}
+                        element={<child.page />}
+                      />
+                    ))}
+                </Route>
+              );
+            }
+
+            // Non-admin routes
+            const Layout = route.isShowHeader ? Header : Fragment;
+            const FooterLayout = route.isShowFooter ? Footer : Fragment;
+
             return (
               <Route
-                key={r.path}
-                path={r.path}
+                key={route.path}
+                path={route.path}
                 element={
                   <Layout>
-                    <Page />
-                    <FooterLayout></FooterLayout>
+                    <route.page />
+                    <FooterLayout />
                   </Layout>
                 }
               />
@@ -30,7 +74,8 @@ function App() {
           })}
         </Routes>
       </Router>
-  </div>);
+    </div>
+  );
 }
 
 export default App;
