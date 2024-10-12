@@ -50,7 +50,7 @@ const RegisterOwner = () => {
 
   const handleFormSubmit = async () => {
     const { email, password, name, phone, agreeTerms,idenCard } = formData;
-
+      const serviceID='01'
     if (!email || !password || !name || !phone||!idenCard) {
       openNotification(false, "Please fill all the fields");
       return;
@@ -78,8 +78,9 @@ const RegisterOwner = () => {
       openNotification(false, "You must agree to the terms of service");
       return;
     }
+    const submitData={...formData, serviceID}
     try {
-      const response = await axios.post("hieuauthen", formData);
+      const response = await axios.post("hieuauthen", submitData);
       console.log(response.data);
       if (response.status === 200) {
         openNotification(true, "Success register");

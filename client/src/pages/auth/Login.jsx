@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Form, Input, Checkbox, Tooltip } from "antd";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF } from "react-icons/fa";
+import { FaGoogle, FaFacebookF,FaAccessibleIcon } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { openNotification } from "../../hooks/notification";
+import {SSO} from '@htilssu/wowo'
+
+const sso = new SSO('01')
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,7 +31,7 @@ const Login = () => {
 
   const handleFormSubmit = async () => {
     const { email, password } = formData;
-
+      const serviceID='01'
     if (!email || !password) {
       openNotification(false, "Please fill all the fields");
       return;
@@ -43,9 +46,9 @@ const Login = () => {
       openNotification(false, "Password should be at least 8 characters");
       return;
     }
-
+    const submitData={...formData,serviceID}
     try {
-      const response = await axios.post("hieuauthen", formData);
+      const response = await axios.post("hieuauthen", submitData);
       console.log(response.data);
       if (response.status === 200) {
         openNotification(true, "Success login");
@@ -60,6 +63,10 @@ const Login = () => {
       );
     }
   };
+
+  function handleLoginSSO() {
+    sso.redirectToLogin("/sso")
+  }
 
   return (
     <div>
@@ -99,6 +106,9 @@ const Login = () => {
                       </div>
                       <div className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
                         <FaFacebookF />
+                      </div>  
+                      <div onClick={handleLoginSSO} className="flex w-10 h-10 justify-center items-center shadow-md rounded-[22px] transition-colors duration-300 hover:bg-[#114098] hover:text-white mx-2 cursor-pointer my-2">
+                        <FaAccessibleIcon />
                       </div>
                     </div>
                     <div className="flex items-center mt-4">

@@ -25,6 +25,7 @@ import Table from "../pages/admin/Table";
 import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import SSO from "../pages/auth/SSO";
 export const routers = [
   {
     path: "/",
@@ -118,5 +119,9 @@ export const routers = [
     isShowHeader: false,
     isShowFooter: false,
   },
+  {
+    path: '/sso',
+    page: SSO,
+  }
 ];
 

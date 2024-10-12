@@ -40,17 +40,9 @@ const LogInOwner = () => {
       [name]: value,
     });
   };
-
-  const handleCheckboxChange = (e) => {
-    setFormData({
-      ...formData,
-      agreeTerms: e.target.checked,
-    });
-  };
-
   const handleFormSubmit = async () => {
     const { email, password} = formData;
-
+      const serviceID='01'
     if (!email || !password) {
       openNotification(false, "Please fill all the fields");
       return;
@@ -65,9 +57,9 @@ const LogInOwner = () => {
       openNotification(false, "Password should be at least 8 characters");
       return;
     }
-
+    const submitData={...formData,serviceID}
     try {
-      const response = await axios.post("hieuauthen", formData);
+      const response = await axios.post("hieuauthen", submitData);
       console.log(response.data);
       if (response.status === 200) {
         openNotification(true, "Success register");
@@ -82,7 +74,7 @@ const LogInOwner = () => {
       );
     }
   };
-
+    
   return (
     <div>
       <div className="row h-[650px]">
