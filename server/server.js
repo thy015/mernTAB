@@ -10,19 +10,19 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
 
+
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 const RoomListRouter = require("./src/routes/RoomList/roomList.route");
 const bookRouter = require("./src/routes/BookRoom/book.route");
 const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
-
+const oauthRouter=require('./src/routes/OAuth/oauth.route')
 //always put first
 
 // Cấu hình middleware
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
-
+app.use(cookieParser())
 // app.use("/videos", videoRoutes);
 const allowedOrigins = ["http://localhost:3000",
   "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];
@@ -46,7 +46,7 @@ app.use("/api/roomList", RoomListRouter);
 app.use("/api/hotelList", HotelListRouter);
 app.use("/api/booking", bookRouter);
 app.use("/api/cancelReq", reqCancelRouter);
-
+app.use("/api/oauth",oauthRouter)
 //mongo connect
 
 mongoose

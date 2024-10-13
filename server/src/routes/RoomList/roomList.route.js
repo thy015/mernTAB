@@ -1,15 +1,14 @@
 const express = require("express");
 const ListRouter = express.Router();
 const Hotel = require("../../models/hotel.model");
-const { authenToken } = require("../../services/jwt");
 
 
 ListRouter.get("/rooms", async (req, res) => {
   try {
     const rooms = await Hotel.Room.find();
-    res.status(200).json(rooms);
+    return res.status(200).json(rooms);
   } catch (e) {
-    res.status(500).json({ message: e.message });
+    return res.status(500).json({ message: e.message });
   }
 });
 
@@ -21,15 +20,15 @@ ListRouter.get("/rooms/:_id", async (req, res) => {
     }
     res.json(hotel);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 ListRouter.get("/hotels/:hotelId/rooms", async (req, res) => {
   try {
       const rooms = await Hotel.Room.find({ hotelID: req.params.hotelId });
-      res.status(200).json(rooms);
+      return res.status(200).json(rooms);
   } catch (e) {
-      res.status(500).json({ message: e.message });
+    return res.status(500).json({ message: e.message });
   }
 });
 

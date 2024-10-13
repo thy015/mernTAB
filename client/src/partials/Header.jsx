@@ -10,55 +10,55 @@ import { openNotification } from "../hooks/notification";
 
 const Header = ({ children }) => {
 
-  const { auth, setAuth } = useContext(AuthContext)
-  axios.defaults.withCredentials = true
+  // const { auth, setAuth } = useContext(AuthContext)
+  // axios.defaults.withCredentials = true
 
-  const setLogout = ()=>{
-    if(auth.isAuthenticated){
-      items.push({
-        label: "Log Out",
-        key: "4",
-        onClick: handleClickMenuItem,
-        icon: (
-          <FontAwesomeIcon icon={faArrowLeft} />
-        ),
-      })
-    }
-  }
+  // const setLogout = ()=>{
+  //   if(auth.isAuthenticated){
+  //     items.push({
+  //       label: "Log Out",
+  //       key: "4",
+  //       onClick: handleClickMenuItem,
+  //       icon: (
+  //         <FontAwesomeIcon icon={faArrowLeft} />
+  //       ),
+  //     })
+  //   }
+  // }
 
-  const setText =()=>{
-    if(auth.isAuthenticated){
-      if(auth.user.name === '' || !auth.user.name){
-        return auth?.user?.email 
-      }else{
-        return auth?.user?.name 
+  // const setText =()=>{
+  //   if(auth.isAuthenticated){
+  //     if(auth.user.name === '' || !auth.user.name){
+  //       return auth?.user?.email 
+  //     }else{
+  //       return auth?.user?.name 
         
-      }
+  //     }
     
-    }else{
-      return "Log In"
-    }
-  }
+  //   }else{
+  //     return "Log In"
+  //   }
+  // }
 
-  console.log(setText())
-  const Logout = () => {
-    axios.get("http://localhost:4000/api/auth/logout")
-      .then(res => {
-        if (res.data.logout) {
-          openNotification(true,"Logout Successful !")
-          setAuth({
-            isAuthenticated: false,
-            user: {
-              id: "",
-              email: '',
-              name: '',
-            }
-          })
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-  }
+  // console.log(setText())
+  // const Logout = () => {
+  //   axios.get("http://localhost:4000/api/auth/logout")
+  //     .then(res => {
+  //       if (res.data.logout) {
+  //         openNotification(true,"Logout Successful !")
+  //         setAuth({
+  //           isAuthenticated: false,
+  //           user: {
+  //             id: "",
+  //             email: '',
+  //             name: '',
+  //           }
+  //         })
+  //       }
+  //     }).catch(err => {
+  //       console.log(err)
+  //     })
+  // }
 
   const handleClickMenuItem = (e) => {
     const key = e.key
@@ -142,7 +142,7 @@ const Header = ({ children }) => {
   ];
 
 
-  setLogout()
+  // setLogout()
   return (
     <div>
       <Row justify={"center"} className="bg-[#114098]">
@@ -184,7 +184,8 @@ const Header = ({ children }) => {
             <ul class="flex space-x-5 ">
               <li>
                 <Link to="/login" className="no-underline">
-                  <Button>{setText()}</Button>
+                  <Button>Login</Button>
+                  {/* {setText()} */}
                 </Link>
               </li>
               <li>

@@ -9,7 +9,7 @@ import axios from "axios";
 import { openNotification } from "../../hooks/notification";
 import {SSO} from '@htilssu/wowo'
 
-const sso = new SSO('01')
+const sso = new SSO('TAB')
 
 const Login = () => {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const Login = () => {
   };
 
   function handleLoginSSO() {
-    sso.redirectToLogin("/sso")
+    sso.redirectToLogin("http://localhost:3000/sso")
   }
 
   return (
