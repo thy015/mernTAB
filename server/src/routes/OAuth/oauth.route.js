@@ -1,8 +1,11 @@
 const express=require('express')
 const router=express.Router()
-const oauthController=require('./oauth.controller')
-const {checkToken}=require('../../middleware/jwt')
+const {verifyOAuthToken}=require('./oauth.controller')
+const {readToken} =require('../../middleware/jwt')
 
-router.post('/verify',checkToken,oauthController.verifyOAuthToken)
-
+router.post('/verify',readToken,verifyOAuthToken)
+router.get('/delete-cookie',(req,res)=>{
+    res.clearCookie('authToken')
+    res.send('Cookie has been deleted')
+})
 module.exports=router

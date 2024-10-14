@@ -9,20 +9,24 @@ const cookieParser = require('cookie-parser');
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const http = require("http");
-
+const swaggerUI=require('swagger-ui-express')
+const swaggerSpec=require('./docs/swagger')
 
 const HotelListRouter = require("./src/routes/HotelList/hotelList.route");
 const RoomListRouter = require("./src/routes/RoomList/roomList.route");
+const signUpRouter = require("./src/routes/signUp/signUp.route");
 const bookRouter = require("./src/routes/BookRoom/book.route");
 const reqCancelRouter = require("./src/routes/BookRoom/cancelReq.route");
-const oauthRouter=require('./src/routes/OAuth/oauth.route')
+const VoucherRoute = require("./src/routes/Voucher/voucher.route")
+const OAuthRoute=require('./src/routes/OAuth/oauth.route')
 //always put first
 
 // Cấu hình middleware
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("combined"));
-app.use(cookieParser())
+
 // app.use("/videos", videoRoutes);
 const allowedOrigins = ["http://localhost:3000",
   "https://wowo.htilssu.id.vn/assets/remoteEntry.js"];
@@ -41,12 +45,16 @@ app.use(
     credentials: true
   })
 );
-
+// swagger config
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
+console.log(`Swagger: http://localhost:${PORT}/api-docs`)
 app.use("/api/roomList", RoomListRouter);
 app.use("/api/hotelList", HotelListRouter);
+app.use("/api/auth", signUpRouter);
 app.use("/api/booking", bookRouter);
 app.use("/api/cancelReq", reqCancelRouter);
-app.use("/api/oauth",oauthRouter)
+app.use("/api/voucher", VoucherRoute);
+app.use('/api/oauth',OAuthRoute)
 //mongo connect
 
 mongoose

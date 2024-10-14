@@ -1,19 +1,16 @@
 // src/routers/router.js
 import DashboardView from "../pages/admin/DashboardView";
 import HomePage from "../pages/user/HomePage";
-
-//import Login from "../pages/login_register/Login";
-//import Register from "../pages/login_register/Register";
-
 import HotelsAdmin from "../pages/admin/Hotels/HotelsAdmin";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Calendar from "../pages/admin/Calendar";
-import LogInOwner from '../pages/auth/LogInOwner'
-import RegisterOwner from '../pages/auth/RegisterOwner'
+
 import Settings from "../pages/admin/Settings";
 import RoomsAdmin from "../pages/admin/Rooms/RoomsAdmin";
 import RoomsOfHotel from "../pages/admin/Rooms/RoomsOfHotel"
+
 import HotelDisplayCompre from "../pages/user/HotelDisplayPage";
+
 import HotelDisplay_HotelTab from "../pages/user/HotelDisplay_HotelTab";
 import OwnerLayout from "../pages/owner/OwnerLayout";
 import Vouchers from "../pages/owner/Voucher/Vouchers";
@@ -23,9 +20,11 @@ import Customer from "../pages/admin/Customers/CustomerList"
 import cancelReqAdmin from "../pages/admin/cancelReq/cancelReqAdmin";
 import Table from "../pages/admin/Table";
 import UpdateHotel from "../pages/admin/Hotels/UpdateHotel";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import SSO from "../pages/auth/SSO";
+import Login from '../pages/auth/Login'
+import LogInOwner from '../pages/auth/LogInOwner'
+import Register from '../pages/auth/Register'
+import RegisterOwner from '../pages/auth/RegisterOwner'
+import SuccessPayment from "../component/SuccessPayment";
 export const routers = [
   {
     path: "/",
@@ -64,7 +63,7 @@ export const routers = [
   // test
   {
     path: "/login",
-    page: Login,
+    page: Login ,
     isShowHeader: false,
     isShowFooter: false,
   },
@@ -89,6 +88,12 @@ export const routers = [
   {
     path: "/booking",
     page: HotelDisplayCompre,
+    isShowHeader: true,
+    isShowFooter: true,
+  },
+  {
+    path: "/booking-success",
+    page: SuccessPayment,
     isShowHeader: true,
     isShowFooter: true,
   },
@@ -119,9 +124,5 @@ export const routers = [
     isShowHeader: false,
     isShowFooter: false,
   },
-  {
-    path: '/sso',
-    page: SSO,
-  }
 ];
 

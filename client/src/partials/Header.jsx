@@ -1,64 +1,73 @@
 import { Button, Dropdown, Row, Col } from "antd";
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ".././index.css";
 import { AuthContext } from "../hooks/auth.context";
 import axios from "axios";
 import { openNotification } from "../hooks/notification";
-
+import { useSelector,useDispatch } from "react-redux";
 const Header = ({ children }) => {
 
-  // const { auth, setAuth } = useContext(AuthContext)
-  // axios.defaults.withCredentials = true
+  const { auth, setAuth } = useContext(AuthContext)
+  axios.defaults.withCredentials = true
+    //log in
+    const navigate=useNavigate()
+    const handleLogInNavigate=(e)=>{
+      if(auth.isAuthenticated){
+        navigate('/profile')
+      }else{
+        e.preventDefault()
+        navigate('/login', {state:{from:location.pathname}})
+      }
+    }
+  const setLogout = ()=>{
+    if(auth.isAuthenticated){
+      items.push({
+        label: "Log Out",
+        key: "4",
+        onClick: handleClickMenuItem,
+        icon: (
+          <FontAwesomeIcon icon={faArrowLeft} />
+        ),
+      })
+    }
+  }
 
-  // const setLogout = ()=>{
-  //   if(auth.isAuthenticated){
-  //     items.push({
-  //       label: "Log Out",
-  //       key: "4",
-  //       onClick: handleClickMenuItem,
-  //       icon: (
-  //         <FontAwesomeIcon icon={faArrowLeft} />
-  //       ),
-  //     })
-  //   }
-  // }
-
-  // const setText =()=>{
-  //   if(auth.isAuthenticated){
-  //     if(auth.user.name === '' || !auth.user.name){
-  //       return auth?.user?.email 
-  //     }else{
-  //       return auth?.user?.name 
+  const setText =()=>{
+    if(auth.isAuthenticated){
+      if(auth.user.name === '' || !auth.user.name){
+        return auth?.user?.email 
+      }else{
+        return auth?.user?.name 
         
-  //     }
+      }
     
-  //   }else{
-  //     return "Log In"
-  //   }
-  // }
+    }else{
+      return "Log In"
+    }
+  }
 
-  // console.log(setText())
-  // const Logout = () => {
-  //   axios.get("http://localhost:4000/api/auth/logout")
-  //     .then(res => {
-  //       if (res.data.logout) {
-  //         openNotification(true,"Logout Successful !")
-  //         setAuth({
-  //           isAuthenticated: false,
-  //           user: {
-  //             id: "",
-  //             email: '',
-  //             name: '',
-  //           }
-  //         })
-  //       }
-  //     }).catch(err => {
-  //       console.log(err)
-  //     })
-  // }
+  console.log(setText())
+  const Logout = () => {
+    axios.get("http://localhost:4000/api/auth/logout")
+      .then(res => {
+        if (res.data.logout) {
+          openNotification(true,"Logout Successful !")
+          setAuth({
+            isAuthenticated: false,
+            user: {
+              id: "",
+              email: '',
+              name: '',
+            }
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+  }
 
   const handleClickMenuItem = (e) => {
     const key = e.key
@@ -142,7 +151,7 @@ const Header = ({ children }) => {
   ];
 
 
-  // setLogout()
+  setLogout()
   return (
     <div>
       <Row justify={"center"} className="bg-[#114098]">
@@ -157,13 +166,9 @@ const Header = ({ children }) => {
               </div>
               </Link>
               <li>
-                <Link to="/booking" className="no-underline " onClick={()=>{
-                  window.reload()
-                }}>
                   <p className="text-white text-[18px] font-bold transition-colors duration-300 hover:text-[#c3eaff] hover:scale-105">
                     Booking
                   </p>
-                </Link>
               </li>
               <li>
                 <Link to="/" className="no-underline">
@@ -182,16 +187,19 @@ const Header = ({ children }) => {
               </li>
             </ul>
             <ul class="flex space-x-5 ">
-              <li>
-                <Link to="/login" className="no-underline">
-                  <Button>Login</Button>
-                  {/* {setText()} */}
-                </Link>
+              <li>        
+
+                <div onClick={handleLogInNavigate}>
+                  <Button>{setText()}</Button>
+                  </div>
               </li>
               <li>
-                <Link to="/register" className="no-underline">
+                {
+                  auth.isAuthenticated ? <></>:<Link to="/register" className="no-underline">
                   <Button>Sign Up</Button>
                 </Link>
+                }
+                
               </li>{""}
               <li>
                 <Link to="/" className="no-underline">

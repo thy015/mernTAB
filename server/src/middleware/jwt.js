@@ -18,7 +18,7 @@ const refreshAccessTokens=async(payload)=>{
     
     return refresh_token
 }
-const checkToken=(req,res,next)=>{
+const checkTokenId=(req,res,next)=>{
     const authHeader=req.headers['authorization']
     const token=authHeader && authHeader.split(' ')[1]
 
@@ -29,10 +29,29 @@ const checkToken=(req,res,next)=>{
         return res.status(400).json({message:'Cant decode token'})
     }
         
-    req.token=decodedToken
+    req.tokenID=decodedToken.payload.id
         next()
         
 }
+const readToken = (req, res) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+  
+    if (!token) {
+      return res.status(400).json({ message: "Token is required" });
+    }
+  
+    try {
+        const decoded = jwt.decode(token);
+        if (!decoded) {
+          return res.status(401).json({ message: "Invalid token" });
+        }
+        req.token = decoded;
+        next();
+      } catch (error) {
+        return res.status(500).json({ message: "Server error", error: error.message });
+      }
+    };
 
 const checkRole=(req,res,next)=>{
     req.locals.user
@@ -41,6 +60,7 @@ const checkRole=(req,res,next)=>{
 module.exports={
     generalAccessTokens,
     refreshAccessTokens,
-    checkToken,
+    checkTokenId,
+    readToken,
     checkRole
 }

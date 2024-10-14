@@ -84,10 +84,15 @@ ul{
 
 .input-addvoucher input::placeholder{
   color:rgba(0, 0, 0, 0.45) !important
+
 }
 .gryphen{
   font-family: gryphen;
 }
 .white-label{
   color: white!important;
+}
+/* src/App.css or src/index.css */
+html {
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font to the entire HTML */
 }

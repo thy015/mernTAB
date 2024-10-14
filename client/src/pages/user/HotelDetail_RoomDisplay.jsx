@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Row, Col, Button } from "antd";
+import BookingConfirmationForm from "../../component/BookingConfirmationForm"
 import { useSelector } from "react-redux";
-
-const HotelDetail_RoomDisplay = ({roomData}) => {
-
+import { AuthContext } from "../../hooks/auth.context";
+import { openNotification } from "../../hooks/notification";
+const HotelDetail_RoomDisplay = ({ roomData, hotel }) => {
+  // State for room count, where room ID is the key
+  const { totalCheckInDay } = useSelector((state) => state.inputDay)
   // State for room count, where room ID is the key
   const [counts, setCounts] = useState({});
-  const {totalCheckInDay}=useSelector((state)=>state.inputDay)
+  // query room data result
+
+  //open modal : Phuc
+  const [isShow, setShow] = useState(false)
+  const [roomSelected, setRoomSelected] = useState({})
+  const [countRoom, setCountRoom] = useState()
+  const [getTotal, setTotal] = useState()
+  let totalPrice = []
+  //get auth context 
+  const { auth } = useContext(AuthContext)
   // Increment room count
   const increment = (roomID) => {
     setCounts((prevCounts) => ({
@@ -23,18 +35,23 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
       [roomID]: Math.max((prevCounts[roomID] || 1) - 1, 1), //never go below 0, no need just in case
     }));
   };
-  const formatMoney=(money)=>{
+
+
+  // Save total price
+
+  const formatMoney = (money) => {
     return new Intl.NumberFormat('de-DE').format(money)
   }
   return (
     <div>
       <div className="mt-4">
-        {roomData.map((room) => {
+        {roomData.map((room, index) => {
           // room property
           const returnCount = counts[room._id] || 1;
           const countRoomPrice = room.money * returnCount;
-          const rangeRoomPrice=countRoomPrice*totalCheckInDay
+          const rangeRoomPrice = countRoomPrice * totalCheckInDay
           const fees = (rangeRoomPrice * 15) / 100;
+          totalPrice[room._id] = rangeRoomPrice + fees
           return (
             // Display room details
             <Row className="border-b my-12" key={room.id}>
@@ -52,15 +69,15 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
               {/* Display room info */}
               <Col span={8}>
                 <div className="py-3">
-                 
-                 <div className="pl-4">
+
+                  <div className="pl-4">
                     <ul className="flex flex-col w-full text-left ">
                       <li>Room Type: {room.typeOfRoom}</li>
                       <li>Capacity: {room.capacity}</li>
                       <li>Total Bed: {room.numberOfBeds}</li>
                       <li>Amenities: ....</li>
                     </ul>
-                    </div>
+                  </div>
                 </div>
               </Col>
               {/* Display price and book button */}
@@ -105,7 +122,23 @@ const HotelDetail_RoomDisplay = ({roomData}) => {
                     </div>
                     {/* reserve */}
                     <div className="mt-3" >
-                    <Button type='solid' className="w-full bg-[#1677ff] hover:scale-105 text-white">Reserve</Button>
+                      <Button disabled={totalCheckInDay===0}
+                        onClick={() => {
+                          if(auth.isAuthenticated){
+                            setShow(true)
+                            setRoomSelected(roomData[index])
+                            setCountRoom(counts[roomData[index]._id])
+                            setTotal(totalPrice[roomData[index]._id])
+                          }else{
+                            openNotification(false,"Reserve failed","Please log in or register account !")
+                          }
+                        }}
+                        type='solid'
+                        className={`w-full text-white ${totalCheckInDay===0? 'bg-gray-400':'bg-[#1677ff] hover:scale-105'}` }
+                      >Reserve
+                      </Button>
+                      <BookingConfirmationForm isShow={isShow} onCancel={() => setShow(false)} room={roomSelected} hotel={hotel} count={countRoom} totalPrice={getTotal} />
+
                     </div>
                   </div>
                 </div>

@@ -1,35 +1,37 @@
 import React, { useEffect } from 'react'
 import { useSearchParams,useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import {jwtDecode} from 'jwt-decode'
+
 const SSO = () => {
   const [searchParams] = useSearchParams();
     const navigate=useNavigate()
 
-  useEffect(() => {
-    const token = searchParams.get('Token');
-    if (token) {
-      try{
-        const decodedToken=jwtDecode(token)
-        console.log(decodedToken)
-        
-        axios.post('http://localhost:4000/api/oauth/verify',{},{
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        })
-        .then((res)=>{
-          console.log('Token verified',res.data)
-          navigate('/')
-        }).catch(e=>{
-          console.log('Error passing data',e.message)
-        })
-      }catch(error){
-        console.log(error.message)
-      }   
-    }
+    useEffect(() => {
+      const token = searchParams.get('Token');
+      if (token) {
+        const verifyToken = async () => {
+          try {
+            const res = await axios.post('http://localhost:4000/api/oauth/verify', {}, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            });
     
-  }, [searchParams,navigate]);
+            console.log('Token verified', res.data.payload);
+            
+            if (res.data.navigateTo) {
+              navigate(res.data.navigateTo);
+            }
+    
+          } catch (error) {
+            console.error('Error passing data', error.message);
+          }
+        };
+    
+        verifyToken(); 
+      }
+    }, [searchParams, navigate]);
+    
   return (
     <>
     <style>

@@ -68,3 +68,4 @@ const footerData = [
   },
 ]
 export { cardData,footerData };
+
